@@ -1,0 +1,207 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: mlsdescripting.app_dir
+msgid "Looking at application directory"
+msgstr ""
+
+#: mlsdescripting.didnt_found_file
+msgid "Didn't found file \"%s\"."
+msgstr ""
+
+#: mlsdescripting.no_absolute_path
+msgid "Searching should not be used with absolute path."
+msgstr ""
+
+#: mlsdescripting.no_file_name
+msgid "File name is empty!"
+msgstr ""
+
+#: mlsdescripting.working_dir
+msgid "Looking at working directory"
+msgstr ""
+
+#: tdlgabout.btnclose.caption
+msgid "Close"
+msgstr ""
+
+#: tdlgabout.caption
+msgid "Abut MLSDE"
+msgstr ""
+
+#: tdlgabout.lbltitle.caption
+msgid "MLSDE  "
+msgstr ""
+
+#: tdlgabout.memoexplain.caption
+msgid ""
+"A proposal for a flexible multi-language IDE.\n"
+"\n"
+"Visit project website at\n"
+"https://www.sf.net/p/mlsde\n"
+"\n"
+"This software is published under the The zlib/libpng License.\n"
+"\n"
+"Copyright © 2018 Guillermo Martínez J.\n"
+msgstr ""
+
+#: tdlgconfiguracion.caption
+msgctxt "tdlgconfiguracion.caption"
+msgid "Configuration"
+msgstr ""
+
+#: tdlgconfiguracion.chkarchocultos.caption
+msgid "Show hidden files"
+msgstr ""
+
+#: tdlgconfiguracion.chkcopiaseguridad.caption
+msgid "Make backup"
+msgstr ""
+
+#: tdlgconfiguracion.chkdirsocultos.caption
+msgid "Show hidden directories"
+msgstr ""
+
+#: tdlgconfiguracion.chkeditguardaalperderfoco.caption
+msgid "Save when lost focus"
+msgstr ""
+
+#: tdlgconfiguracion.chkmostrarbarraestrado.caption
+msgid "Show status bar"
+msgstr ""
+
+#: tdlgconfiguracion.chkmostrarbarraherramientas.caption
+msgid "Show tool bar"
+msgstr ""
+
+#: tdlgconfiguracion.chkmostrarmenuppal.caption
+msgid "Show menu bar"
+msgstr ""
+
+#: tdlgconfiguracion.chksoloarchivosfuente.caption
+msgid "Show only source and text files"
+msgstr ""
+
+#: tdlgconfiguracion.editextcopiaseguridad.text
+msgid "bak~"
+msgstr ""
+
+#: tdlgconfiguracion.lbleditextcopiaseguridad.caption
+msgid "Backup file extension"
+msgstr ""
+
+#: tdlgconfiguracion.lbleditniveldirs.caption
+msgid "Max level depth for directories"
+msgstr ""
+
+#: tdlgconfiguracion.tituloarchivosdir.caption
+msgid "Files and directories"
+msgstr ""
+
+#: tdlgconfiguracion.tituloaspecto.caption
+msgid "Aspect"
+msgstr ""
+
+#: tdlgconfiguracion.titulocopiasseguridad.caption
+msgid "Backups"
+msgstr ""
+
+#: tdlgconfiguracion.tituloguardadoautomatico.caption
+msgid "Autosave"
+msgstr ""
+
+#: tfrmeditorfuente.actcerrarlengueta.caption
+msgid "Close tab"
+msgstr ""
+
+#: tfrmeditorfuente.acteditguardar.caption
+msgctxt "tfrmeditorfuente.acteditguardar.caption"
+msgid "Save"
+msgstr ""
+
+#: tfrmeditorfuente.acteditguardar.hint
+msgid "Guardar archivo"
+msgstr ""
+
+#: tfrmeditorfuente.acteditrecarga.caption
+msgid "Reload"
+msgstr ""
+
+#: tfrmeditorfuente.acteditrecarga.hint
+msgid "Recarga el archivo desde disco"
+msgstr ""
+
+#: tfrmeditorfuente.barraherramientas.caption
+msgid "BarraHerramientas"
+msgstr ""
+
+#: tvntprincipal.acprgcierraarchivo.caption
+msgid "Close file"
+msgstr ""
+
+#: tvntprincipal.acprgconfigurar.caption
+msgctxt "tvntprincipal.acprgconfigurar.caption"
+msgid "Configuration"
+msgstr ""
+
+#: tvntprincipal.acprgguardararchivo.caption
+msgctxt "TVNTPRINCIPAL.ACPRGGUARDARARCHIVO.CAPTION"
+msgid "Save"
+msgstr ""
+
+#: tvntprincipal.acprgsalir.caption
+msgid "Exit"
+msgstr ""
+
+#: tvntprincipal.acpryabrir.caption
+msgid "Open..."
+msgstr ""
+
+#: tvntprincipal.acpryactualiza.caption
+msgid "Update"
+msgstr ""
+
+#: tvntprincipal.acpryeliminar.caption
+msgid "Remove"
+msgstr ""
+
+#: tvntprincipal.acprynuevoarchivo.caption
+msgid "New file"
+msgstr ""
+
+#: tvntprincipal.acprynuevodir.caption
+msgid "New directory..."
+msgstr ""
+
+#: tvntprincipal.acpryrenombrar.caption
+msgid "Rename..."
+msgstr ""
+
+#: tvntprincipal.actprycerrartodosarchivos.caption
+msgid "Close all tabs"
+msgstr ""
+
+#: tvntprincipal.caption
+msgid "Edit"
+msgstr ""
+
+#: tvntprincipal.menuprparchivo.caption
+msgid "File"
+msgstr ""
+
+#: tvntprincipal.mnuprgacercade.caption
+msgid "About..."
+msgstr ""
+
+#: tvntprincipal.mnuprgprograma.caption
+msgid "Program"
+msgstr ""
+
+#: tvntprincipal.mnuprpproyecto.caption
+msgid "Project"
+msgstr ""
+
+#: unitvntprincipal.titulo_ventana
+msgid "%s (%s) - edit"
+msgstr ""
+

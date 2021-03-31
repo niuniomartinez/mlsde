@@ -1,0 +1,210 @@
+object DlgConfiguracion: TDlgConfiguracion
+  Left = 335
+  Height = 279
+  Top = 221
+  Width = 578
+  BorderStyle = bsDialog
+  Caption = 'Configuration'
+  ClientHeight = 279
+  ClientWidth = 578
+  OnCreate = FormCreate
+  Position = poOwnerFormCenter
+  LCLVersion = '1.6.0.4'
+  object PantallasConfig: TNotebook
+    Left = 218
+    Height = 225
+    Top = 0
+    Width = 360
+    PageIndex = 0
+    Align = alClient
+    TabOrder = 1
+    TabStop = True
+    object PagProyecto: TPage
+      object TituloArchivosDir: TDividerBevel
+        Left = 11
+        Height = 17
+        Top = 8
+        Width = 339
+        Caption = 'Files and directories'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object ChkDirsOcultos: TCheckBox
+        Left = 11
+        Height = 22
+        Top = 64
+        Width = 158
+        Caption = 'Show hidden directories'
+        TabOrder = 0
+      end
+      object ChkArchOcultos: TCheckBox
+        Left = 11
+        Height = 22
+        Top = 112
+        Width = 121
+        Caption = 'Show hidden files'
+        TabOrder = 1
+      end
+      object EditNivelDirs: TSpinEdit
+        Left = 11
+        Height = 27
+        Top = 32
+        Width = 50
+        MaxValue = 10
+        MinValue = 1
+        TabOrder = 2
+        Value = 1
+      end
+      object LblEditNivelDirs: TLabel
+        Left = 75
+        Height = 17
+        Top = 35
+        Width = 170
+        Caption = 'Max level depth for directories'
+        FocusControl = EditNivelDirs
+        ParentColor = False
+      end
+      object TituloCopiasSeguridad: TDividerBevel
+        Left = 11
+        Height = 17
+        Top = 142
+        Width = 339
+        Caption = 'Backups'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object ChkCopiaSeguridad: TCheckBox
+        Left = 11
+        Height = 22
+        Top = 158
+        Width = 98
+        Caption = 'Make backup'
+        TabOrder = 3
+      end
+      object EditExtCopiaSeguridad: TComboBox
+        Left = 11
+        Height = 29
+        Top = 190
+        Width = 100
+        ItemHeight = 0
+        ItemIndex = 0
+        Items.Strings = (
+          'bak~'
+          'bak'
+          'orig'
+        )
+        TabOrder = 4
+        Text = 'bak~'
+      end
+      object LblEditExtCopiaSeguridad: TLabel
+        Left = 126
+        Height = 17
+        Top = 193
+        Width = 118
+        Caption = 'Backup file extension'
+        ParentColor = False
+      end
+      object ChkSoloArchivosFuente: TCheckBox
+        Left = 11
+        Height = 22
+        Top = 88
+        Width = 195
+        Caption = 'Show only source and text files'
+        TabOrder = 5
+      end
+    end
+    object PagEntorno: TPage
+      Tag = 1
+      object TituloGuardadoAutomatico: TDividerBevel
+        Left = 6
+        Height = 17
+        Top = 10
+        Width = 344
+        Caption = 'Autosave'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object ChkEditGuardaAlPerderFoco: TCheckBox
+        Left = 6
+        Height = 22
+        Top = 32
+        Width = 140
+        Caption = 'Save when lost focus'
+        TabOrder = 0
+      end
+      object TituloAspecto: TDividerBevel
+        Left = 6
+        Height = 17
+        Top = 64
+        Width = 344
+        Caption = 'Aspect'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object ChkMostrarMenuPpal: TCheckBox
+        Left = 6
+        Height = 22
+        Top = 88
+        Width = 111
+        Caption = 'Show menu bar'
+        TabOrder = 1
+      end
+      object ChkMostrarBarraHerramientas: TCheckBox
+        Left = 6
+        Height = 22
+        Top = 112
+        Width = 100
+        Caption = 'Show tool bar'
+        TabOrder = 2
+      end
+      object ChkMostrarBarraEstrado: TCheckBox
+        Left = 6
+        Height = 22
+        Top = 136
+        Width = 113
+        Caption = 'Show status bar'
+        TabOrder = 3
+      end
+    end
+  end
+  object PanelBotones: TButtonPanel
+    Left = 6
+    Height = 42
+    Top = 231
+    Width = 566
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    OKButton.OnClick = OKButtonClick
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 3
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object OpcionesConfiguracion: TTreeView
+    Left = 6
+    Height = 219
+    Top = 6
+    Width = 207
+    Align = alLeft
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+    OnClick = OpcionesConfiguracionClick
+    Items.Data = {
+      F9FFFFFF020002000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000
+      0000000700000050726F6A656374FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000
+      000000000000000B000000456E7669726F6E6D656E74
+    }
+  end
+  object Splitter: TSplitter
+    Left = 213
+    Height = 225
+    Top = 0
+    Width = 5
+  end
+end
