@@ -1,0 +1,52 @@
+object ProgressDlg: TProgressDlg
+  Left = 408
+  Height = 103
+  Top = 131
+  Width = 320
+  BorderIcons = []
+  BorderStyle = bsDialog
+  Caption = 'Progress'
+  ClientHeight = 103
+  ClientWidth = 320
+  FormStyle = fsStayOnTop
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.0.10.0'
+  object LabelText: TLabel
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 304
+    AutoSize = False
+    Caption = 'Working...'
+    ParentColor = False
+  end
+  object ProgressBar: TProgressBar
+    Left = 8
+    Height = 20
+    Top = 32
+    Width = 304
+    TabOrder = 0
+  end
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 35
+    Top = 62
+    Width = 308
+    Enabled = False
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    CancelButton.OnClick = CancelButtonClick
+    TabOrder = 1
+    ShowButtons = [pbCancel]
+  end
+end

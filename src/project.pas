@@ -1,8 +1,7 @@
-UNIT Project;
-(*<Defines a poject manager. *)
+unit Project;
+(*<Defines the project manager. *)
 (*
-  Copyright (c) 2018 Guillermo Martínez J.
-  See file AUTHORS for a full list of authors.
+  Copyright (c) 2018-2020 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -23,433 +22,472 @@ UNIT Project;
     3. This notice may not be removed or altered from any source
     distribution.
  *)
+{$MODESWITCH ADVANCEDRECORDS+}
+interface
 
-INTERFACE
+  uses
+    Configuration,
+    Classes, fgl, sysutils;
 
-  USES
-    Utils,
-    Classes, Sysutils;
+  const
+  (* To identify project configuration object. *)
+    CfgProjectId = 'project';
 
-  TYPE
-  (* @Exclude:  Forwarded. *)
-    TProject = CLASS;
-  (* @Exclude:  Forwarded. *)
-    TDirectorio = CLASS;
-
-
-
-  (* Contiene la descripción de un archivo de proyecto. *)
-    TArchivo = CLASS (TObject)
-    PRIVATE
-      fNombre, fRuta: STRING;
-      fDirectorio: TDirectorio;
-
-      PROCEDURE PonNombre (CONST aNombre: STRING);
-    PUBLIC
-    (* Constructor. *)
-      CONSTRUCTOR Create (aDir: TDirectorio);
-
-    (* Nombre del archivo, sin ruta. *)
-      PROPERTY Nombre: STRING READ fNombre WRITE PonNombre;
-    (* Ruta del directorio contenedor del archivo. *)
-      PROPERTY Ruta: STRING READ fRuta WRITE fRuta;
-    END;
+  type
+  (* @exclude forward declaration. *)
+    TProject = class;
+  (* @exclude forward declaration. *)
+    TDirectory = class;
 
 
 
-  (* Contiene la descripción de un directorio del proyecto. *)
-    TDirectorio = CLASS (TObject)
-    PRIVATE
-      fNombre: STRING;
-      fProyecto: TProject;
-      fRaiz: TDirectorio;
-      fSubdirectorios: ARRAY OF TDirectorio;
-      fArchivos: ARRAY OF TArchivo;
+  (* Manages project configuration. *)
+    TProjectConfiguration = class (TCustomConfiguration)
+    private
+      function GetDirectoryDepth: Integer;
+      procedure SetDirectoryDepth (aValue: Integer);
+      function GetShowHiddenFiles: Boolean;
+      procedure SetShowHiddenFiles (aValue: Boolean);
+      function GetShowHiddenDirectories: Boolean;
+      procedure SetShowHiddenDirectories (aValue: Boolean);
+    public
+    (* Tells depth when scanning directories. *)
+      property DirDepth: Integer read GetDirectoryDepth write SetDirectoryDepth;
+    (* Tells if should show the hidden files in the project list. *)
+      property ShowHiddenFiles: Boolean
+         read GetShowHiddenFiles write SetShowHiddenFiles;
+    (* Tells if should show the hidden directories in the project list. *)
+      property ShowHiddenDirs: Boolean
+        read GetShowHiddenDirectories write SetShowHiddenDirectories;
+    end;
 
-      FUNCTION TomaNumSubDirectorios: INTEGER; INLINE;
-      FUNCTION TomaSubdirectorio (CONST Ndx: INTEGER): TDirectorio; INLINE;
-      FUNCTION TomaNumArchivos: INTEGER; INLINE;
-      FUNCTION TomaArchivo (CONST Ndx: INTEGER): TArchivo; INLINE;
 
-      PROCEDURE PonNombre (aNombre: STRING);
-      FUNCTION TomaRuta: STRING;
-      PROCEDURE Vacia;
-    PUBLIC
-    (* Crea el directorio (vacío). *)
-      CONSTRUCTOR Create (aProyecto: TProject; aRaiz: TDirectorio=NIL);
+
+  (* File information. *)
+    TFile = record
+    private
+      fOwner: TDirectory;
+      fName: String;
+    public
+    (* Builds and returns the full file path. *)
+      function GetPath: String;
+
+    (* Directory. *)
+      property Directory: TDirectory read fOwner;
+    (* File name. *)
+      property Name: String read fName;
+    end;
+
+
+
+  (* Directory information. *)
+    TDirectory = class (TObject)
+    private type
+    (* Directory container. *)
+      TDirectoryList = SPECIALIZE TFPGObjectList<TDirectory>;
+    private
+      fProject: TProject;
+      fOwner: TDirectory;
+      fName: String;
+      fDirList: TDirectoryList;
+      fFileList: array of TFile;
+
+      function GetNumDirs: Integer; inline;
+      function GetSubDir (const aNdx: Integer): TDirectory; inline;
+      function GetNumFiles: Integer; inline;
+      function GetFile (const aNdx: Integer): TFile; inline;
+
+    (* Checks if given directory or file is valid.  Result may depend on the
+       project configuration. *)
+      function IsValidFile (const aInfo: TSearchRec): Boolean;
+    public
+    (* Constructor.
+       @param(aName Directory name.)
+       @param(aOwner Directory owner.  If @nil then asume it is root.) *)
+      constructor Create (const aName: String; aOwner: TDirectory = Nil);
     (* Destructor. *)
-      DESTRUCTOR Destroy; OVERRIDE;
-    (* Escanea el directorio y genera el árbol.  Funciona de forma
-      semi-recursiva, solicitando el escaneo de cada subdirectorio
-      encontrado.  No ejecuta el evento de cambio.  *)
-      PROCEDURE Escanea (aRuta: STRING; CONST Nivel: INTEGER);
+      destructor Destroy; override;
+    (* Clears data from the directory. *)
+      procedure Clear;
+    (* Builds and returns the full directory path. *)
+      function GetPath: String;
+    (* Scans the directory and populates with files and subdirectories.
+       @param(aLevel How much deep the scan will be.  0 will scan the current
+              directory only, 1 will scan subdirectories, etc.) *)
+      procedure Scan (aLevel: Integer);
 
-    (* Nombre del directorio. *)
-      PROPERTY Nombre: STRING READ fNombre WRITE PonNombre;
-    (* Ruta del directorio. *)
-      PROPERTY Ruta: STRING READ TomaRuta;
-    (* Directorio raíz. *)
-      PROPERTY Raiz: TDirectorio READ fRaiz;
-    (* Número de subdirectorios.  Empieza a contar en 1. *)
-      PROPERTY NumSubdirectorios: INTEGER READ TomaNumSubDirectorios;
-    (* Acceso a subdirectorios. *)
-      PROPERTY Subdirectorios[CONST Ndx: INTEGER]: TDirectorio READ TomaSubdirectorio;
-    (* Número de archivos. *)
-      PROPERTY NumArchivos: INTEGER READ TomaNumArchivos;
-    (* Acceso a archivos.  Empieza a contar en 1. *)
-      PROPERTY Archivos[CONST Ndx: INTEGER]: TArchivo READ TomaArchivo;
-    END;
+    (* Owner directory. *)
+      property Owner: TDirectory read fOwner;
+    (* Directory name.  If it is the root directory, then it contains the full
+       path. *)
+      property Name: String read fName;
+    (* How many subdirectories contains. *)
+      property NumDirs: Integer read GetNumDirs;
+    (* Returns reference to a subdirectory.  It is 0-based. *)
+      property SubDir[aNdx: Integer]: TDirectory read GetSubDir;
+    (* How many files contains. *)
+      property NumFiles: Integer read GetNumFiles;
+    (* Returns information about a file.  It is 0-based. *)
+      property Files[aNdx: Integer]: TFile read GetFile;
+    end;
 
 
 
-  (* Contains and manages a project.
+  (* Stores and manages a project.
 
-     @bold(Implementation note:)  Right now there's only one project per
-     application.  It is created and owned by @link(TVntPrincipal) (the main
-     window). *)
-    TProject = CLASS (TObject)
-    PRIVATE
-      fRutaBase: STRING;
-      fRaiz: TDirectorio;
+     Right now a project is just a list of directories and files.
 
-      fOnChange: TMlsdeNotification;
+     If @link(ProgressDlg) exists, then it is used to show progress. *)
+    TProject = class (TObject)
+    private
+      fBasePath: String;
+      fRoot: TDirectory;
+      fOnChange: TNotifyEvent;
 
-      PROCEDURE PonRutaBase (CONST aRuta: STRING); INLINE;
-    (* Limpia el proyecto actual. *)
-      PROCEDURE Vacia;
-
-      FUNCTION GetOnCHange: TNotifyEvent; INLINE;
-      PROCEDURE SetOnChange (CONST aCallback: TNotifyEvent); INLINE;
-    PUBLIC
-    (* Creates an empty project. *)
-      CONSTRUCTOR Create;
+    (* Event to cancel the scanning. *)
+      procedure CancelScan (aSender: TObject);
+    public
     (* Destructor. *)
-      DESTRUCTOR Destroy; OVERRIDE;
-    (* Analiza el directorio y genera el proyecto.  El proyecto actual se
-      elimina. *)
-      PROCEDURE Escanea (aRuta: STRING = '');
+      destructor Destroy; override;
+    (* Opens a project.
 
-    (* Ruta base del proyecto, sin el directorio de la @link(raiz). *)
-      PROPERTY RutaBase: STRING READ fRutaBase WRITE PonRutaBase;
-    (* Directorio raíz. *)
-      PROPERTY Raiz: TDirectorio READ fRaiz;
+       Right now, a project is just a directory. *)
+      procedure Open (aPath: String);
+    (* Scans the directory searching for files and directories. *)
+      procedure Scan;
+    (* Clears the project data. *)
+      procedure Clear;
 
-    (* Event triggered when something in the project changes, as a file name. *)
-      PROPERTY onChange: TNotifyEvent READ GetOnChange WRITE SetOnChange;
-    END;
+    (* Base path. *)
+      property BasePath: String read fBasePath;
+    (* Root directory.  It may be @nil. *)
+      property Root: TDirectory read fRoot;
 
-IMPLEMENTATION
+    (* Event triggered when project changed.  For example, when opening a new
+       one, adding items, etc.
 
-  USES
-    Configuracion, UnitDatos;
+       Note that this doesn't triggers if a file changes (yet). *)
+      property OnChange: TNotifyEvent read fOnChange write fOnChange;
+    end;
 
-  VAR
-    ExtensionesValidas: ARRAY OF STRING;
+implementation
 
-(* Determina si el archivo o directorio es identificado como válido,
-   dependiendo de la configuración. *)
-  FUNCTION EsValido (CONST Info: TSearchRec): BOOLEAN;
-  VAR
-    Extension: STRING;
-  BEGIN
-    IF (Info.Attr AND faDirectory) = faDirectory THEN
-    BEGIN
-      IF (Info.Name = '.') OR (Info.Name = '..') THEN
-	EXIT (FALSE);
-      IF (NOT Config.InluyeDirsOcultos)
-      AND ((Info.Attr AND faHidden) = faHidden) THEN
-        EXIT (FALSE);
-    END
-    ELSE BEGIN
-      IF (NOT Config.InluyeArchivosOcultos)
-      AND ((Info.Attr AND faHidden) = faHidden) THEN
-        EXIT (FALSE);
-      IF Config.InluyeSoloArchivosFuente THEN
-      BEGIN
-        Extension := LowerCase (Trim (ExtractFileExt (Info.Name)));
-        IF Length (Extension) > 0 THEN
-        BEGIN
-          Extension := RightStr (Extension, Length (Extension) - 1);
-          IF NOT IsWordInList (Extension, ExtensionesValidas) THEN
-            EXIT (FALSE);
-        END;
-      END;
-    END;
-    RESULT := TRUE;
-  END;
+  uses
+    Main, ProgressDialogForm,
+    ComCtrls, Forms;
+
+  const
+    DefaultDirDepth = 5;
+
+  var
+  (* Flag to know if current operation has been canceled. *)
+    fCancelOperation: Boolean;
+
+(*
+ * TProjectConfiguration
+ ***************************************************************************)
+
+  function TProjectConfiguration.GetDirectoryDepth: Integer;
+  begin
+    Result := Self.GetIntValue (CfgProjectId, 'dir_depth', DefaultDirDepth)
+  end;
 
 
 
-  (*
-   * TArchivo
-   **************************************************************************)
-
-  PROCEDURE TArchivo.PonNombre (CONST aNombre: STRING);
-  BEGIN
-    IF fNombre <> aNombre THEN
-    BEGIN
-      fNombre := ExtractFileName (aNombre);
-      IF fNombre <> aNombre THEN fRuta := ExtractFileDir (aNombre);
-      fDirectorio.fProyecto.fOnChange.NotifyEvent
-    END;
-  END;
+  procedure TProjectConfiguration.SetDirectoryDepth (aValue: Integer);
+  begin
+    if 1 > aValue then aValue := DefaultDirDepth;
+    Self.SetIntValue (CfgProjectId, 'dir_depth', aValue)
+  end;
 
 
 
-(* Constructor. *)
-  CONSTRUCTOR TArchivo.Create (aDir: TDirectorio);
-  BEGIN
-    INHERITED Create;
-    fDirectorio := aDir;
-  END;
+  function TProjectConfiguration.GetShowHiddenFiles: Boolean;
+  begin
+    Result := Self.GetBoolValue (CfgProjectId, 'show_hidden_files', False)
+  end;
+
+
+
+  procedure TProjectConfiguration.SetShowHiddenFiles (aValue: Boolean);
+  begin
+    Self.SetBooleanValue (CfgProjectId, 'show_hidden_files', aValue)
+  end;
+
+
+
+  function TProjectConfiguration.GetShowHiddenDirectories: Boolean;
+  begin
+    Result := Self.GetBoolValue (CfgProjectId, 'show_hidden_dirs', False)
+  end;
+
+
+
+  procedure TProjectConfiguration.SetShowHiddenDirectories (aValue: Boolean);
+  begin
+    Self.SetBooleanValue (CfgProjectId, 'show_hidden_dir', aValue)
+  end;
 
 
 
 (*
- * TDirectorio
- **************************************************************************)
+ * TFile
+ ***************************************************************************)
 
-  FUNCTION TDirectorio.TomaNumSubDirectorios: INTEGER;
-  BEGIN
-    RESULT := Length (fSubdirectorios);
-  END;
-
-
-
-  FUNCTION TDirectorio.TomaSubdirectorio (CONST Ndx: INTEGER): TDirectorio;
-  BEGIN
-    RESULT := fSubdirectorios[Ndx - 1];
-  END;
+(* Builds path. *)
+  function TFile.GetPath: String;
+  begin
+  { All files are in directories. }
+    Result := IncludeTrailingPathDelimiter (fOwner.GetPath + fName)
+  end;
 
 
 
-  FUNCTION TDirectorio.TomaNumArchivos: INTEGER;
-  BEGIN
-    RESULT := Length (fArchivos);
-  END;
+(*
+ * TDirectory
+ ***************************************************************************)
+
+  function TDirectory.GetNumDirs: Integer;
+  begin
+    Result := fDirList.Count
+  end;
 
 
 
-  FUNCTION TDirectorio.TomaArchivo (CONST Ndx: INTEGER): TArchivo;
-  BEGIN
-    RESULT := fArchivos[Ndx - 1];
-  END;
+  function TDirectory.GetSubDir (const aNdx: Integer): TDirectory;
+  begin
+    Result := fDirList[aNdx]
+  end;
 
 
 
-  PROCEDURE TDirectorio.PonNombre (aNombre: STRING);
-  BEGIN
-    aNombre := ExtractFileName (ExcludeTrailingPathDelimiter (aNombre));
-    IF fNombre <> aNombre THEN
-    BEGIN
-      fNombre := aNombre;
-      fProyecto.fOnChange.NotifyEvent
-    END;
-  END;
+  function TDirectory.GetNumFiles: Integer;
+  begin
+    Result := Length (fFileList)
+  end;
 
 
 
-  FUNCTION TDirectorio.TomaRuta: STRING;
-  BEGIN
-    IF fRaiz <> NIL THEN
-      RESULT := IncludeTrailingPathDelimiter (fRaiz.Ruta + fNombre)
-    ELSE
-      RESULT := IncludeTrailingBackslash (fProyecto.RutaBase + fNombre);
-  END;
+  function TDirectory.GetFile (const aNdx: Integer): TFile;
+  begin
+    if (0 > aNdx) or (aNdx >= Length (fFileList)) then
+      RAISE Exception.CreateFmt ('File index %d out of bounds.', [aNdx]);
+    Result := fFileList[aNdx]
+  end;
+
+
+(* Checks if given directory or file is valid. *)
+  function TDirectory.IsValidFile (const aInfo: TSearchRec): Boolean;
+
+    function IsHidden: Boolean; inline;
+    begin
+      Result := ((aInfo.Attr and faHidden) = faHidden) or (aInfo.Name[1] = '.')
+    end;
+
+  var
+    lCfgSection: TProjectConfiguration;
+  begin
+    lCfgSection := TProjectConfiguration (
+      MLSDEApplication.Configuration.FindConfig (CfgProjectId)
+    );
+  { Directories. }
+    if (aInfo.Attr and faDirectory) = faDirectory then
+    begin
+    { Avoid navigation entries. }
+      if (aInfo.Name = '.') or (aInfo.Name = '..') then Exit (False);
+    { Hidden directories. }
+      if (not lCfgSection.ShowHiddenDirs) and IsHidden then
+        Exit (False)
+    end
+  { Files. }
+    else begin
+    { Hidden files. }
+      if (not lCfgSection.ShowHiddenFiles) and IsHidden then
+        Exit (False)
+    end;
+  { If here, then it is valid. }
+    Result := True
+  end;
 
 
 
-  PROCEDURE TDirectorio.Vacia;
-  VAR
-    Ndx: INTEGER;
-  BEGIN
-    FOR Ndx := LOW (fSubdirectorios) TO HIGH (fSubdirectorios) DO
-      FreeAndNil (fSubdirectorios[Ndx]);
-    SetLength (fSubdirectorios, 0);
-    FOR Ndx := LOW (fArchivos) TO HIGH (fArchivos) DO
-      FreeAndNil (fArchivos[Ndx]);
-    SetLength (fArchivos, 0);
-  END;
-
-
-
-(* Crea el directorio (vacío). *)
-  CONSTRUCTOR TDirectorio.Create (aProyecto: TProject; aRaiz: TDirectorio);
-  BEGIN
-    INHERITED Create;
-    fProyecto := aProyecto;
-    fRaiz := aRaiz;
-  END;
+(* Constructor. *)
+  constructor TDirectory.Create (const aName: String; aOwner: TDirectory);
+  begin
+    inherited Create;
+    fOwner := aOwner;
+    fName := ExtractFileName (aName);
+    fDirList := TDirectoryList.Create
+  end;
 
 
 
 (* Destructor. *)
-  DESTRUCTOR TDirectorio.Destroy;
-  BEGIN
-    SELF.Vacia;
-    INHERITED Destroy;
-  END;
+  destructor TDirectory.Destroy;
+  begin
+    fDirList.Free;
+    inherited Destroy
+  end;
+
+
+(* Clears data from the directory. *)
+  procedure TDirectory.Clear;
+  begin
+    fDirList.Clear;
+    SetLength (fFileList, 0)
+  end;
 
 
 
-(* Escanea el directorio y genera el árbol.  Funciona de forma
-  semi-recursiva, solicitando el escaneo de cada subdirectorio
-  encontrado.  No ejecuta el evento de cambio. *)
-  PROCEDURE TDirectorio.Escanea (aRuta: STRING; CONST Nivel: INTEGER);
+(* Builds path. *)
+  function TDirectory.GetPath: String;
+  begin
+  { If it's root, it doesn't has owner. }
+    if fOwner <> Nil then
+      Result := IncludeTrailingPathDelimiter (fOwner.GetPath + fName)
+    else
+      Result := IncludeTrailingPathDelimiter (fProject.fBasePath + fName)
+  end;
 
-    PROCEDURE AnnadeSubdirectorio (CONST aNombre: STRING); INLINE;
-    VAR
-      Ndx: INTEGER;
-    BEGIN
-      Ndx := Length (fSubdirectorios);
-      SetLength (fSubdirectorios, Ndx + 1);
-      fSubdirectorios[Ndx] := TDirectorio.Create (fProyecto, SELF);
-      fSubdirectorios[Ndx].PonNombre (aNombre);
-      fSubdirectorios[Ndx].Escanea (aRuta+aNombre, Nivel + 1);
-    END;
 
-    PROCEDURE AnnadeArchivo (CONST aNombre: STRING); INLINE;
-    VAR
-      Ndx: INTEGER;
-    BEGIN
-      Ndx := Length (fArchivos);
-      SetLength (fArchivos, Ndx + 1);
-      fArchivos[Ndx] := TArchivo.Create (SELF);
-      fArchivos[Ndx].PonNombre (aNombre);
-      fArchivos[Ndx].fRuta := aRuta;
-    END;
 
-  VAR
-    Resultado: INTEGER;
-    InfoArchivo: TSearchRec;
-  BEGIN
-    IF Nivel >= Config.NivelProfundidadDirs + 1 THEN
-      EXIT;
-  { Inicializa el análisis. }
-    PonNombre (aRuta);
-    aRuta := IncludeTrailingPathDelimiter (aRuta);
-    SELF.Vacia;
-    Resultado := FindFirst (aRuta+'*', faAnyFile OR faDirectory OR faHidden, InfoArchivo);
-    TRY
-    { Realiza la búsqueda. }
-      IF Resultado = 0 THEN
-      REPEAT
-	IF EsValido (InfoArchivo) THEN
-	BEGIN
-	  IF (InfoArchivo.Attr AND faDirectory) = faDirectory THEN
-	    AnnadeSubdirectorio (InfoArchivo.Name)
-	  ELSE
-	    AnnadeArchivo (InfoArchivo.Name);
-	END;
-      UNTIL FindNext (InfoArchivo) <> 0;
-    FINALLY
-      FindClose (InfoArchivo);
-    END;
-    fProyecto.fOnChange.NotifyEvent
-  END;
+(* Scans the directory and populates with files and subdirectories. *)
+  procedure TDirectory.Scan (aLevel: Integer);
+
+    procedure AddSubdirectory (const aName: String); inline;
+    begin
+      fDirList.Add (TDirectory.Create (aName, Self))
+    end;
+
+    procedure AddFile (const aName: String); inline;
+    var
+      lNdx: Integer;
+    begin
+    { TODO: Filter files by type (i.e. add only known files). }
+      lNdx := Length (fFileList);
+      SetLength (fFileList, lNdx + 1);
+      fFileList[lNdx].fOwner := Self;
+      fFileList[lNdx].fName := aName
+    end;
+
+  var
+    lFileInfo: TSearchRec;
+    lDirectory: TDirectory;
+  begin
+    Self.Clear;
+  { Get files and directories. }
+    if FindFirst (
+      Self.GetPath + '*',
+      faAnyFile or faDirectory or faHidden,
+      lFileInfo
+    ) = 0 then
+    try
+      repeat
+        if fCancelOperation then Exit;
+        if Random (100) = 50 then
+        begin
+	  if ProgressDlg <> Nil then
+	    ProgressDlg.LabelText.Caption := Self.GetPath + lFileInfo.Name;
+          Application.ProcessMessages
+        end;
+        if Self.IsValidFile (lFileInfo) then
+        begin
+          if (lFileInfo.Attr and faDirectory) = faDirectory then
+            AddSubdirectory (lFileInfo.Name)
+          else
+            AddFile (lFileInfo.Name)
+        end
+      until FindNext (lFileInfo) <> 0
+    finally
+      FindClose (lFileInfo)
+    end;
+  { Next level. }
+    Dec (aLevel);
+    if aLevel > 0 then for lDirectory in fDirList do lDirectory.Scan (aLevel)
+  end;
 
 
 
 (*
  * TProject
- ****************************************************************************)
+ ***************************************************************************)
 
-  PROCEDURE TProject.PonRutaBase (CONST aRuta: STRING); INLINE;
-  BEGIN
-    fRutaBase := IncludeTrailingPathDelimiter (aRuta);
-  END;
-
-
-
-(* Limpia el proyecto actual. *)
-  PROCEDURE TProject.Vacia;
-  BEGIN
-    FreeAndNil (fRaiz);
-  END;
-
-
-
-  FUNCTION TProject.GetOnChange: TNotifyEvent;
-  BEGIN
-    RESULT := fOnChange.Callback
-  END;
-
-
-
-  PROCEDURE TProject.SetOnChange (CONST aCallback: TNotifyEvent);
-  BEGIN
-    fOnChange.Callback := aCallback
-  END;
-
-
-(* Creates an empty project. *)
-  CONSTRUCTOR TProject.Create;
-  VAR
-    Tmp: STRING;
-  BEGIN
-    INHERITED Create;
-    fOnChange.Owner := SELF;
-    fOnChange.Callback := NIL;
-    Tmp := ExcludeTrailingPathDelimiter (GetUserDir);
-    PonRutaBase (ExtractFileDir (Tmp));
-    fRaiz := TDirectorio.Create (SELF);
-    fRaiz.Nombre := Tmp
-  END;
+(* Event to cancel the scanning. *)
+  procedure TProject.CancelScan (aSender: TObject);
+  begin
+    fCancelOperation := True
+  end;
 
 
 
 (* Destructor. *)
-  DESTRUCTOR TProject.Destroy;
-  BEGIN
-    INHERITED Destroy;
-    FreeAndNil (fRaiz);
-  END;
+  destructor TProject.Destroy;
+  begin
+    Self.Clear;
+    inherited Destroy
+  end;
 
 
 
-(* Analiza el directorio y genera el proyecto.  El proyecto actual se
-   elimina. *)
-  PROCEDURE TProject.Escanea (aRuta: STRING);
-  VAR
-    NdxExt, NdxSin, PosChar: INTEGER;
-  BEGIN
-  { Si no indicó una ruta, re-escanea. }
-    IF aRuta = '' THEN
-      aRuta := SELF.Raiz.Ruta;
-    IF DirectoryExists (aRuta) THEN
-    BEGIN
-      TRY
-      { Crea la lista de extensiones reconocidas.}
-        NdxExt := 0;
-        FOR NdxSin := LOW (ListaSintaxis) TO HIGH (ListaSintaxis) DO
-        BEGIN
-          SetLength (ExtensionesValidas, NdxExt + 1);
-          ExtensionesValidas[NdxExt] := '';
-          FOR PosChar := 1 TO Length (ListaSintaxis[NdxSin].Extensiones) DO
-            IF ListaSintaxis[NdxSin].Extensiones[PosChar] = ';' THEN
-            BEGIN
-              INC (NdxExt);
-              SetLength (ExtensionesValidas, NdxExt + 1);
-              ExtensionesValidas[NdxExt] := '';
-            END
-            ELSE
-              ExtensionesValidas[NdxExt] :=
-                ExtensionesValidas[NdxExt] +
-                ListaSintaxis[NdxSin].Extensiones[PosChar];
-          INC (NdxExt);
-        END;
-      { Realiza el análisis. }
-	fOnChange.Deactivate;
-	Vacia;
-	PonRutaBase (ExtractFileDir (ExcludeTrailingPathDelimiter (aRuta)));
-	fRaiz := TDirectorio.Create (SELF);
-	fRaiz.Escanea (IncludeTrailingPathDelimiter (aRuta), 1);
-      FINALLY
-	SetLength (ExtensionesValidas, 0);
-	fOnChange.Activate
-      END;
-      fOnChange.NotifyEvent
-    END;
-  END;
+(* Opens a project. *)
+  procedure TProject.Open (aPath: String);
+  begin
+    Self.Clear;
+    aPath := Trim (aPath);
+  { If no path, then root. }
+    if aPath = '' then
+    begin
+      aPath := ExcludeTrailingPathDelimiter (GetUserDir);
+      fBasePath := ExtractFileDir (aPath);
+      fRoot := TDirectory.Create (
+        ExtractFileName (ExcludeTrailingPathDelimiter (aPath))
+      );
+      fRoot.fProject := Self
+    end
+    else begin
+      fBasePath := IncludeTrailingPathDelimiter (ExtractFileDir (aPath));
+      fRoot := TDirectory.Create (
+        ExtractFileName (ExcludeTrailingPathDelimiter (aPath))
+      );
+      fRoot.fProject := Self
+    end;
+  { Populate. }
+    Self.Scan;
+    if Assigned (fOnChange) then fOnChange (Self)
+  end;
 
-END.
+
+
+(* Scans the project directory. *)
+  procedure TProject.Scan;
+  begin
+  { Set up the progress dialog, if available. }
+    fCancelOperation := False;
+    if ProgressDlg <> Nil then
+    begin
+      ProgressDlg.ProgressBar.Style := pbstMarquee;
+      ProgressDlg.OnCancelAction := @Self.CancelScan
+    end;
+  { Do scan. }
+    fRoot.Scan (
+      TProjectConfiguration (
+        MLSDEApplication.Configuration.FindConfig (CfgProjectId)
+      ).DirDepth
+    );
+  { Reset the progress dialog, if available. }
+    if ProgressDlg <> Nil then ProgressDlg.OnCancelAction := Nil;
+  { If operation was cancelled, remove data. }
+    if fCancelOperation then Self.Clear
+  end;
+
+
+
+(* Clears project. *)
+  procedure TProject.Clear;
+  begin
+    FreeAndNil (fRoot);
+    fBasePath := ''
+  end;
+
+end.
+

@@ -1,0 +1,97 @@
+object MainWindow: TMainWindow
+  Left = 387
+  Height = 376
+  Top = 136
+  Width = 643
+  Caption = 'MLSDE'
+  ClientHeight = 355
+  ClientWidth = 643
+  Menu = MainMenu
+  OnCreate = Initialize
+  OnShow = FormShow
+  LCLVersion = '2.0.10.0'
+  inline ProjectViewer: TProjectView
+    Height = 335
+    Width = 160
+    Align = alLeft
+    ClientHeight = 335
+    ClientWidth = 160
+    inherited ProjectTree: TTreeView
+      Height = 335
+      Width = 160
+    end
+  end
+  object ResizeBar: TSplitter
+    Left = 160
+    Height = 335
+    Top = 0
+    Width = 5
+  end
+  object EditorList: TPageControl
+    Left = 165
+    Height = 335
+    Top = 0
+    Width = 478
+    Align = alClient
+    TabOrder = 2
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 20
+    Top = 335
+    Width = 643
+    Panels = <>
+  end
+  object MainMenu: TMainMenu
+    Images = GlobalData.IconList
+    Left = 528
+    Top = 8
+    object MenuItemMLSDE: TMenuItem
+      Caption = '&MLSDE'
+      object MenuItemConfiguration: TMenuItem
+        Action = ActionConfigure
+      end
+      object MenuItemAbout: TMenuItem
+        Action = ActionAbout
+      end
+      object MenuItemQuit: TMenuItem
+        Action = ActionQuit
+      end
+    end
+    object MenuItemProject: TMenuItem
+      Caption = '&Project'
+      object MenuItemOpenPrj: TMenuItem
+        Action = ActionOpenProject
+      end
+    end
+  end
+  object ActionList: TActionList
+    Images = GlobalData.IconList
+    Left = 592
+    Top = 8
+    object ActionQuit: TFileExit
+      Category = 'File'
+      Caption = '&Quit'
+      Hint = 'Ends application'
+      ImageIndex = 0
+    end
+    object ActionConfigure: TAction
+      Tag = 1
+      Caption = '&Configuration...'
+      ImageIndex = 1
+      OnExecute = ActionEnvironmentExecute
+    end
+    object ActionAbout: TAction
+      Tag = 2
+      Caption = '&About...'
+      ImageIndex = 2
+      OnExecute = ActionEnvironmentExecute
+    end
+    object ActionOpenProject: TAction
+      Tag = 3
+      Caption = '&Open...'
+      ImageIndex = 3
+      OnExecute = ActionProjectExecute
+    end
+  end
+end

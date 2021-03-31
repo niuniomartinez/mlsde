@@ -1,0 +1,30 @@
+inherited ProjectConfigurationFrame: TProjectConfigurationFrame
+  DesignLeft = 339
+  DesignTop = 195
+  object TitleFilesNDirs: TDividerBevel[0]
+    Left = 0
+    Height = 17
+    Top = 0
+    Width = 320
+    Caption = 'Files and directories'
+    Align = alTop
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object CheckHiddenFiles: TCheckBox[1]
+    Left = 8
+    Height = 21
+    Top = 24
+    Width = 123
+    Caption = 'Show hidden files.'
+    TabOrder = 0
+  end
+  object CheckHiddenDirectories: TCheckBox[2]
+    Left = 8
+    Height = 21
+    Top = 57
+    Width = 160
+    Caption = 'Show hidden directories.'
+    TabOrder = 1
+  end
+end

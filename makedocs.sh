@@ -1,2 +1,8 @@
 #!/bin/bash
-pasdoc -T mlsde -O html -L en -E docs/internal/src --auto-abastract --use-tipue-search src/*.pas src/bascript/*.pas
+
+# This script builds the internal source documentation.
+SOURCES=src/*.pas
+OUTPUT_DIR=docs/internal/src/
+EXT_HIERARCHY=--external-class-hierarchy=pasdoc-inheritance.txt
+
+pasdoc -T mlsde -O html -L en --use-tipue-search --include-creation-time -E "$OUTPUT_DIR" $EXT_HIERARCHY "$SOURCES"

@@ -1,0 +1,172 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: configuration.cfg_help_cfg
+msgctxt "configuration.cfg_help_cfg"
+msgid "Tells configuration file to use."
+msgstr ""
+
+#: configuration.cfg_help_help
+msgctxt "configuration.cfg_help_help"
+msgid "Shows this help."
+msgstr ""
+
+#: configuration.cfg_help_usage
+msgctxt "configuration.cfg_help_usage"
+msgid "Usage: %s [options]"
+msgstr ""
+
+#: configuration.cfg_help_where
+msgctxt "configuration.cfg_help_where"
+msgid "Where options are:"
+msgstr ""
+
+#: configurationdialogform.captionconfiguration
+msgctxt "configurationdialogform.captionconfiguration"
+msgid "Configuration"
+msgstr ""
+
+#: configurationdialogform.captionenvironment
+msgctxt "configurationdialogform.captionenvironment"
+msgid "Environment"
+msgstr ""
+
+#: configurationdialogform.captionproject
+msgctxt "configurationdialogform.captionproject"
+msgid "Project"
+msgstr ""
+
+#: configurationdialogform.messagecantsaveconfigfile
+msgctxt "configurationdialogform.messagecantsaveconfigfile"
+msgid "Couldn't save changes to configuration file."
+msgstr ""
+
+#: configurationdialogform.messageneedsreinitialize
+msgctxt "configurationdialogform.messageneedsreinitialize"
+msgid ""
+"Some configuration changes won't be applied\n"
+"until you reinitialize the application.\n"
+msgstr ""
+
+#: guiutils.error_str
+msgid "Error"
+msgstr ""
+
+#: guiutils.warning_str
+msgid "Warning"
+msgstr ""
+
+#: main.messagecantcreateconfigdir
+msgctxt "main.messagecantcreateconfigdir"
+msgid ""
+"Cannot create configuration directory.\n"
+"Configuration changes won't be saved.\n"
+msgstr ""
+
+#: main.messageselectapplanguage
+msgctxt "main.messageselectapplanguage"
+msgid "Selects the application language."
+msgstr ""
+
+#: projectviewframe.sorting
+msgid "Sorting files..."
+msgstr ""
+
+#: taboutdialog.caption
+msgid "About MLSDE"
+msgstr ""
+
+#: taboutdialog.lblcopyright.caption
+msgid "Copyright © 2018-2020 Guillermo Martínez J."
+msgstr ""
+
+#: taboutdialog.lbldescription.caption
+msgid ""
+"\n"
+"MultiLanguage Scriptable Development Environment\n"
+"\n"
+"A proposal for a flexible multi-language IDE.\n"
+"This software is published under the The zlib/libpng License.\n"
+msgstr ""
+
+#: taboutdialog.lbltitle.caption
+msgid "MLSDE  "
+msgstr ""
+
+#: taboutdialog.lblwebsite.caption
+msgid "https://www.sf.net/p/mlsde"
+msgstr ""
+
+#: tconfigurationdlg.caption
+msgctxt "tconfigurationdlg.caption"
+msgid "Configuration"
+msgstr ""
+
+#: tenvironmentconfigurationframe.listlanguages.itemsex[0].caption
+msgid "Default (or English)"
+msgstr ""
+
+#: tenvironmentconfigurationframe.listlanguages.itemsex[1].caption
+msgid "English [en]"
+msgstr ""
+
+#: tenvironmentconfigurationframe.listlanguages.itemsex[2].caption
+msgid "Spanish [es]"
+msgstr ""
+
+#: tenvironmentconfigurationframe.titlelanguage.caption
+msgid "Language"
+msgstr ""
+
+#: tmainwindow.actionabout.caption
+msgid "&About..."
+msgstr ""
+
+#: tmainwindow.actionconfigure.caption
+msgid "&Configuration..."
+msgstr ""
+
+#: tmainwindow.actionopenproject.caption
+msgid "&Open..."
+msgstr ""
+
+#: tmainwindow.actionquit.caption
+msgid "&Quit"
+msgstr ""
+
+#: tmainwindow.actionquit.hint
+msgid "Ends application"
+msgstr ""
+
+#: tmainwindow.caption
+msgid "MLSDE"
+msgstr ""
+
+#: tmainwindow.menuitemmlsde.caption
+msgid "&MLSDE"
+msgstr ""
+
+#: tmainwindow.menuitemproject.caption
+msgid "&Project"
+msgstr ""
+
+#: tprogressdlg.caption
+msgid "Progress"
+msgstr ""
+
+#: tprogressdlg.labeltext.caption
+msgid "Working..."
+msgstr ""
+
+#: tprojectconfigurationframe.checkhiddendirectories.caption
+msgid "Show hidden directories."
+msgstr ""
+
+#: tprojectconfigurationframe.checkhiddenfiles.caption
+msgid "Show hidden files."
+msgstr ""
+
+#: tprojectconfigurationframe.titlefilesndirs.caption
+msgid "Files and directories"
+msgstr ""
+

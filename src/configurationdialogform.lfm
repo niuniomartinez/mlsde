@@ -1,0 +1,54 @@
+object ConfigurationDlg: TConfigurationDlg
+  Left = 392
+  Height = 390
+  Top = 114
+  Width = 642
+  BorderStyle = bsDialog
+  Caption = 'Configuration'
+  ClientHeight = 390
+  ClientWidth = 642
+  OnCreate = Initialize
+  Position = poOwnerFormCenter
+  LCLVersion = '2.0.10.0'
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 41
+    Top = 343
+    Width = 630
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    OKButton.OnClick = Accept
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 0
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object NoteBook: TNotebook
+    Left = 174
+    Height = 337
+    Top = 0
+    Width = 468
+    Align = alClient
+    TabOrder = 1
+  end
+  object TabList: TTreeView
+    Left = 0
+    Height = 337
+    Top = 0
+    Width = 169
+    Align = alLeft
+    ScrollBars = ssAutoBoth
+    TabOrder = 2
+    OnClick = TabListClick
+  end
+  object ResizeBar: TSplitter
+    Left = 169
+    Height = 337
+    Top = 0
+    Width = 5
+  end
+end

@@ -4,38 +4,67 @@
     <Version Value="11"/>
     <General>
       <Flags>
-        <SaveClosedFiles Value="False"/>
-        <SaveOnlyProjectUnits Value="True"/>
         <MainUnitHasUsesSectionForAllUnits Value="False"/>
-        <SaveJumpHistory Value="False"/>
-        <SaveFoldState Value="False"/>
       </Flags>
+      <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
       <AutoCreateForms Value="False"/>
       <Title Value="mlsde"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
-        <TextName Value="Burdjia"/>
-        <TextDesc Value="Multi Language IDE"/>
+        <TextName Value="mlsde"/>
+        <TextDesc Value="Flexible Development Environment"/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <i18n>
       <EnableI18N Value="True"/>
-      <OutDir Value="languages"/>
+      <OutDir Value="../bin/languages"/>
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <AutoIncrementBuild Value="True"/>
-      <MinorVersionNr Value="1"/>
-      <BuildNr Value="31"/>
-      <Language Value="0809"/>
-      <Attributes pvaDebug="True" pvaPreRelease="True" pvaPrivateBuild="True"/>
-      <StringTable ProductVersion="0.1.0"/>
+      <MajorVersionNr Value="1"/>
+      <Attributes pvaDebug="True" pvaPreRelease="True"/>
+      <StringTable Comments="Early development" CompanyName="Guillermo Martínez J." LegalCopyright="(c) Guillermo Martínez 2018-2020" ProductName="MultiLanguage Srcriptable Development Environment" ProductVersion="1.a.0.0"/>
     </VersionInfo>
-    <BuildModes Count="1" Active="Default">
-      <Item1 Name="Default" Default="True"/>
+    <BuildModes Count="2">
+      <Item1 Name="Debug" Default="True"/>
+      <Item2 Name="Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="../bin/mlsde"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <CStyleOperator Value="False"/>
+              <AllowLabel Value="False"/>
+              <CPPInline Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item2>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
@@ -46,139 +75,111 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="2">
       <Item1>
         <PackageName Value="LazControls"/>
       </Item1>
       <Item2>
-        <PackageName Value="SynEdit"/>
-      </Item2>
-      <Item3>
         <PackageName Value="LCL"/>
-      </Item3>
+      </Item2>
     </RequiredPackages>
-    <Units Count="12">
+    <Units Count="14">
       <Unit0>
         <Filename Value="mlsde.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="24" Y="20"/>
-        <UsageCount Value="40"/>
       </Unit0>
       <Unit1>
-        <Filename Value="unitvntprincipal.pas"/>
+        <Filename Value="mainform.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="VntPrincipal"/>
+        <ComponentName Value="MainWindow"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="unitVntPrincipal"/>
-        <TopLine Value="462"/>
-        <CursorPos X="24" Y="473"/>
-        <UsageCount Value="40"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
+        <UnitName Value="MainForm"/>
       </Unit1>
       <Unit2>
         <Filename Value="project.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Project"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="432"/>
-        <CursorPos Y="455"/>
-        <UsageCount Value="40"/>
       </Unit2>
       <Unit3>
-        <Filename Value="unitdlgconfiguracion.pas"/>
+        <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="DlgConfiguracion"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="unitDlgConfiguracion"/>
-        <EditorIndex Value="-1"/>
-        <UsageCount Value="40"/>
+        <UnitName Value="Main"/>
       </Unit3>
       <Unit4>
-        <Filename Value="unitfrmeditorfuente.pas"/>
+        <Filename Value="configurationdialogform.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="FrmEditorFuente"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Frame"/>
-        <UnitName Value="unitFrmEditorFuente"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="247"/>
-        <CursorPos X="35" Y="253"/>
-        <UsageCount Value="40"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="unitdatos.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="ModuloDatos"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="DataModule"/>
-        <UnitName Value="UnitDatos"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="12"/>
-        <CursorPos X="36" Y="19"/>
-        <UsageCount Value="40"/>
-      </Unit5>
-      <Unit6>
-        <Filename Value="configuracion.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="Configuracion"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="97"/>
-        <CursorPos X="5" Y="350"/>
-        <UsageCount Value="40"/>
-      </Unit6>
-      <Unit7>
-        <Filename Value="utils.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="Utils"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="56"/>
-        <CursorPos X="12" Y="63"/>
-        <UsageCount Value="40"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="bascript/bascript.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="BAScript"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1286"/>
-        <CursorPos X="5" Y="1289"/>
-        <UsageCount Value="39"/>
-      </Unit8>
-      <Unit9>
-        <Filename Value="autocompletionutils.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="AutocompletionUtils"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos Y="27"/>
-        <UsageCount Value="36"/>
-      </Unit9>
-      <Unit10>
-        <Filename Value="unitdlgabout.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="DlgAbout"/>
+        <ComponentName Value="ConfigurationDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="UnitDlgAbout"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="63"/>
-        <CursorPos X="41" Y="64"/>
-        <UsageCount Value="35"/>
+        <UnitName Value="ConfigurationDialogForm"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="guiutils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="GUIUtils"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="configurationdialogframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ConfigurationFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ConfigurationDialogFrame"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="configurationframeenvironment.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="EnvironmentConfigurationFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ConfigurationFrameEnvironment"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="aboutdlg.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AboutDialog"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="AboutDlg"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="globaldatamodule.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GlobalData"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+        <UnitName Value="GlobalDataModule"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="projectviewframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ProjectView"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ProjectViewFrame"/>
       </Unit10>
       <Unit11>
-        <Filename Value="bascript/mlsdescripting.pas"/>
+        <Filename Value="configuration.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="mlsdeScripting"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="5"/>
-        <CursorPos X="3" Y="139"/>
-        <UsageCount Value="29"/>
-        <Loaded Value="True"/>
+        <UnitName Value="Configuration"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="configurationframeproject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ProjectConfigurationFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ConfigurationFrameProject"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="progressdialogform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ProgressDlg"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ProgressDialogForm"/>
+      </Unit13>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -188,24 +189,37 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="bascript"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
         <CStyleOperator Value="False"/>
+        <IncludeAssertionCode Value="True"/>
         <AllowLabel Value="False"/>
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
       <Checks>
+        <IOChecks Value="True"/>
+        <RangeChecks Value="True"/>
         <OverflowChecks Value="True"/>
         <StackChecks Value="True"/>
       </Checks>
-      <Optimizations>
-        <OptimizationLevel Value="0"/>
-      </Optimizations>
+      <VerifyObjMethodCallValidity Value="True"/>
     </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf2Set"/>
+        <UseHeaptrc Value="True"/>
+        <TrashVariables Value="True"/>
+        <UseExternalDbgSyms Value="True"/>
+      </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

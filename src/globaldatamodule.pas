@@ -1,6 +1,5 @@
-PROGRAM mlsde;
-(* The MultiLanguage Scriptable Development Environment.
- *)
+unit GlobalDataModule;
+(*< Contains and manages data used (and shadred) by various modules. *)
 (*
   Copyright (c) 2018-2019 Guillermo Martínez J.
 
@@ -23,26 +22,36 @@ PROGRAM mlsde;
     3. This notice may not be removed or altered from any source
     distribution.
  *)
-USES
-  {$IFDEF UNIX}{$IFDEF UseCThreads}
-  Cthreads,
-  {$ENDIF}{$ENDIF}
-  Forms, Interfaces,
-  Main, MainForm, GlobalDataModule;
 
-{$R *.res}
+interface
 
-BEGIN
-  MLSDEApplication := TMLSDEApplication.Create;
-  RequireDerivedFormResource := True;
-{ Initialization. }
-  Application.Initialize;
-  MLSDEApplication.Initialize;
-  Application.CreateForm (TMainWindow, MainWindow);
-  Application.CreateForm (TGlobalData, GlobalData);
-{ Execution. }
-  IF NOT Application.Terminated THEN Application.Run;
-{ Free the MLSDE object, so everything is freed before the finalization
-  sections. }
-  MLSDEApplication.Free
-END.
+  uses
+    Classes, Controls;
+
+  const
+  (* Index of the directory icon. *)
+    ICON_DIRECTORY = 0;
+  (* Index of the open directory icon. *)
+    ICON_OPEN_DIRECTORY = 1;
+  (* Index of the file icon. *)
+    ICON_FILE = 2;
+
+  type
+  (* Global data container.
+
+     Right now it stores data as @italic(resource).  In the future it should
+     load the data from files. *)
+    TGlobalData = class (TDataModule)
+      Iconlist: Timagelist;
+      FileIconList: Timagelist;
+    end;
+
+  var
+    GlobalData: TGlobalData;
+
+implementation
+
+{$R *.lfm}
+
+end.
+
