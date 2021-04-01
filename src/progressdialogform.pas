@@ -65,7 +65,7 @@ interface
     private
       fOnCancelAction: TNotifyEvent;
 
-      procedure SetOnCancelAction (const aValue: TNotifyEvent); inline;
+      procedure SetOnCancelAction (const aValue: TNotifyEvent);
     public
     (* If set, this will be called if the @code(Cancel) button is pressed.
 

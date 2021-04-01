@@ -27,14 +27,22 @@ unit ProjectViewFrame;
 interface
 
   uses
-    GlobalDataModule, { Icons for ProjectTree }
     Project,
-    Forms, ComCtrls;
+    Forms, ComCtrls, Controls;
+
+  const
+  (* Index of the directory icon. *)
+    ICON_DIRECTORY = 0;
+  (* Index of the open directory icon. *)
+    ICON_OPEN_DIRECTORY = 1;
+  (* Index of the file icon. *)
+    ICON_FILE = 2;
 
   type
   (* A panel that shows the project content.  It also allows some interaction
      as open files or rename items. *)
     TProjectView = class (TFrame)
+      FileIconList: TImageList;
       ProjectTree: TTreeView;
     private
       fProject: TProject;

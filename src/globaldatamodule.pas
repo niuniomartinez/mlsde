@@ -28,14 +28,6 @@ interface
   uses
     Classes, Controls;
 
-  const
-  (* Index of the directory icon. *)
-    ICON_DIRECTORY = 0;
-  (* Index of the open directory icon. *)
-    ICON_OPEN_DIRECTORY = 1;
-  (* Index of the file icon. *)
-    ICON_FILE = 2;
-
   type
   (* Global data container.
 
@@ -43,7 +35,6 @@ interface
      load the data from files. *)
     TGlobalData = class (TDataModule)
       Iconlist: Timagelist;
-      FileIconList: Timagelist;
     end;
 
   var
