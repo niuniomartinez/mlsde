@@ -68,10 +68,6 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr ""
 
-#: mainform.errornoeditorcomponent
-msgid "Can't find editor component in tabs."
-msgstr ""
-
 #: projectviewframe.sorting
 msgid "Sorting files..."
 msgstr ""

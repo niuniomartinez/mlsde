@@ -87,9 +87,6 @@ implementation
 
 {$R *.lfm}
 
-  resourcestring
-    ErrorNoEditorComponent = 'Can''t find editor component in tabs!';
-
   const
   (* To build the window title. *)
     WindowTitle = '%s (%s) - MLSDE';
@@ -210,7 +207,7 @@ implementation
     for Ndx := aTab.ComponentCount - 1 downto 0 do
       if aTab.Components[Ndx] is TSourceEditorFrame then
         Exit (TSourceEditorFrame (aTab.Components[Ndx]));
-    raise Exception.Create (ErrorNoEditorComponent)
+    raise Exception.Create ('Can''t find editor component in tabs!')
   end;
 
 
@@ -222,20 +219,9 @@ implementation
     lTab: TTabSheet = Nil;
     lTabname: String;
     Ndx: Integer;
-
-  (* helper to create a new tab. *)
-    function CreateEditionTab: TTabSheet; inline;
-    begin
-      Result := Self.EditorList.AddTabSheet;
-      lEditor := TSourceEditorFrame.Create (Result);
-      lEditor.Align := alClient;
-      lEditor.Parent := Result;
-      Self.EditorList.ActivePage := Result
-    end;
-
   begin
   { Search file in tabs. }
-    lTabname := EncodeName (aFileName);
+    lTabname := NormalizeIdentifier (aFileName);
     if Self.EditorList.PageCount > 0 then
       for Ndx := 0 to Self.EditorList.PageCount - 1 do
         if Self.EditorList.Pages[Ndx].Name = lTabname then
@@ -246,7 +232,11 @@ implementation
   { If not found, then load. }
     if lTab = nil then
     begin
-      lTab := CreateEditionTab;
+      lTab := Self.EditorList.AddTabSheet;
+      Self.EditorList.ActivePage := lTab;
+      lEditor := TSourceEditorFrame.Create (lTab);
+      lEditor.Align := alClient;
+      lEditor.Parent := lTab;
       lEditor.Load (aFileName)
     end;
     Self.EditorList.ActivePage := lTab;

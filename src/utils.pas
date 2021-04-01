@@ -27,12 +27,12 @@ interface
 
 (* Encodes a name (i.e. file path) so all characters are valid for identifiers.
  *)
-  function EncodeName (const aName: String): String;
+  function NormalizeIdentifier (const aName: String): String;
 
 implementation
 
 (* Encodes name. *)
-  function EncodeName (CONST aName: String): String;
+  function NormalizeIdentifier (CONST aName: String): String;
   const
     lValidChars = [ 'A'..'Z', '0'..'9', 'a'..'z', '_'];
   var

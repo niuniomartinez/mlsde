@@ -78,8 +78,8 @@ implementation
     Self.SynEdit.Lines.LoadFromFile (aSourceFileName);
     fPath := IncludeTrailingPathDelimiter (ExtractFileDir (aSourceFileName));
     fFileName := ExtractFileName (aSourceFileName);
-    Self.Name := 'edit' + EncodeName (aSourceFileName);
-    Self.Parent.Name := EncodeName (aSourceFileName);
+    Self.Name := 'edit' + NormalizeIdentifier  (aSourceFileName);
+    Self.Parent.Name := NormalizeIdentifier (aSourceFileName);
     Self.Parent.Caption := fFileName;
   { TODO: Syntax hightlighter and autocomplete stuff. }
   end;
