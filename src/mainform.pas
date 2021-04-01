@@ -141,21 +141,17 @@ implementation
   procedure TMainWindow.ProjectTreeDblClick (Sender: TObject);
   var
     lProjectTree: TTreeView absolute Sender;
-    lFileInfo: TFilePtr;
+    lFileInfo: TFile;
   begin
     if (lProjectTree.Selected <> Nil)
     and (lProjectTree.Selected.Data <> Nil) then
     begin
-      if not (TObject (lProjectTree.Selected.Data) is TDirectory) then
+      if TObject (lProjectTree.Selected.Data) is TFile then
       begin
-        lFileInfo := lProjectTree.Selected.Data;
-        Self.OpenFile (lFileInfo^.GetPath + lFileInfo^.Name)
+        lFileInfo := TFile (lProjectTree.Selected.Data);
+        Self.OpenFile (lFileInfo.GetPath + lFileInfo.Name)
       end
-      else
-        ShowInformation ('Problema', 'Es un directorio')
     end
-    else
-      ShowInformation ('Problema', 'No hay nada seleccionado')
   end;
 
 

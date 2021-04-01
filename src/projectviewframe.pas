@@ -192,7 +192,7 @@ implementation
             aNode,
             aDir.Files[lNdx].Name
           );
-          lNode.Data := aDir.GetFileInfoPointer (lNdx);
+          lNode.Data := aDir.Files[lNdx];
           lNode.ImageIndex := ICON_FILE;
           lNode.SelectedIndex := ICON_FILE;
         end

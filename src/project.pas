@@ -34,6 +34,33 @@ interface
     CfgProjectId = 'project';
 
   type
+  (* Implementation note:
+       See both TDirectory and TFile are CLASSes.  I think useing RECORDs
+       instead would be more efficient (i.e. an array of contiguous objects
+       would be better for both cache access and memory fragmentation) but I
+       didn't do that due to the tree node identification problem (see
+       TMainWindow.ProjectTreeDblClick).  Also use TFPGObjectList helps with
+       management.  And CLASSes don't need the pointer access operator (^).
+
+       Anyway, if I find that use ARRAY OF RECORD is better then this system
+       should change.
+
+       I've found a way that whould make the identification work with RECORDs:
+
+       TItem = RECORD Id: integer END;
+       TFile = RECORD Id: integer; Name: String; fOwner: ... END;
+       TDir  = RECORD Id: integer; Name: String; Files: ... END;
+
+       That way if you have a pointer (i.e. Node.Data) you can do:
+
+       CASE TItemPtr (Node.Data)^.Id OF
+       ID_FILE:
+         File := TFilePtr (Node.Data);
+       ID_DIR:
+         Dir := TDirPtr (Node.Data);
+       END;
+
+   *)
   (* @exclude forward declaration. *)
     TProject = class;
   (* @exclude forward declaration. *)
@@ -63,14 +90,16 @@ interface
 
 
 
-  (* Pointer to file information. *)
-    TFilePtr = ^TFile;
   (* File information. *)
-    TFile = record
+    TFile = class (TObject)
     private
       fOwner: TDirectory;
       fName: String;
     public
+    (* Constructor.
+       @param(aName File name.)
+       @param(aOwner Directory owner.  Must @bold(not) be @nil.)*)
+      constructor Create (const aName: String; aOwner: TDirectory);
     (* Builds and returns the full file path. *)
       function GetPath: String;
 
@@ -86,13 +115,15 @@ interface
     TDirectory = class (TObject)
     private type
     (* Directory container. *)
-      TDirectoryList = SPECIALIZE TFPGObjectList<TDirectory>;
+      TDirectoryList = specialize TFPGObjectList<TDirectory>;
+    (* File container. *)
+      TFileList = specialize TFPGObjectList<TFile>;
     private
       fProject: TProject;
       fOwner: TDirectory;
       fName: String;
       fDirList: TDirectoryList;
-      fFileList: array of TFile;
+      fFileList: TFileList;
 
       function GetNumDirs: Integer; inline;
       function GetSubDir (const aNdx: Integer): TDirectory; inline;
@@ -117,8 +148,6 @@ interface
        @param(aLevel How much deep the scan will be.  0 will scan the current
               directory only, 1 will scan subdirectories, etc.) *)
       procedure Scan (aLevel: Integer);
-    (* Returns a pointer to the file information. *)
-      function GetFileInfoPointer (aNdx: Integer): TFilePtr;
 
     (* Owner directory. *)
       property Owner: TDirectory read fOwner;
@@ -238,6 +267,18 @@ implementation
  * TFile
  ***************************************************************************)
 
+(* Constructor. *)
+  constructor TFile.Create (const aName: String; aOwner: TDirectory);
+  begin
+    if not Assigned (aOwner) then
+      raise Exception.CreateFmt ('File %s without directory?', [aName]);
+    inherited Create;
+    fOwner := aOwner;
+    fName := aName
+  end;
+
+
+
 (* Builds path. *)
   function TFile.GetPath: String;
   begin
@@ -267,15 +308,13 @@ implementation
 
   function TDirectory.GetNumFiles: Integer;
   begin
-    Result := Length (fFileList)
+    if Assigned (fFileList) then Result := fFileList.Count else Result := 0
   end;
 
 
 
   function TDirectory.GetFile (const aNdx: Integer): TFile;
   begin
-    if (0 > aNdx) or (aNdx >= Length (fFileList)) then
-      RAISE Exception.CreateFmt ('File index %d out of bounds.', [aNdx]);
     Result := fFileList[aNdx]
   end;
 
@@ -320,8 +359,9 @@ implementation
   begin
     inherited Create;
     fOwner := aOwner;
-    fName := ExtractFileName (aName);
-    fDirList := TDirectoryList.Create
+    fName := ExcludeTrailingPathDelimiter (ExtractFileName (aName));
+    fDirList := TDirectoryList.Create;
+    fFileList := Nil { This is created only if needed. }
   end;
 
 
@@ -329,6 +369,7 @@ implementation
 (* Destructor. *)
   destructor TDirectory.Destroy;
   begin
+    fFileList.Free;
     fDirList.Free;
     inherited Destroy
   end;
@@ -337,8 +378,8 @@ implementation
 (* Clears data from the directory. *)
   procedure TDirectory.Clear;
   begin
-    fDirList.Clear;
-    SetLength (fFileList, 0)
+    FreeAndNil (fFileList);
+    fDirList.Clear
   end;
 
 
@@ -364,14 +405,10 @@ implementation
     end;
 
     procedure AddFile (const aName: String); inline;
-    var
-      lNdx: Integer;
     begin
     { TODO: Filter files by type (i.e. add only known files). }
-      lNdx := Length (fFileList);
-      SetLength (fFileList, lNdx + 1);
-      fFileList[lNdx].fOwner := Self;
-      fFileList[lNdx].fName := aName
+      if not Assigned (fFileList) then fFileList := TFileList.Create (True);
+      fFileList.Add (TFile.Create (aName, Self))
     end;
 
   var
@@ -408,16 +445,6 @@ implementation
   { Next level. }
     Dec (aLevel);
     if aLevel > 0 then for lDirectory in fDirList do lDirectory.Scan (aLevel)
-  end;
-
-
-
-(* Returns file pointer. *)
-  function TDirectory.GetFileInfoPointer(aNdx: Integer): TFilePtr;
-  begin
-    if (0 > aNdx) or (aNdx >= Length (fFileList)) then
-      RAISE Exception.CreateFmt ('File index %d out of bounds.', [aNdx]);
-    Result := @fFileList[aNdx]
   end;
 
 
