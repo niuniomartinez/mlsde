@@ -1,7 +1,7 @@
 unit GUIUtils;
 (*<Defines stuff that simplifies some GUI operations. *)
 (*
-  Copyright (c) 2018-2019 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -82,8 +82,10 @@ implementation
     Application.MessageBox (PCHAR (aMessage), PChar (aCaption))
   end;
 
-  procedure ShowInformation
-    (const aCaption, aMessageFmt: String; aParams: array of const);
+  procedure ShowInformation (
+    const aCaption, aMessageFmt: String;
+    aParams: array of const
+  );
   begin
     ShowInformation (aCaption, Format (aMessageFmt, aParams))
   end;

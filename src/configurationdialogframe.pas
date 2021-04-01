@@ -2,7 +2,7 @@ unit ConfigurationDialogFrame;
 (*<Defines the base class for the frames used by
   @link(TConfigurationDlg). *)
 (*
-  Copyright (c) 2018-2019 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages

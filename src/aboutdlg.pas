@@ -1,7 +1,7 @@
 unit AboutDlg;
 (*<Implements an "About..." dialog. *)
 (*
-  Copyright (c) 2018-2019 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
   See file AUTHORS for a full list of authors.
 
   This software is provided 'as-is', without any express or implied
@@ -40,7 +40,7 @@ interface
       LblTitle: TLabel;
       ButtonPannel: TButtonPanel;
     (* Executed when dialog is activated. *)
-      procedure FormActivate(Sender: TObject);
+      procedure FormActivate (Sender: TObject);
     (* User clicked on web URL. *)
       procedure LblWebsiteClick (Sender: TObject);
     end;

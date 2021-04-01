@@ -1,7 +1,7 @@
 unit ConfigurationFrameProject;
 (*<Defines the frame used for Project Configuration. *)
 (*
-  Copyright (c) 2018-2020 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -29,7 +29,7 @@ interface
     ConfigurationDialogFrame, DividerBevel, StdCtrls, Spin;
 
   type
-    TProjectConfigurationFrame = class(TConfigurationFrame)
+    TProjectConfigurationFrame = class (TConfigurationFrame)
       TitleFilesNDirs: TDividerBevel;
         CheckHiddenFiles: TCheckBox;
         CheckHiddenDirectories: TCheckBox;

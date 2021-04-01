@@ -1,7 +1,7 @@
 unit Configuration;
 (*< Implements the base class of the configuration objects. *)
 (*
-  Copyright (c) 2018-2020 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -97,7 +97,7 @@ interface
     TConfiguration = class (TObject)
     private type
     (* Container for the configuration pieces. *)
-      TConfigurationList = SPECIALIZE TFPGObjectList<TCustomConfiguration>;
+      TConfigurationList = specialize TFPGObjectList<TCustomConfiguration>;
     private
       fFile: TIniFile;
       fSectionList: TConfigurationList;
@@ -174,8 +174,10 @@ implementation
 
 
 (* Returns int value. *)
-  function TCustomConfiguration.GetIntValue
-    (const aSection, aVariable:String; const aDefault: Integer)
+  function TCustomConfiguration.GetIntValue (
+    const aSection, aVariable:String;
+    const aDefault: Integer
+  )
     : Integer;
   begin
     Result := fOwner.fFile.ReadInteger (aSection, aVariable, aDefault)
@@ -184,8 +186,10 @@ implementation
 
 
 (* Sets an int value. *)
-  procedure TCustomConfiguration.SetIntValue
-    (const aSection, aVariable: String; const aValue: Integer);
+  procedure TCustomConfiguration.SetIntValue (
+    const aSection, aVariable: String;
+    const aValue: Integer
+  );
   begin
     fOwner.fFile.WriteInteger (aSection, aVariable, aValue)
   end;
@@ -193,8 +197,10 @@ implementation
 
 
 (* Returns bool value. *)
-  function TCustomConfiguration.GetBoolValue
-    (const aSection, aVariable:String; const aDefault: Boolean)
+  function TCustomConfiguration.GetBoolValue (
+    const aSection, aVariable:String;
+    const aDefault: Boolean
+  )
     : Boolean;
   begin
     Result := fOwner.fFile.ReadBool (aSection, aVariable, aDefault)
@@ -203,8 +209,10 @@ implementation
 
 
 (* Sets a bool value. *)
-  procedure TCustomConfiguration.SetBooleanValue
-    (const aSection, aVariable: String; const aValue: Boolean);
+  procedure TCustomConfiguration.SetBooleanValue (
+    const aSection, aVariable: String;
+    const aValue: Boolean
+  );
   begin
     fOwner.fFile.WriteBool (aSection, aVariable, aValue)
   end;
@@ -283,7 +291,7 @@ implementation
     fFile := TIniFile.Create (lFileName);
   { Parse command line options. }
     for lConfigSection in fSectionList do
-      lConfigSection.ParseCommandLineOptions;
+      lConfigSection.ParseCommandLineOptions
   end;
 
 
@@ -305,8 +313,10 @@ implementation
 
 
 (* Adds a configuration object. *)
-  procedure TConfiguration.AddSection
-    (aCfg: TCustomConfiguration; aName: String);
+  procedure TConfiguration.AddSection (
+    aCfg: TCustomConfiguration;
+    aName: String
+  );
   begin
     if Self.GetSection (aName) = Nil then
     begin
@@ -340,7 +350,7 @@ implementation
   begin
     for lCfg in fSectionList do
       if Assigned (lCfg.OnApplyConfiguration) then
-	lCfg.OnApplyConfiguration (lCfg)
+        lCfg.OnApplyConfiguration (lCfg)
   end;
 
 end.

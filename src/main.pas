@@ -1,7 +1,7 @@
 unit Main;
 (*<Implements the @link(MLSDEApplication) object. *)
 (*
-  Copyright (c) 2018-2020 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -59,7 +59,7 @@ interface
   (* Defines the MLSDEApplication object.
 
      This is an idea borrowed from Lazarus:  Instead of having a bunch of global
-     objects scattered arround different units, all that is managed by a simple
+     objects scattered around different units, all that is managed by a simple
      object.  Think as @code(MLSDEApplication) is the logic part of the
      application while the @code(Application) object manages the graphical
      interface.

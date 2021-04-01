@@ -1,7 +1,7 @@
 unit ProgressDialogForm;
 (*<Implements a dialog that shows a progress bar. *)
 (*
-  Copyright (c) 2020 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
