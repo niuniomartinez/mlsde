@@ -126,10 +126,6 @@ msgstr ""
 msgid "&Configuration..."
 msgstr ""
 
-#: tmainwindow.actionopenproject.caption
-msgid "&Open..."
-msgstr ""
-
 #: tmainwindow.actionquit.caption
 msgid "&Quit"
 msgstr ""
@@ -172,5 +168,9 @@ msgstr ""
 
 #: tprojectconfigurationframe.titlefilesndirs.caption
 msgid "Files and directories"
+msgstr ""
+
+#: tprojectview.actionopenproject.caption
+msgid "&Open..."
 msgstr ""
 

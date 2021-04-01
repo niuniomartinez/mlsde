@@ -28,7 +28,7 @@ interface
 
   uses
     Project,
-    Forms, ComCtrls, Controls;
+    Forms, ComCtrls, Controls, ActnList, StdCtrls, Menus, Classes;
 
   const
   (* Index of the directory icon. *)
@@ -42,8 +42,16 @@ interface
   (* A panel that shows the project content.  It also allows some interaction
      as open files or rename items. *)
     TProjectView = class (TFrame)
+    (* Action list.  Contains non-edition project actions only. *)
+      ActionList: TActionList;
+        ActionOpenProject: TAction;
       FileIconList: TImageList;
       ProjectTree: TTreeView;
+      ProjectPopupMenu: TPopupMenu;
+       MenuItemOpenProject: TMenuItem;
+
+    (* Event triggered when a project action is executed. *)
+      procedure ActionProjectExecute (Sender: TObject);
     private
       fProject: TProject;
       fCancelOperation: Boolean;
@@ -63,17 +71,61 @@ interface
 implementation
 
   uses
-    ProgressDialogForm,
-    sysutils;
+    GUIUtils, Main, ProgressDialogForm,
+    Dialogs, sysutils;
 
 {$R *.lfm}
 
   resourcestring
     SORTING = 'Sorting files...';
 
+  const
+  (* Tags to identify actions. *)
+    tagOpenProject = 1;
+
 (*
  * TProjectView
  ***************************************************************************)
+
+(* Event triggered when a project action is executed. *)
+  procedure TProjectView.ActionProjectExecute (Sender: TObject);
+
+    procedure OpenProject;
+    var
+      lDlgOpenDirectory: TSelectDirectoryDialog;
+    begin
+      lDlgOpenDirectory := TSelectDirectoryDialog.Create (Self);
+      try
+      { Configure dialog. }
+        lDlgOpenDirectory.Options := [ofEnableSizing, ofPathMustExist];
+        if lDlgOpenDirectory.Execute then
+        begin
+        { TODO: Check if project changed to save data? }
+        { Progress dialog. }
+	  ProgressDlg := TProgressDlg.Create (Self);
+          try
+	    ProgressDlg.Show;
+	    MLSDEApplication.Project.Open (lDlgOpenDirectory.FileName)
+          finally
+	    FreeAndNil (ProgressDlg)
+          end
+        end
+      finally
+        lDlgOpenDirectory.Free
+      end;
+    end;
+
+  begin
+    case (Sender AS TComponent).Tag of
+    tagOpenProject:
+      OpenProject;
+    else
+    { This should never be rendered, so no translation required. }
+      GUIUtils.ShowError ('Action tag: %d', [(Sender AS TComponent).Tag]);
+    end;
+  end;
+
+
 
 (* Tree sorting. *)
   function TProjectView.OrderNodes (aNode1, aNode2: TTreeNode): Integer;

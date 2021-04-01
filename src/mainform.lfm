@@ -12,34 +12,32 @@ object MainWindow: TMainWindow
   LCLVersion = '2.0.10.0'
   inline ProjectViewer: TProjectView
     Height = 355
-    Width = 160
+    Width = 187
     Align = alLeft
     ClientHeight = 355
-    ClientWidth = 160
+    ClientWidth = 187
     inherited ProjectTree: TTreeView
       Height = 355
-      Width = 160
-      PopupMenu = ProjectPopupMenu
-      OnDblClick = ProjectTreeDblClick
+      Width = 187
     end
   end
   object ResizeBar: TSplitter
-    Left = 160
+    Left = 187
     Height = 355
     Top = 0
     Width = 5
   end
   object EditorList: TPageControl
-    Left = 165
+    Left = 192
     Height = 355
     Top = 0
-    Width = 478
+    Width = 451
     Align = alClient
     TabOrder = 2
   end
   object MainMenu: TMainMenu
     Images = GlobalData.IconList
-    Left = 528
+    Left = 520
     Top = 8
     object MenuItemMLSDE: TMenuItem
       Caption = '&MLSDE'
@@ -56,7 +54,6 @@ object MainWindow: TMainWindow
     object MenuItemProject: TMenuItem
       Caption = '&Project'
       object MenuItemOpenPrj: TMenuItem
-        Action = ActionOpenProject
       end
     end
   end
@@ -81,20 +78,6 @@ object MainWindow: TMainWindow
       Caption = '&About...'
       ImageIndex = 2
       OnExecute = ActionEnvironmentExecute
-    end
-    object ActionOpenProject: TAction
-      Tag = 3
-      Caption = '&Open...'
-      ImageIndex = 3
-      OnExecute = ActionProjectExecute
-    end
-  end
-  object ProjectPopupMenu: TPopupMenu
-    Images = GlobalData.IconList
-    Left = 80
-    Top = 16
-    object PrjMenuOpen: TMenuItem
-      Action = ActionOpenProject
     end
   end
 end

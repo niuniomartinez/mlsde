@@ -31,13 +31,16 @@ interface
     Forms, Menus, ActnList, StdActns, ComCtrls, ExtCtrls;
 
   type
-  (* Main window of the application. *)
+  (* Main window of the application.
+
+     Note that some stuff is defined in the @link(Initialize) method. *)
     TMainWindow = class (TForm)
+    (* Action list.  Only contains application actions.  Other actions are in
+       the respective @code(TFrame). *)
       ActionList: TActionList;
        ActionConfigure: TAction;
        ActionAbout: TAction;
        ActionQuit: TFileExit;
-       ActionOpenProject: TAction;
       MainMenu: TMainMenu;
        MenuItemMLSDE: TMenuItem;
         MenuItemAbout: TMenuItem;
@@ -45,16 +48,12 @@ interface
         MenuItemQuit: TMenuItem;
        MenuItemOpenPrj: TMenuItem;
         MenuItemProject: TMenuItem;
-      ProjectViewer: TProjectView;
-       ProjectPopupMenu: TPopupMenu;
-        PrjMenuOpen: TMenuItem;
+        ProjectViewer: TProjectView;
       ResizeBar: TSplitter;
       EditorList: TPageControl;
 
     (* Event triggered when an environment action is executed. *)
       procedure ActionEnvironmentExecute (Sender: TObject);
-    (* Event triggered when a project action is executed. *)
-      procedure ActionProjectExecute (Sender: TObject);
     (* Event triggered when form is shown. *)
       procedure FormShow (Sender: TObject);
     (* Initializes the window. *)
@@ -81,7 +80,7 @@ interface
 implementation
 
   uses
-    AboutDlg, ConfigurationDialogForm, GUIUtils, Main, ProgressDialogForm,
+    AboutDlg, ConfigurationDialogForm, GUIUtils, Main,
     Project, Utils,
     Classes, Controls, Dialogs, sysutils;
 
@@ -94,7 +93,7 @@ implementation
     tagConfigure = 1;
     tagAboutDlg = 2;
 
-    tagOpenProject = 3;
+
 
 (*
  * TMainWindow
@@ -116,50 +115,10 @@ implementation
 
 
 
-(* Event triggered when a project action is executed. *)
-    procedure TMainWindow.ActionProjectExecute (Sender: TObject);
-
-    procedure OpenProject;
-    var
-      lDlgOpenDirectory: TSelectDirectoryDialog;
-    begin
-      lDlgOpenDirectory := TSelectDirectoryDialog.Create (Self);
-      try
-      { Configure dialog. }
-        lDlgOpenDirectory.Options := [ofEnableSizing, ofPathMustExist];
-        if lDlgOpenDirectory.Execute then
-        begin
-        { TODO: Check if project changed to save data? }
-        { Progress dialog. }
-	  ProgressDlg := TProgressDlg.Create (Self);
-          try
-	    ProgressDlg.Show;
-	    MLSDEApplication.Project.Open (lDlgOpenDirectory.FileName)
-          finally
-	    FreeAndNil (ProgressDlg)
-          end
-        end
-      finally
-        lDlgOpenDirectory.Free
-      end;
-    end;
-
-  begin
-    case (Sender AS TComponent).Tag of
-    tagOpenProject:
-      OpenProject;
-    else
-    { This should never be rendered, so no translation required. }
-      ShowError ('Action tag: %d', [(Sender AS TComponent).Tag]);
-    end;
-  end;
-
-
-
 (* Shows window. *)
   procedure TMainWindow.FormShow (Sender: TObject);
   begin
-    ProjectViewer.UpdateView
+    Self.ProjectViewer.UpdateView
   end;
 
 
@@ -168,9 +127,12 @@ implementation
   procedure TMainWindow.Initialize (Sender: TObject);
   begin
   { Create project view. }
-    ProjectViewer.Project := MLSDEApplication.Project;
+    Self.ProjectViewer.Project := MLSDEApplication.Project;
   { Project management. }
-    MLSDEApplication.Project.OnChange := @Self.ProjectChanged
+    MLSDEApplication.Project.OnChange := @Self.ProjectChanged;
+  { Some action events. }
+    Self.ProjectViewer.ProjectTree.OnDblClick := @Self.ProjectTreeDblClick;
+    Self.MenuItemOpenPrj.Action := Self.ProjectViewer.ActionOpenProject
   end;
 
 

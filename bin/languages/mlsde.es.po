@@ -135,10 +135,6 @@ msgstr "&Acerca de..."
 msgid "&Configuration..."
 msgstr "&Configuración..."
 
-#: tmainwindow.actionopenproject.caption
-msgid "&Open..."
-msgstr "&Abrir..."
-
 #: tmainwindow.actionquit.caption
 msgid "&Quit"
 msgstr "S&alir"
@@ -182,4 +178,8 @@ msgstr "Profundidad:"
 #: tprojectconfigurationframe.titlefilesndirs.caption
 msgid "Files and directories"
 msgstr "Archivos y directorios"
+
+#: tprojectview.actionopenproject.caption
+msgid "&Open..."
+msgstr "&Abrir..."
 

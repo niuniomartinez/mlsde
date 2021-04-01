@@ -15,6 +15,7 @@ object ProjectView: TProjectView
     Width = 320
     Align = alClient
     Images = FileIconList
+    PopupMenu = ProjectPopupMenu
     ReadOnly = True
     ScrollBars = ssAutoBoth
     TabOrder = 0
@@ -122,5 +123,24 @@ object ProjectView: TProjectView
       0036000000360000003600000036000000360000003600000036000000360000
       0036000000330000001DFFFFFF00
     }
+  end
+  object ActionList: TActionList
+    Images = GlobalData.IconList
+    Left = 192
+    Top = 16
+    object ActionOpenProject: TAction
+      Tag = 1
+      Caption = '&Open...'
+      ImageIndex = 3
+      OnExecute = ActionProjectExecute
+    end
+  end
+  object ProjectPopupMenu: TPopupMenu
+    Images = GlobalData.IconList
+    Left = 104
+    Top = 16
+    object MenuItemOpenProject: TMenuItem
+      Action = ActionOpenProject
+    end
   end
 end
