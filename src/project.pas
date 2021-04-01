@@ -1,7 +1,7 @@
 unit Project;
 (*<Defines the project manager. *)
 (*
-  Copyright (c) 2018-2020 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -63,6 +63,8 @@ interface
 
 
 
+  (* Pointer to file information. *)
+    TFilePtr = ^TFile;
   (* File information. *)
     TFile = record
     private
@@ -115,6 +117,8 @@ interface
        @param(aLevel How much deep the scan will be.  0 will scan the current
               directory only, 1 will scan subdirectories, etc.) *)
       procedure Scan (aLevel: Integer);
+    (* Returns a pointer to the file information. *)
+      function GetFileInfoPointer (aNdx: Integer): TFilePtr;
 
     (* Owner directory. *)
       property Owner: TDirectory read fOwner;
@@ -238,7 +242,7 @@ implementation
   function TFile.GetPath: String;
   begin
   { All files are in directories. }
-    Result := IncludeTrailingPathDelimiter (fOwner.GetPath + fName)
+    Result := IncludeTrailingPathDelimiter (fOwner.GetPath)
   end;
 
 
@@ -404,6 +408,16 @@ implementation
   { Next level. }
     Dec (aLevel);
     if aLevel > 0 then for lDirectory in fDirList do lDirectory.Scan (aLevel)
+  end;
+
+
+
+(* Returns file pointer. *)
+  function TDirectory.GetFileInfoPointer(aNdx: Integer): TFilePtr;
+  begin
+    if (0 > aNdx) or (aNdx >= Length (fFileList)) then
+      RAISE Exception.CreateFmt ('File index %d out of bounds.', [aNdx]);
+    Result := @fFileList[aNdx]
   end;
 
 

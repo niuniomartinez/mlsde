@@ -2,7 +2,7 @@ unit ProjectViewFrame;
 (*<Implements the project view used by @link(MainForm).
  *)
 (*
-  Copyright (c) 2018-2020 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -132,7 +132,7 @@ implementation
             aNode,
             aDir.Files[lNdx].Name
           );
-          lNode.Data := Nil; { aDir.Archivos[Ndx];}
+          lNode.Data := aDir.GetFileInfoPointer (lNdx);
           lNode.ImageIndex := ICON_FILE;
           lNode.SelectedIndex := ICON_FILE;
         end

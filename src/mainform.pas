@@ -2,7 +2,7 @@ unit MainForm;
 (*<Defines the main window of the application.
  *)
 (*
-  Copyright (c) 2018-2020 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -27,7 +27,7 @@ unit MainForm;
 interface
 
   uses
-    ProjectViewFrame,
+    EditorFrame, ProjectViewFrame,
     Forms, Menus, ActnList, StdActns, ComCtrls, ExtCtrls;
 
   type
@@ -59,7 +59,17 @@ interface
       procedure FormShow (Sender: TObject);
     (* Initializes the window. *)
       procedure Initialize (Sender: TObject);
+    (* User clicks on tree. *)
+      procedure ProjectTreeDblClick (Sender: TObject);
     private
+    (* Returns the "editor" object of the given tab.
+
+       If it doesn't find it then raises an exception. *)
+      function FindEditorInTab (const aTab: TTabSheet): TSourceEditorFrame;
+    (* Opens the given file.
+
+       If file was open it just sets the tab in first plane. *)
+      procedure OpenFile (const aFileName: String);
     (* Project has changed. *)
       procedure ProjectChanged (Sender: TObject);
     end;
@@ -72,10 +82,13 @@ implementation
 
   uses
     AboutDlg, ConfigurationDialogForm, GUIUtils, Main, ProgressDialogForm,
-    Controls, Dialogs,
-    Classes, sysutils;
+    Project, Utils,
+    Classes, Controls, Dialogs, sysutils;
 
 {$R *.lfm}
+
+  resourcestring
+    ErrorNoEditorComponent = 'Can''t find editor component in tabs!';
 
   const
   (* To build the window title. *)
@@ -107,7 +120,7 @@ implementation
 
 
 (* Event triggered when a project action is executed. *)
-  procedure Tmainwindow.ActionProjectExecute (Sender: TObject);
+    procedure TMainWindow.ActionProjectExecute (Sender: TObject);
 
     procedure OpenProject;
     var
@@ -161,6 +174,83 @@ implementation
     ProjectViewer.Project := MLSDEApplication.Project;
   { Project management. }
     MLSDEApplication.Project.OnChange := @Self.ProjectChanged
+  end;
+
+
+
+(* Double click on project tree. *)
+  procedure TMainWindow.ProjectTreeDblClick (Sender: TObject);
+  var
+    lProjectTree: TTreeView absolute Sender;
+    lFileInfo: TFilePtr;
+  begin
+    if (lProjectTree.Selected <> Nil)
+    and (lProjectTree.Selected.Data <> Nil) then
+    begin
+      if not (TObject (lProjectTree.Selected.Data) is TDirectory) then
+      begin
+        lFileInfo := lProjectTree.Selected.Data;
+        Self.OpenFile (lFileInfo^.GetPath + lFileInfo^.Name)
+      end
+      else
+        ShowInformation ('Problema', 'Es un directorio')
+    end
+    else
+      ShowInformation ('Problema', 'No hay nada seleccionado')
+  end;
+
+
+
+(* Returns editor object. *)
+  function TMainWindow.FindEditorInTab (const aTab: TTabSheet)
+    : TSourceEditorFrame;
+  var
+    Ndx: Integer;
+  begin
+    for Ndx := aTab.ComponentCount - 1 downto 0 do
+      if aTab.Components[Ndx] is TSourceEditorFrame then
+        Exit (TSourceEditorFrame (aTab.Components[Ndx]));
+    raise Exception.Create (ErrorNoEditorComponent)
+  end;
+
+
+
+(* Opens source file. *)
+  procedure TMainWindow.OpenFile (const aFileName: String);
+  var
+    lEditor: TSourceEditorFrame;
+    lTab: TTabSheet = Nil;
+    lTabname: String;
+    Ndx: Integer;
+
+  (* helper to create a new tab. *)
+    function CreateEditionTab: TTabSheet; inline;
+    begin
+      Result := Self.EditorList.AddTabSheet;
+      lEditor := TSourceEditorFrame.Create (Result);
+      lEditor.Align := alClient;
+      lEditor.Parent := Result;
+      Self.EditorList.ActivePage := Result
+    end;
+
+  begin
+  { Search file in tabs. }
+    lTabname := EncodeName (aFileName);
+    if Self.EditorList.PageCount > 0 then
+      for Ndx := 0 to Self.EditorList.PageCount - 1 do
+        if Self.EditorList.Pages[Ndx].Name = lTabname then
+        begin
+          lTab := Self.EditorList.Pages[Ndx];
+          lEditor := Self.FindEditorInTab (lTab)
+        end;
+  { If not found, then load. }
+    if lTab = nil then
+    begin
+      lTab := CreateEditionTab;
+      lEditor.Load (aFileName)
+    end;
+    Self.EditorList.ActivePage := lTab;
+    lEditor.SynEdit.SetFocus
   end;
 
 

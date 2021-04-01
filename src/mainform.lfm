@@ -20,6 +20,7 @@ object MainWindow: TMainWindow
       Height = 355
       Width = 160
       PopupMenu = ProjectPopupMenu
+      OnDblClick = ProjectTreeDblClick
     end
   end
   object ResizeBar: TSplitter

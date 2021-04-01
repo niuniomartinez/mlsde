@@ -75,15 +75,18 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="LazControls"/>
+        <PackageName Value="SynEdit"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="LazControls"/>
       </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPackages>
-    <Units Count="14">
+    <Units Count="16">
       <Unit0>
         <Filename Value="mlsde.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -180,6 +183,18 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ProgressDialogForm"/>
       </Unit13>
+      <Unit14>
+        <Filename Value="editorframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SourceEditorFrame"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="EditorFrame"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="utils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Utils"/>
+      </Unit15>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
