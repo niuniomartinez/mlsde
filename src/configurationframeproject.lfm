@@ -1,6 +1,6 @@
 inherited ProjectConfigurationFrame: TProjectConfigurationFrame
-  DesignLeft = 339
-  DesignTop = 195
+  DesignLeft = 434
+  DesignTop = 193
   object TitleFilesNDirs: TDividerBevel[0]
     Left = 0
     Height = 17
@@ -22,9 +22,27 @@ inherited ProjectConfigurationFrame: TProjectConfigurationFrame
   object CheckHiddenDirectories: TCheckBox[2]
     Left = 8
     Height = 21
-    Top = 57
+    Top = 56
     Width = 160
     Caption = 'Show hidden directories.'
     TabOrder = 1
+  end
+  object EditDirectoryDepth: TSpinEdit[3]
+    Left = 8
+    Height = 26
+    Top = 104
+    Width = 304
+    Anchors = [akTop, akLeft, akRight]
+    MinValue = 1
+    TabOrder = 2
+    Value = 1
+  end
+  object lblDirectoryDepth: TLabel[4]
+    Left = 8
+    Height = 15
+    Top = 88
+    Width = 90
+    Caption = 'Directory depth:'
+    ParentColor = False
   end
 end

@@ -11,36 +11,30 @@ object MainWindow: TMainWindow
   OnShow = FormShow
   LCLVersion = '2.0.10.0'
   inline ProjectViewer: TProjectView
-    Height = 335
+    Height = 355
     Width = 160
     Align = alLeft
-    ClientHeight = 335
+    ClientHeight = 355
     ClientWidth = 160
     inherited ProjectTree: TTreeView
-      Height = 335
+      Height = 355
       Width = 160
+      PopupMenu = ProjectPopupMenu
     end
   end
   object ResizeBar: TSplitter
     Left = 160
-    Height = 335
+    Height = 355
     Top = 0
     Width = 5
   end
   object EditorList: TPageControl
     Left = 165
-    Height = 335
+    Height = 355
     Top = 0
     Width = 478
     Align = alClient
     TabOrder = 2
-  end
-  object StatusBar: TStatusBar
-    Left = 0
-    Height = 20
-    Top = 335
-    Width = 643
-    Panels = <>
   end
   object MainMenu: TMainMenu
     Images = GlobalData.IconList
@@ -92,6 +86,14 @@ object MainWindow: TMainWindow
       Caption = '&Open...'
       ImageIndex = 3
       OnExecute = ActionProjectExecute
+    end
+  end
+  object ProjectPopupMenu: TPopupMenu
+    Images = GlobalData.IconList
+    Left = 80
+    Top = 16
+    object PrjMenuOpen: TMenuItem
+      Action = ActionOpenProject
     end
   end
 end

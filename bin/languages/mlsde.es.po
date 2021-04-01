@@ -177,6 +177,10 @@ msgstr "Muestra directorios ocultos."
 msgid "Show hidden files."
 msgstr "Muestra archivos ocultos."
 
+#: tprojectconfigurationframe.lbldirectorydepth.caption
+msgid "Directory depth:"
+msgstr "Profundidad:"
+
 #: tprojectconfigurationframe.titlefilesndirs.caption
 msgid "Files and directories"
 msgstr "Archivos y directorios"

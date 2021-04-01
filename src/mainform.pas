@@ -37,23 +37,24 @@ interface
        ActionConfigure: TAction;
        ActionAbout: TAction;
        ActionQuit: TFileExit;
-       ActionOpenProject: Taction;
+       ActionOpenProject: TAction;
       MainMenu: TMainMenu;
        MenuItemMLSDE: TMenuItem;
         MenuItemAbout: TMenuItem;
         MenuItemConfiguration: TMenuItem;
         MenuItemQuit: TMenuItem;
        MenuItemOpenPrj: TMenuItem;
-        MenuItemProject: Tmenuitem;
+        MenuItemProject: TMenuItem;
       ProjectViewer: TProjectView;
+       ProjectPopupMenu: TPopupMenu;
+        PrjMenuOpen: TMenuItem;
       ResizeBar: TSplitter;
       EditorList: TPageControl;
-      StatusBar: TStatusBar;
 
     (* Event triggered when an environment action is executed. *)
       procedure ActionEnvironmentExecute (Sender: TObject);
     (* Event triggered when a project action is executed. *)
-      procedure ActionProjectExecute(Sender: Tobject);
+      procedure ActionProjectExecute (Sender: TObject);
     (* Event triggered when form is shown. *)
       procedure FormShow (Sender: TObject);
     (* Initializes the window. *)
@@ -106,7 +107,7 @@ implementation
 
 
 (* Event triggered when a project action is executed. *)
-  procedure Tmainwindow.ActionProjectExecute(Sender: Tobject);
+  procedure Tmainwindow.ActionProjectExecute (Sender: TObject);
 
     procedure OpenProject;
     var

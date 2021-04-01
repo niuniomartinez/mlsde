@@ -26,13 +26,15 @@ unit ConfigurationFrameProject;
 interface
 
   uses
-    ConfigurationDialogFrame, DividerBevel, StdCtrls;
+    ConfigurationDialogFrame, DividerBevel, StdCtrls, Spin;
 
   type
     TProjectConfigurationFrame = class(TConfigurationFrame)
       TitleFilesNDirs: TDividerBevel;
-        CheckHiddenDirectories: TCheckBox;
         CheckHiddenFiles: TCheckBox;
+        CheckHiddenDirectories: TCheckBox;
+        lblDirectoryDepth: TLabel;
+        EditDirectoryDepth: TSpinEdit;
     public
     (* Initializes the frame.
 
@@ -60,9 +62,10 @@ implementation
     lProjectConfiguration := TProjectConfiguration (
       MLSDEApplication.Configuration.FindConfig (CfgProjectId)
     );
-  { Hidden files and directories. }
+  { Files and directories. }
     CheckHiddenFiles.Checked := lProjectConfiguration.ShowHiddenFiles;
-    CheckHiddenDirectories.Checked := lProjectConfiguration.ShowHiddenDirs
+    CheckHiddenDirectories.Checked := lProjectConfiguration.ShowHiddenDirs;
+    EditDirectoryDepth.Value := lProjectConfiguration.DirDepth
   end;
 
 
@@ -74,9 +77,10 @@ implementation
     lProjectConfiguration := TProjectConfiguration (
       MLSDEApplication.Configuration.FindConfig (CfgProjectId)
     );
-  { Hidden files and directories. }
+  { Files and directories. }
     lProjectConfiguration.ShowHiddenFiles := CheckHiddenFiles.Checked;
-    lProjectConfiguration.ShowHiddenDirs :=  CheckHiddenDirectories.Checked
+    lProjectConfiguration.ShowHiddenDirs :=  CheckHiddenDirectories.Checked;
+    lProjectConfiguration.DirDepth := EditDirectoryDepth.Value
   end;
 
 end.
