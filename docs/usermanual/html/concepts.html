@@ -3,24 +3,26 @@
  <head>
   <meta charset="utf-8" />
   <title>MLSDE User Manual-Basic Concepts</title>
-  <meta name="generator" content="Free Markdown to HTML Converter; gVim" />
+  <meta name="generator" content="Free Markdown to HTML Converter" />
   <meta name="robots" content="index, follow" />
   <link href="style/normalize.css" rel="stylesheet" type="text/css" />
   <link rel="shortcut icon" href="favicon.ico" />
  </head>
  <body>
-  <header><h1>Basic Concepts</h1></header>
-
-  <section>
-    <header><h2 id="the-directories">The Directories</h2></header>
-    <p>Application files (like translations) are in subdirectories in the <code>bin</code> subdirectory.  You should not change such files.</p>
-    <p>User based files (like the configuration) live under the <em>user configuration directory</em>.  This directory is a platform-dependent location:</p>
-    <ul>
-      <li><strong>Windows</strong>:  <code>%APPDATA%\mlsde</code></li>
-      <li><strong>Linux</strong>: `~/.config/mlsde´</li>
-    </ul>
-    <p>If you have problems with configuration just remove the <code>mlsde.cfg</code> file that is in the user configuration directory.  This way the next time you run MLSDE it will use the default configuration.</p>
-  </section>
-
+  <h1 id="basic-concepts">Basic Concepts</h1>
+  <p>This guide is written from the perspective of a Windows user.  Most instructions
+  only require trivial changes to work on other platforms.</p>
+  <h2 id="the-directories">The Directories</h2>
+  <p>Application files (like translations) are in subdirectories in the <code>bin</code>
+  subdirectory.  You should not change such files.</p>
+  <p>User based files (like the configuration) live under the <em>user configuration
+  directory</em>.  This directory is a platform-dependent location:</p>
+  <ul>
+  <li><strong>Windows</strong>:  <code>%APPDATA%\mlsde</code></li>
+  <li><strong>Linux</strong>: <code>~/.config/mlsde</code></li>
+  </ul>
+  <p>If you have problems with configuration just remove the <code>mlsde.cfg</code> file that
+  is in the user configuration directory.  This way the next time you run MLSDE
+  it will use the default configuration.</p>
  </body>
 </html>

@@ -12,7 +12,7 @@ User based files (like the configuration) live under the *user configuration
 directory*.  This directory is a platform-dependent location:
 
 * **Windows**:  `%APPDATA%\mlsde`
-* **Linux**: `~/.config/mlsde´
+* **Linux**: `~/.config/mlsde`
 
 If you have problems with configuration just remove the `mlsde.cfg` file that
 is in the user configuration directory.  This way the next time you run MLSDE

@@ -5,8 +5,6 @@ main menu.
 
 ![Configuration option](images/menu-cfg.png)
 
-That will open the configuration menu, [as seen before](basics.html#configuration).
-
 The configuration dialog is divided in two parts:  The _configuration sections_
 on the left and the _configuration options_ on the right.
 

@@ -17,21 +17,20 @@
     h1 {
       margin-top: 0;
     }
-    nav.index {
-      border: none;
-      float: left;
-      height: 75%;
-      margin: 0;
-      padding: 2px;
-      width: 20%;
-    }
     iframe {
       display: block;
-      border: 1px solid;
       height:75%;
       padding: 4px;
-      width: 75%;
     }
+      iframe#toc {
+        float: left;
+        border: none;
+        width: 20%;
+      }
+      iframe#content {
+        border: 1px solid;
+        width: 75%;
+      }
   </style>
  </head>
  <body>
@@ -39,30 +38,7 @@
     <h1>MLSDE User Manual</h1>
   </header>
   <p>Note both project and documentation are <abbr title="Work In Progggress">WIP</abbr>.</p>
-  <nav class="index">
-    <h2><a href="intro.html" target="content">Introduction</a></h2>
-    <h2>Getting Started</h2>
-    <ul>
-      <li><a href="install.html" target="content">Installation</a></li>
-      <li><a href="concepts.html" target="content">Basic Concepts</a></li>
-    </ul>
-    <h2>Basic Usage</h2>
-    <ul>
-      <li><a href="basics.html" target="content">First steps</a><ul>
-	<li><a href="basics.html#mlsde-overview" target="content">MLSDE Overview</a></li>
-	<li><a href="basics.html#configuration" target="content">Configuration</a></li>
-	<li><a href="basics.html#open-files" target="content">Open Files</a></li>
-      </ul></li>
-    </ul>
-    <h2>Configuration</h2>
-    <ul>
-      <li><a href="configuration.html" target="content">Configuration Overview</a></li>
-      <li><a href="cfg-environment.html" target="content">Enfironment Configuration</a></li>
-      <li><a href="cfg-project.html" target="content">Project Configuration</a><ul>
-	<li><a href="cfg-project.html#files-and-directories" target="content">Files and Directories</a></li>
-      </ul></li>
-    </ul>
-  </nav>
+  <iframe id="toc" name="toc" src="toc.html"></iframe>
   <iframe id="content" name="content" src="intro.html"></iframe>
   <footer>
     <p><a href="https://github.com/niuniomartinez/mlsde">MLSDE</a> &copy; 2018-2021 Guillermo Martínez J.</p>

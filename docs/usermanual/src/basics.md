@@ -10,9 +10,9 @@ The first time you open MLSDE you'll see something similar to this:
 
 ## Configuration ##
 
-Before to start using MLSDE it is recommendable to enter the _Configuration
-Dialog_.  To do so select in the top menu `MLSDE > Configuration...` (this is,
-the top option of the `MLSDE` menu).
+Before to start using MLSDE it is recommendable to open the [_Configuration
+Dialog_](configuration.html).  To do so select in the top menu `MLSDE >
+Configuration...` (this is, the top option of the `MLSDE` menu).
 
 ![Configuration dialog](images/cfg-dialog.png)
 
@@ -37,10 +37,38 @@ To open a project you can click on menu `Project > Open...` or click with the
 _mouse right button_ in the left part of the window to open the **Project Popup
 Menu**.
 
-![Open project](images/open-project-popup.png)
+![Open project](images/open-project-menu.png)
+![Open project from pop-up menu](images/open-project-popup.png)
+
+Also, you can use the `Open project` button from the tool bar.
+
+![Open project from tool bar](images/open-project-button.png)
 
 Select the project directory in the dialog and accept.  The project tree will
-appear on the left.  To pen a file just do double-click on the file name and
+appear on the left.  To open a file just do double-click on the file name and
 the source editor will appear on the right.
 
 ![Open file](images/open-file.png)
+
+
+
+## Edit Files ##
+
+Current version supports very basic edition.  Select text by dragging the mouse
+and then use `Ctrl+C`, `Ctrl+X` and `Ctrl+V` to _copy_, _cut_ and _paste_.
+
+Future versions will include more edition tools and options.
+
+Modified files are marked by an asterisk in the tab.  Modified lines are marked
+with a yellow line in the left _gutter_.
+
+![Modified file](images/modified-file.png)
+
+## Save Files ##
+
+To save the modified files you can use the `File > Save file` menu option or
+the `Save file` button.  You can also save all modified files by selecting
+`Save all`.
+
+![Saving file](images/save-file-menu.png)
+![Saving file](images/save-file-button.png)
