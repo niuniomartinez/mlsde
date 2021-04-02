@@ -126,12 +126,32 @@ msgstr ""
 msgid "&Configuration..."
 msgstr ""
 
+#: tmainwindow.actionconfigure.hint
+msgid "Opens configuration dialog."
+msgstr ""
+
 #: tmainwindow.actionquit.caption
 msgid "&Quit"
 msgstr ""
 
 #: tmainwindow.actionquit.hint
 msgid "Ends application"
+msgstr ""
+
+#: tmainwindow.actionsaveall.caption
+msgid "Save &all"
+msgstr ""
+
+#: tmainwindow.actionsaveall.hint
+msgid "Saves all modified files."
+msgstr ""
+
+#: tmainwindow.actionsavefile.caption
+msgid "&Save file"
+msgstr ""
+
+#: tmainwindow.actionsavefile.hint
+msgid "Saves file."
 msgstr ""
 
 #: tmainwindow.caption
@@ -172,5 +192,9 @@ msgstr ""
 
 #: tprojectview.actionopenproject.caption
 msgid "&Open..."
+msgstr ""
+
+#: tprojectview.actionopenproject.hint
+msgid "Opens project directory."
 msgstr ""
 

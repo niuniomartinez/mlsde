@@ -187,6 +187,7 @@
         <Filename Value="editorframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SourceEditorFrame"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="EditorFrame"/>
       </Unit14>

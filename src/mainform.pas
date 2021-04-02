@@ -41,6 +41,8 @@ interface
        ActionConfigure: TAction;
        ActionAbout: TAction;
        ActionQuit: TFileExit;
+       ActionSaveFile: TAction;
+       ActionSaveAll: TAction;
       MainMenu: TMainMenu;
        MenuItemMLSDE: TMenuItem;
         MenuItemAbout: TMenuItem;
@@ -48,19 +50,34 @@ interface
         MenuItemQuit: TMenuItem;
        MenuItemOpenPrj: TMenuItem;
         MenuItemProject: TMenuItem;
+      ToolBar: TToolBar;
+       tbtnQuit: TToolButton;
+       tbtnOpenPrj: TToolButton;
+       tbtnSeparator1: TToolButton;
+       tbtnSaveFile: TToolButton;
+       tbtnSaveAll: TToolButton;
       ProjectViewer: TProjectView;
       ResizeBar: TSplitter;
       EditorList: TPageControl;
 
     (* Event triggered when an environment action is executed. *)
       procedure ActionEnvironmentExecute (Sender: TObject);
+    (* Event trigered when a file action is executed. *)
+      procedure ActionSourceFileExecute (Sender: TObject);
     (* Event triggered when form is shown. *)
       procedure FormShow (Sender: TObject);
     (* Initializes the window. *)
       procedure Initialize (Sender: TObject);
     (* User clicks on tree. *)
       procedure ProjectTreeDblClick (Sender: TObject);
+    (* There are changes in the editor.
+
+       This event is triggered when a file changed, and also when user selects
+       a file. *)
+      procedure EditorChanged (Sender: TObject);
     private
+    (* Updates the state of the components related with files. *)
+      procedure UpdateFileComponentStates;
     (* Returns the "editor" object of the given tab.
 
        If it doesn't find it then raises an exception. *)
@@ -93,6 +110,9 @@ implementation
     tagConfigure = 1;
     tagAboutDlg = 2;
 
+    tagSaveFile = 1;
+    tagSaveAllFiles = 2;
+
 
 
 (*
@@ -109,8 +129,36 @@ implementation
       GUIUtils.RunModalDialog (TAboutDialog.Create (Self));
     else
     { This should never be rendered, so no translation required. }
-      ShowError ('Action tag: %d', [(Sender AS TComponent).Tag]);
-    end;
+      ShowError ('Action environment tag: %d', [(Sender AS TComponent).Tag]);
+    end
+  end;
+
+
+
+(* Executes file actions. *)
+  procedure TMainWindow.ActionSourceFileExecute (Sender: TObject);
+  var
+    lEditor: TSourceEditorFrame;
+    Ndx: Integer;
+  begin
+    case (Sender as TComponent).Tag of
+    tagSaveFile:
+      if Self.EditorList.ActivePage <> Nil then
+      begin
+        lEditor := Self.FindEditorInTab (Self.EditorList.ActivePage);
+        lEditor.Save
+      end;
+    tagSaveAllFiles:
+      if Self.EditorList.PageCount > 0 then
+        for Ndx := 0 to Self.EditorList.PageCount - 1 do
+        begin
+          lEditor := Self.FindEditorInTab (Self.EditorList.Pages[Ndx]);
+          if lEditor.Modified then lEditor.Save
+        end;
+    else
+    { This should never be rendered, so no translation required. }
+      ShowError ('Action source file tag: %d', [(Sender AS TComponent).Tag]);
+    end
   end;
 
 
@@ -118,7 +166,8 @@ implementation
 (* Shows window. *)
   procedure TMainWindow.FormShow (Sender: TObject);
   begin
-    Self.ProjectViewer.UpdateView
+    Self.ProjectViewer.UpdateView;
+    Self.UpdateFileComponentStates
   end;
 
 
@@ -132,7 +181,10 @@ implementation
     MLSDEApplication.Project.OnChange := @Self.ProjectChanged;
   { Some action events. }
     Self.ProjectViewer.ProjectTree.OnDblClick := @Self.ProjectTreeDblClick;
-    Self.MenuItemOpenPrj.Action := Self.ProjectViewer.ActionOpenProject
+    Self.MenuItemOpenPrj.Action := Self.ProjectViewer.ActionOpenProject;
+    Self.tbtnOpenPrj.Action := Self.ProjectViewer.ActionOpenProject;
+
+    Self.UpdateFileComponentStates
   end;
 
 
@@ -149,7 +201,47 @@ implementation
       if TObject (lProjectTree.Selected.Data) is TFile then
       begin
         lFileInfo := TFile (lProjectTree.Selected.Data);
-        Self.OpenFile (lFileInfo.GetPath + lFileInfo.Name)
+        Self.OpenFile (lFileInfo.GetPath + lFileInfo.Name);
+        Self.UpdateFileComponentStates
+      end
+    end
+  end;
+
+
+
+(* There are changes in the editor. *)
+  procedure TMainWindow.EditorChanged (Sender: TObject);
+  begin
+    Self.UpdateFileComponentStates
+  end;
+
+
+
+(* Updates components. *)
+  procedure TMainWindow.UpdateFileComponentStates;
+  var
+    Ndx: Integer;
+    lEditor: TSourceEditorFrame;
+  begin
+  { Initially, all save options are disabled. }
+    Self.ActionSaveFile.Enabled := False;
+    Self.ActionSaveAll.Enabled := False;
+  { Are there opened files? }
+    if Self.EditorList.PageCount > 0 then
+    begin
+    { Is any of them modified? }
+      for Ndx := 0 to Self.EditorList.PageCount - 1 do
+      begin
+        lEditor := Self.FindEditorInTab (Self.EditorList.Pages[Ndx]);
+        if lEditor.Modified then
+        begin
+          Self.ActionSaveAll.Enabled := True;
+        { Is the selected tab modified? }
+          lEditor := Self.FindEditorInTab (Self.EditorList.ActivePage);
+          Self.ActionSaveFile.Enabled := lEditor.Modified;
+        { No need to check more. }
+          Exit
+        end
       end
     end
   end;
@@ -195,7 +287,8 @@ implementation
       lEditor := TSourceEditorFrame.Create (lTab);
       lEditor.Align := alClient;
       lEditor.Parent := lTab;
-      lEditor.Load (aFileName)
+      lEditor.Load (aFileName);
+      lEditor.OnChange := @Self.EditorChanged
     end;
     Self.EditorList.ActivePage := lTab;
     lEditor.SynEdit.SetFocus
@@ -220,7 +313,8 @@ implementation
       lProjectName := '<>';
       lProjectPath := '.'
     end;
-    Self.Caption := Format (WindowTitle, [lProjectName, lProjectPath])
+    Self.Caption := Format (WindowTitle, [lProjectName, lProjectPath]);
+    Self.UpdateFileComponentStates
   end;
 
 end.

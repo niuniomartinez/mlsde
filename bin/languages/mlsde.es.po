@@ -135,6 +135,10 @@ msgstr "&Acerca de..."
 msgid "&Configuration..."
 msgstr "&Configuración..."
 
+#: tmainwindow.actionconfigure.hint
+msgid "Opens configuration dialog."
+msgstr "Abre el diálogo de configuración."
+
 #: tmainwindow.actionquit.caption
 msgid "&Quit"
 msgstr "S&alir"
@@ -142,6 +146,22 @@ msgstr "S&alir"
 #: tmainwindow.actionquit.hint
 msgid "Ends application"
 msgstr "Finaliza la aplicación"
+
+#: tmainwindow.actionsaveall.caption
+msgid "Save &all"
+msgstr "Guardar &Todo"
+
+#: tmainwindow.actionsaveall.hint
+msgid "Saves all modified files."
+msgstr "Guarda todos los archivos fuente modificados."
+
+#: tmainwindow.actionsavefile.caption
+msgid "&Save file"
+msgstr "&Guarda archivo"
+
+#: tmainwindow.actionsavefile.hint
+msgid "Saves file."
+msgstr "Guarda el archivo."
 
 #: tmainwindow.caption
 msgid "MLSDE"
@@ -182,4 +202,8 @@ msgstr "Archivos y directorios"
 #: tprojectview.actionopenproject.caption
 msgid "&Open..."
 msgstr "&Abrir..."
+
+#: tprojectview.actionopenproject.hint
+msgid "Opens project directory."
+msgstr "Abre directorio de proyecto."
 

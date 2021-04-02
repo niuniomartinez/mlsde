@@ -5,5 +5,10 @@
 {"hash":2853892,"name":"tmainwindow.actionquit.caption","sourcebytes":[38,81,117,105,116],"value":"&Quit"},
 {"hash":183770574,"name":"tmainwindow.actionquit.hint","sourcebytes":[69,110,100,115,32,97,112,112,108,105,99,97,116,105,111,110],"value":"Ends application"},
 {"hash":103972814,"name":"tmainwindow.actionconfigure.caption","sourcebytes":[38,67,111,110,102,105,103,117,114,97,116,105,111,110,46,46,46],"value":"&Configuration..."},
-{"hash":158096254,"name":"tmainwindow.actionabout.caption","sourcebytes":[38,65,98,111,117,116,46,46,46],"value":"&About..."}
+{"hash":180435262,"name":"tmainwindow.actionconfigure.hint","sourcebytes":[79,112,101,110,115,32,99,111,110,102,105,103,117,114,97,116,105,111,110,32,100,105,97,108,111,103,46],"value":"Opens configuration dialog."},
+{"hash":158096254,"name":"tmainwindow.actionabout.caption","sourcebytes":[38,65,98,111,117,116,46,46,46],"value":"&About..."},
+{"hash":208959397,"name":"tmainwindow.actionsavefile.caption","sourcebytes":[38,83,97,118,101,32,102,105,108,101],"value":"&Save file"},
+{"hash":87396030,"name":"tmainwindow.actionsavefile.hint","sourcebytes":[83,97,118,101,115,32,102,105,108,101,46],"value":"Saves file."},
+{"hash":208838572,"name":"tmainwindow.actionsaveall.caption","sourcebytes":[83,97,118,101,32,38,97,108,108],"value":"Save &all"},
+{"hash":59924574,"name":"tmainwindow.actionsaveall.hint","sourcebytes":[83,97,118,101,115,32,97,108,108,32,109,111,100,105,102,105,101,100,32,102,105,108,101,115,46],"value":"Saves all modified files."}
 ]}

@@ -11,34 +11,79 @@ object MainWindow: TMainWindow
   OnShow = FormShow
   LCLVersion = '2.0.10.0'
   inline ProjectViewer: TProjectView
-    Height = 355
+    Height = 323
+    Top = 32
     Width = 187
     Align = alLeft
-    ClientHeight = 355
+    ClientHeight = 323
     ClientWidth = 187
+    TabOrder = 1
     inherited ProjectTree: TTreeView
-      Height = 355
+      Height = 323
       Width = 187
     end
   end
   object ResizeBar: TSplitter
     Left = 187
-    Height = 355
-    Top = 0
+    Height = 323
+    Top = 32
     Width = 5
   end
   object EditorList: TPageControl
     Left = 192
-    Height = 355
-    Top = 0
+    Height = 323
+    Top = 32
     Width = 451
     Align = alClient
-    TabOrder = 2
+    TabOrder = 3
+    OnChange = EditorChanged
+  end
+  object ToolBar: TToolBar
+    Left = 0
+    Top = 0
+    Width = 643
+    EdgeBorders = []
+    Images = GlobalData.IconList
+    ParentShowHint = False
+    TabOrder = 0
+    object tbtnQuit: TToolButton
+      Left = 1
+      Top = 0
+      Action = ActionQuit
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object tbtnOpenPrj: TToolButton
+      Left = 24
+      Top = 0
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object tbtnSeparator1: TToolButton
+      Left = 47
+      Height = 22
+      Top = 0
+      Style = tbsSeparator
+    end
+    object tbtnSaveFile: TToolButton
+      Left = 55
+      Top = 0
+      Action = ActionSaveFile
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object tbtnSaveAll: TToolButton
+      Left = 78
+      Top = 0
+      Action = ActionSaveAll
+      ParentShowHint = False
+      ShowHint = True
+    end
   end
   object MainMenu: TMainMenu
     Images = GlobalData.IconList
     Left = 520
-    Top = 8
+    Top = 40
     object MenuItemMLSDE: TMenuItem
       Caption = '&MLSDE'
       object MenuItemConfiguration: TMenuItem
@@ -60,7 +105,7 @@ object MainWindow: TMainWindow
   object ActionList: TActionList
     Images = GlobalData.IconList
     Left = 592
-    Top = 8
+    Top = 40
     object ActionQuit: TFileExit
       Category = 'File'
       Caption = '&Quit'
@@ -70,6 +115,7 @@ object MainWindow: TMainWindow
     object ActionConfigure: TAction
       Tag = 1
       Caption = '&Configuration...'
+      Hint = 'Opens configuration dialog.'
       ImageIndex = 1
       OnExecute = ActionEnvironmentExecute
     end
@@ -78,6 +124,20 @@ object MainWindow: TMainWindow
       Caption = '&About...'
       ImageIndex = 2
       OnExecute = ActionEnvironmentExecute
+    end
+    object ActionSaveFile: TAction
+      Tag = 1
+      Caption = '&Save file'
+      Hint = 'Saves file.'
+      ImageIndex = 4
+      OnExecute = ActionSourceFileExecute
+    end
+    object ActionSaveAll: TAction
+      Tag = 2
+      Caption = 'Save &all'
+      Hint = 'Saves all modified files.'
+      ImageIndex = 5
+      OnExecute = ActionSourceFileExecute
     end
   end
 end

@@ -131,6 +131,7 @@ object ProjectView: TProjectView
     object ActionOpenProject: TAction
       Tag = 1
       Caption = '&Open...'
+      Hint = 'Opens project directory.'
       ImageIndex = 3
       OnExecute = ActionProjectExecute
     end
