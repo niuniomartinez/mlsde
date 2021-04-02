@@ -48,7 +48,7 @@ interface
         MenuItemQuit: TMenuItem;
        MenuItemOpenPrj: TMenuItem;
         MenuItemProject: TMenuItem;
-        ProjectViewer: TProjectView;
+      ProjectViewer: TProjectView;
       ResizeBar: TSplitter;
       EditorList: TPageControl;
 
