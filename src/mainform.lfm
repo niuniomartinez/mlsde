@@ -11,29 +11,29 @@ object MainWindow: TMainWindow
   OnShow = FormShow
   LCLVersion = '2.0.10.0'
   inline ProjectViewer: TProjectView
-    Height = 323
+    Height = 303
     Top = 32
     Width = 187
     Align = alLeft
-    ClientHeight = 323
+    ClientHeight = 303
     ClientWidth = 187
     TabOrder = 1
     inherited ProjectTree: TTreeView
-      Height = 323
+      Height = 303
       Width = 187
     end
   end
   object ResizeBar: TSplitter
     Left = 187
-    Height = 323
+    Height = 303
     Top = 32
-    Width = 5
+    Width = 8
   end
   object EditorList: TPageControl
-    Left = 192
-    Height = 323
+    Left = 195
+    Height = 303
     Top = 32
-    Width = 451
+    Width = 448
     Align = alClient
     TabOrder = 3
     OnChange = EditorChanged
@@ -42,43 +42,46 @@ object MainWindow: TMainWindow
     Left = 0
     Top = 0
     Width = 643
+    ButtonHeight = 28
+    ButtonWidth = 25
     EdgeBorders = []
     Images = GlobalData.IconList
     ParentShowHint = False
+    ShowHint = True
     TabOrder = 0
-    object tbtnQuit: TToolButton
-      Left = 1
-      Top = 0
-      Action = ActionQuit
-      ParentShowHint = False
-      ShowHint = True
-    end
     object tbtnOpenPrj: TToolButton
-      Left = 24
+      Left = 9
       Top = 0
-      ParentShowHint = False
-      ShowHint = True
     end
     object tbtnSeparator1: TToolButton
-      Left = 47
-      Height = 22
+      Left = 1
+      Height = 28
       Top = 0
       Style = tbsSeparator
     end
     object tbtnSaveFile: TToolButton
-      Left = 55
+      Left = 39
       Top = 0
       Action = ActionSaveFile
-      ParentShowHint = False
-      ShowHint = True
     end
     object tbtnSaveAll: TToolButton
-      Left = 78
+      Left = 64
       Top = 0
       Action = ActionSaveAll
-      ParentShowHint = False
-      ShowHint = True
     end
+    object tbtnSeparator2: TToolButton
+      Left = 34
+      Height = 28
+      Top = 0
+      Style = tbsDivider
+    end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 20
+    Top = 335
+    Width = 643
+    Panels = <>
   end
   object MainMenu: TMainMenu
     Images = GlobalData.IconList
@@ -99,6 +102,18 @@ object MainWindow: TMainWindow
     object MenuItemProject: TMenuItem
       Caption = '&Project'
       object MenuItemOpenPrj: TMenuItem
+      end
+      object MenuItemCloseAllTabs: TMenuItem
+        Action = ActionCloseAllTabs
+      end
+    end
+    object MenuItemFile: TMenuItem
+      Caption = '&File'
+      object MenuItemSaveFile: TMenuItem
+        Action = ActionSaveFile
+      end
+      object MenuItemSaveAll: TMenuItem
+        Action = ActionSaveAll
       end
     end
   end
@@ -138,6 +153,13 @@ object MainWindow: TMainWindow
       Hint = 'Saves all modified files.'
       ImageIndex = 5
       OnExecute = ActionSourceFileExecute
+    end
+    object ActionCloseAllTabs: TAction
+      Tag = 3
+      Caption = '&Close all tabs'
+      Hint = 'Closes all tabs.  It doesn''t save them!'
+      ImageIndex = 7
+      OnExecute = ActionEnvironmentExecute
     end
   end
 end

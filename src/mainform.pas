@@ -33,7 +33,8 @@ interface
   type
   (* Main window of the application.
 
-     Note that some stuff is defined in the @link(Initialize) method. *)
+     Note that some stuff is defined in the @link(Initialize) method.  That's
+     why some buttons and menu options look empty. *)
     TMainWindow = class (TForm)
     (* Action list.  Only contains application actions.  Other actions are in
        the respective @code(TFrame). *)
@@ -41,9 +42,14 @@ interface
        ActionConfigure: TAction;
        ActionAbout: TAction;
        ActionQuit: TFileExit;
+       ActionCloseAllTabs: TAction;
        ActionSaveFile: TAction;
        ActionSaveAll: TAction;
       MainMenu: TMainMenu;
+      MenuItemSaveFile: TMenuItem;
+      MenuItemSaveAll: TMenuItem;
+      MenuItemFile: TMenuItem;
+      MenuItemCloseAllTabs: TMenuItem;
        MenuItemMLSDE: TMenuItem;
         MenuItemAbout: TMenuItem;
         MenuItemConfiguration: TMenuItem;
@@ -51,14 +57,15 @@ interface
        MenuItemOpenPrj: TMenuItem;
         MenuItemProject: TMenuItem;
       ToolBar: TToolBar;
-       tbtnQuit: TToolButton;
-       tbtnOpenPrj: TToolButton;
        tbtnSeparator1: TToolButton;
+       tbtnOpenPrj: TToolButton;
+       tbtnSeparator2: TToolButton;
        tbtnSaveFile: TToolButton;
        tbtnSaveAll: TToolButton;
       ProjectViewer: TProjectView;
       ResizeBar: TSplitter;
       EditorList: TPageControl;
+      StatusBar: TStatusBar;
 
     (* Event triggered when an environment action is executed. *)
       procedure ActionEnvironmentExecute (Sender: TObject);
@@ -111,6 +118,7 @@ implementation
   (* Tag values for different actions. *)
     tagConfigure = 1;
     tagAboutDlg = 2;
+    tagCloseAllTabs = 3;
 
     tagSaveFile = 1;
     tagSaveAllFiles = 2;
@@ -129,6 +137,8 @@ implementation
       GUIUtils.RunModalDialog (TConfigurationDlg.Create (Self));
     tagAboutDlg:
       GUIUtils.RunModalDialog (TAboutDialog.Create (Self));
+    tagCloseAllTabs:
+      Self.CloseAllTabs;
     else
     { This should never be rendered, so no translation required. }
       ShowError ('Action environment tag: %d', [(Sender AS TComponent).Tag]);
@@ -225,6 +235,7 @@ implementation
     Ndx: Integer;
     lEditor: TSourceEditorFrame;
   begin
+    Self.ActionCloseAllTabs.Enabled := Self.EditorList.PageCount > 0;
   { Initially, all save options are disabled. }
     Self.ActionSaveFile.Enabled := False;
     Self.ActionSaveAll.Enabled := False;
@@ -328,7 +339,8 @@ implementation
     Ndx: Integer;
   begin;
     for Ndx := Self.EditorList.PageCount - 1 downto 0 do
-      Self.EditorList.Pages[Ndx].Free
+      Self.EditorList.Pages[Ndx].Free;
+    Self.UpdateFileComponentStates
   end;
 
 end.

@@ -131,6 +131,16 @@ msgstr "Idioma"
 msgid "&About..."
 msgstr "&Acerca de..."
 
+#: tmainwindow.actionclosealltabs.caption
+msgid "&Close all tabs"
+msgstr "&Cerrar todas las lengüetas"
+
+#: tmainwindow.actionclosealltabs.hint
+msgid "Closes all tabs.  It doesn't save them!"
+msgstr ""
+"Cierra todas las lengüetas abiertas.\n"
+"¡No guarda cambios!"
+
 #: tmainwindow.actionconfigure.caption
 msgid "&Configuration..."
 msgstr "&Configuración..."
@@ -149,7 +159,7 @@ msgstr "Finaliza la aplicación"
 
 #: tmainwindow.actionsaveall.caption
 msgid "Save &all"
-msgstr "Guardar &Todo"
+msgstr "Guardar &todos los archivos"
 
 #: tmainwindow.actionsaveall.hint
 msgid "Saves all modified files."
@@ -157,7 +167,7 @@ msgstr "Guarda todos los archivos fuente modificados."
 
 #: tmainwindow.actionsavefile.caption
 msgid "&Save file"
-msgstr "&Guarda archivo"
+msgstr "&Guardar archivo"
 
 #: tmainwindow.actionsavefile.hint
 msgid "Saves file."
@@ -166,6 +176,10 @@ msgstr "Guarda el archivo."
 #: tmainwindow.caption
 msgid "MLSDE"
 msgstr ""
+
+#: tmainwindow.menuitemfile.caption
+msgid "&File"
+msgstr "&Archivo"
 
 #: tmainwindow.menuitemmlsde.caption
 msgid "&MLSDE"
