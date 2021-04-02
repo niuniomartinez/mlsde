@@ -44,7 +44,7 @@ interface
     TProjectView = class (TFrame)
     (* Action list.  Contains non-edition project actions only. *)
       ActionList: TActionList;
-        ActionOpenProject: TAction;
+       ActionOpenProject: TAction;
       FileIconList: TImageList;
       ProjectTree: TTreeView;
       ProjectPopupMenu: TPopupMenu;
@@ -112,7 +112,7 @@ implementation
         end
       finally
         lDlgOpenDirectory.Free
-      end;
+      end
     end;
 
   begin

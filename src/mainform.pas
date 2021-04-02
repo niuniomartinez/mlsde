@@ -88,6 +88,8 @@ interface
       procedure OpenFile (const aFileName: String);
     (* Project has changed. *)
       procedure ProjectChanged (Sender: TObject);
+    (* Closes all tabs. *)
+      procedure CloseAllTabs;
     end;
 
   var
@@ -301,6 +303,7 @@ implementation
   var
     lProjectName, lProjectPath: String;
   begin
+    Self.CloseAllTabs; { TODO: Only when loading new project? }
     Self.ProjectViewer.UpdateView;
     if MLSDEApplication.Project.Root <> Nil then
     begin
@@ -315,6 +318,17 @@ implementation
     end;
     Self.Caption := Format (WindowTitle, [lProjectName, lProjectPath]);
     Self.UpdateFileComponentStates
+  end;
+
+
+
+{ Closes all tabs. }
+  procedure TMainWindow.CloseAllTabs;
+  var
+    Ndx: Integer;
+  begin;
+    for Ndx := Self.EditorList.PageCount - 1 downto 0 do
+      Self.EditorList.Pages[Ndx].Free
   end;
 
 end.
