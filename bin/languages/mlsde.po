@@ -93,6 +93,14 @@ msgstr ""
 msgid "https://github.com/niuniomartinez/mlsde"
 msgstr ""
 
+#: taboutdialog.tabsheetgeneral.caption
+msgid "General"
+msgstr ""
+
+#: taboutdialog.tabsheetlicense.caption
+msgid "License"
+msgstr ""
+
 #: tconfigurationdlg.caption
 msgctxt "tconfigurationdlg.caption"
 msgid "Configuration"

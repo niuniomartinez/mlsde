@@ -26,7 +26,7 @@ unit AboutDlg;
 interface
 
   uses
-    Forms, StdCtrls, ButtonPanel, Classes;
+    Forms, StdCtrls, ButtonPanel, ComCtrls, Classes;
 
   type
   (* Shows legal and contact information about the application.
@@ -34,10 +34,14 @@ interface
      It is used by @link(TMainWindow), wich creates and destroys it.
    *)
     TAboutDialog = class (TForm)
-      LblWebsite: Tlabel;
-      LblCopyright: Tlabel;
-      LblDescription: Tlabel;
-      LblTitle: TLabel;
+      PageControl: TPageControl;
+       TabSheetGeneral: TTabSheet;
+        LblTitle: TLabel;
+        LblDescription: Tlabel;
+        LblWebsite: Tlabel;
+        LblCopyright: Tlabel;
+       TabSheetLicense: TTabSheet;
+         MemoLicense: TMemo;
       ButtonPannel: TButtonPanel;
     (* Executed when dialog is activated. *)
       procedure FormActivate (Sender: TObject);
@@ -47,11 +51,27 @@ interface
 
 implementation
 
+(* Implementation note:
+     See that the license text is stored as a resource.  That makes the license
+     easily modificable.  Maybe a better way is to set the license as a constant
+     text and assign in runtime, though it is still quite easy to modify
+     (specially the name).
+
+     This also apply to the version number and web-site URI.
+ *)
+
   uses
     fileinfo, LCLIntf,
-  { TODO: Use $IFDEF to include only the appropriate one.
-  }
-    winpeimagereader, elfreader, machoreader;
+{$IFDEF WINDOWS}
+    winpeimagereader
+{$ELSE}
+ {$IF DEFINED(MACOS) OR DEFINED(DARWIN)}
+    machoreader
+ {$ELSE}
+    elfreader
+ {$ENDIF}
+{$ENDIF}
+    ;
 
 {$R *.lfm}
 
