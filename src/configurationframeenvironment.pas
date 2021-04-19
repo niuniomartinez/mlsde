@@ -92,7 +92,7 @@ implementation
     lEnvironmentConfiguration: TEnvironmentConfiguration;
   begin
     lEnvironmentConfiguration := TEnvironmentConfiguration (
-      MLSDEApplication.Configuration.FindConfig (CFG_ENVIRONMENT)
+      MLSDEApplication.Configuration.FindConfig (idEnvironmentConfig)
     );
   { Languaje. }
     Listlanguages.ItemIndex :=
@@ -108,7 +108,7 @@ implementation
     lLanguageId: String;
   begin
     lEnvironmentConfiguration := TEnvironmentConfiguration (
-      MLSDEApplication.Configuration.FindConfig (CFG_ENVIRONMENT)
+      MLSDEApplication.Configuration.FindConfig (idEnvironmentConfig)
     );
   { Language. }
     lLanguageId := GetLanguageName (Listlanguages.ItemIndex);

@@ -51,7 +51,7 @@ object AboutDialog: TAboutDialog
     Width = 380
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight, akBottom]
-    Caption = 'https://www.sf.net/p/mlsde'#13
+    Caption = 'https://github.com/niuniomartinez/mlsde'#13
     Font.Color = clMenuHighlight
     Font.Style = [fsBold, fsUnderline]
     ParentColor = False

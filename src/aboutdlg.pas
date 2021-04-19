@@ -67,7 +67,7 @@ implementation
   { Try to avoid change the URL using translations.
 
     Note that it is still possible to change the URI... }
-    LblWebsite.Caption := 'https://www.sf.net/p/mlsde';
+    LblWebsite.Caption := 'https://github.com/niuniomartinez/mlsde';
   { Get version from executable properties. }
     lFileVersionInfo := TFileVersionInfo.Create (Self);
     try

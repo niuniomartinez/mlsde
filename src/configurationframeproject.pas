@@ -60,7 +60,7 @@ implementation
     lProjectConfiguration: TProjectConfiguration;
   begin
     lProjectConfiguration := TProjectConfiguration (
-      MLSDEApplication.Configuration.FindConfig (CfgProjectId)
+      MLSDEApplication.Configuration.FindConfig (idProjectConfig)
     );
   { Files and directories. }
     CheckHiddenFiles.Checked := lProjectConfiguration.ShowHiddenFiles;
@@ -75,7 +75,7 @@ implementation
     lProjectConfiguration: TProjectConfiguration;
   begin
     lProjectConfiguration := TProjectConfiguration (
-      MLSDEApplication.Configuration.FindConfig (CfgProjectId)
+      MLSDEApplication.Configuration.FindConfig (idProjectConfig)
     );
   { Files and directories. }
     lProjectConfiguration.ShowHiddenFiles := CheckHiddenFiles.Checked;

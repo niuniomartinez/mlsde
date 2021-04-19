@@ -145,10 +145,10 @@ implementation
     Forms;
 
   resourcestring
-    CFG_HELP_USAGE   = 'Usage: %s [options]';
-    CFG_HELP_WHERE   = 'Where options are:';
-    CFG_HELP_HELP    = 'Shows this help.';
-    CFG_HELP_CFG     = 'Tells configuration file to use.';
+    txtHelpUsage  = 'Usage: %s [options]';
+    txtHelpWhere  = 'Where options are:';
+    txtHelpHelp   = 'Shows this help.';
+    { txtHelpConfig = 'Tells configuration file to use.'; }
 
 (*
  * TCustomConfiguration
@@ -302,11 +302,11 @@ implementation
     lConfigSection: TCustomConfiguration;
   begin
     WriteLn;
-    WriteLn (Format (CFG_HELP_USAGE, [ExtractFileName (Application.ExeName)]));
+    WriteLn (Format (txtHelpUsage, [ExtractFileName (Application.ExeName)]));
     WriteLn;
-    WriteLn (CFG_HELP_WHERE);
-    WriteLn ('  --cfg=<config_file_paht>:  ', CFG_HELP_CFG);
-    WriteLn ('  --help: ', CFG_HELP_HELP);
+    WriteLn (txtHelpWhere);
+    { WriteLn ('  --cfg=<config_file_paht>:  ', txtHelpConfig); }
+    WriteLn ('  --help: ', txtHelpHelp);
     for lConfigSection in fSectionList do lConfigSection.PrintCommandLineHelp
   end;
 

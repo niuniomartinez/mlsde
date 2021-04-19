@@ -31,14 +31,14 @@ interface
 
   const
   (* To identify project configuration object. *)
-    CfgProjectId = 'project';
+    idProjectConfig = 'project';
 
   type
   (* Implementation note:
-       See both TDirectory and TFile are CLASSes.  I think useing RECORDs
-       instead would be more efficient (i.e. an array of contiguous objects
-       would be better for both cache access and memory fragmentation) but I
-       didn't do that due to the tree node identification problem (see
+       See both TDirectory and TFile are CLASSes.  I thinkg to use RECORDs
+       would be more efficient (i.e. an array of contiguous objects would be
+       better for both cache access and memory fragmentation) but I didn't do
+       that due to the tree node identification problem (see
        TMainWindow.ProjectTreeDblClick).  Also use TFPGObjectList helps with
        management.  And CLASSes don't need the pointer access operator (^).
 
@@ -222,7 +222,7 @@ implementation
 
   function TProjectConfiguration.GetDirectoryDepth: Integer;
   begin
-    Result := Self.GetIntValue (CfgProjectId, 'dir_depth', DefaultDirDepth)
+    Result := Self.GetIntValue (idProjectConfig, 'dir_depth', DefaultDirDepth)
   end;
 
 
@@ -230,35 +230,35 @@ implementation
   procedure TProjectConfiguration.SetDirectoryDepth (aValue: Integer);
   begin
     if 1 > aValue then aValue := DefaultDirDepth;
-    Self.SetIntValue (CfgProjectId, 'dir_depth', aValue)
+    Self.SetIntValue (idProjectConfig, 'dir_depth', aValue)
   end;
 
 
 
   function TProjectConfiguration.GetShowHiddenFiles: Boolean;
   begin
-    Result := Self.GetBoolValue (CfgProjectId, 'show_hidden_files', False)
+    Result := Self.GetBoolValue (idProjectConfig, 'show_hidden_files', False)
   end;
 
 
 
   procedure TProjectConfiguration.SetShowHiddenFiles (aValue: Boolean);
   begin
-    Self.SetBooleanValue (CfgProjectId, 'show_hidden_files', aValue)
+    Self.SetBooleanValue (idProjectConfig, 'show_hidden_files', aValue)
   end;
 
 
 
   function TProjectConfiguration.GetShowHiddenDirectories: Boolean;
   begin
-    Result := Self.GetBoolValue (CfgProjectId, 'show_hidden_dirs', False)
+    Result := Self.GetBoolValue (idProjectConfig, 'show_hidden_dirs', False)
   end;
 
 
 
   procedure TProjectConfiguration.SetShowHiddenDirectories (aValue: Boolean);
   begin
-    Self.SetBooleanValue (CfgProjectId, 'show_hidden_dir', aValue)
+    Self.SetBooleanValue (idProjectConfig, 'show_hidden_dir', aValue)
   end;
 
 
@@ -331,7 +331,7 @@ implementation
     lCfgSection: TProjectConfiguration;
   begin
     lCfgSection := TProjectConfiguration (
-      MLSDEApplication.Configuration.FindConfig (CfgProjectId)
+      MLSDEApplication.Configuration.FindConfig (idProjectConfig)
     );
   { Directories. }
     if (aInfo.Attr and faDirectory) = faDirectory then
@@ -512,7 +512,7 @@ implementation
   { Do scan. }
     fRoot.Scan (
       TProjectConfiguration (
-        MLSDEApplication.Configuration.FindConfig (CfgProjectId)
+        MLSDEApplication.Configuration.FindConfig (idProjectConfig)
       ).DirDepth
     );
   { Reset the progress dialog, if available. }

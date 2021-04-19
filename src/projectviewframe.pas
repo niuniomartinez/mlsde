@@ -32,11 +32,11 @@ interface
 
   const
   (* Index of the directory icon. *)
-    ICON_DIRECTORY = 0;
+    iconDirectory = 0;
   (* Index of the open directory icon. *)
-    ICON_OPEN_DIRECTORY = 1;
+    iconOpenDirectory = 1;
   (* Index of the file icon. *)
-    ICON_FILE = 2;
+    iconFile = 2;
 
   type
   (* A panel that shows the project content.  It also allows some interaction
@@ -77,7 +77,7 @@ implementation
 {$R *.lfm}
 
   resourcestring
-    SORTING = 'Sorting files...';
+    txtSortingFiles = 'Sorting files...';
 
   const
   (* Tags to identify actions. *)
@@ -171,8 +171,8 @@ implementation
       if fCancelOperation then Exit;
       if Random (100) = 50 then Application.ProcessMessages;
       aNode.Expanded := False;
-      aNode.ImageIndex := ICON_DIRECTORY;
-      aNode.SelectedIndex := ICON_OPEN_DIRECTORY;
+      aNode.ImageIndex := iconDirectory;
+      aNode.SelectedIndex := iconOpenDirectory;
     { Add directories if available. }
       if aDir.NumDirs > 0 then
         for lNdx := 0 to aDir.NumDirs - 1 do
@@ -193,8 +193,8 @@ implementation
             aDir.Files[lNdx].Name
           );
           lNode.Data := aDir.Files[lNdx];
-          lNode.ImageIndex := ICON_FILE;
-          lNode.SelectedIndex := ICON_FILE;
+          lNode.ImageIndex := iconFile;
+          lNode.SelectedIndex := iconFile;
         end
     end;
 
@@ -205,7 +205,7 @@ implementation
     fCancelOperation := False;
     if ProgressDlg <> Nil then
     begin
-      ProgressDlg.LabelText.Caption := SORTING;
+      ProgressDlg.LabelText.Caption := txtSortingFiles;
       ProgressDlg.ProgressBar.Style := pbstMarquee;
       ProgressDlg.OnCancelAction := @Self.CancelSorting
     end;

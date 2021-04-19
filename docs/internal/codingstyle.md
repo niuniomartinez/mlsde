@@ -2,7 +2,7 @@
 
 ## Introduction ##
 
-This is the _MinGRo Coding Style Guide_.  This is mostly the same style than
+This is the _MLSDE Coding Style Guide_.  This is mostly the same style than
 the [Embarcadero's Object Pascal Style
 Guide](https://edn.embarcadero.com/article/10280) but with some differences;
 this document also explains the reasons of these differences.
@@ -38,8 +38,11 @@ All units should contain the following elements in the following order:
 
 ## Comments ##
 
-Sources _must_ include comments.  At least all public objects should have one
-comment to explain its proposal and use.
+Sources _must_ include comments explaining things (i.e. algorithms, decisions,
+use cases, notes...).  Please be as verbose as you can.  Remember that you'll
+forget how that code works in a couple of days.  You'll do.  Really.
+
+At least all public objects should have one comment to explain its proposal and use.
 
 The comments should be formatted as explained in _pasdoc_ documentation, so
 anybody can create a full internal documentation using it.  Read [pasdoc
@@ -93,9 +96,7 @@ TBitBtnKind = (bkCustom, bkOK, bkCancel, bkHelp,
 
 ### Casing ###
 
-Keywords in `UPPERCASE`.  I know that Delphi recommendation is to use lowercase
-but I find easer to read with keywords written in uppercase *even with syntax
-highlighting*.  Please don't tell me about to use lowercase.
+Keywords in `lowercase`.
 
 Everything else (constant and variable names, set elements, methods,
 properties, etc.) should be `CamelCase`.
@@ -106,39 +107,39 @@ properties, etc.) should be `CamelCase`.
 
 I use 2-spaces indentation and a tab-character for each 8 spaces.
 
-`BEGIN` and `END` keywords are on the same column in most cases.  Same for
-`REPEAT` and `UNTIL`, `CASE` and `END`, etcetera.
+`begin` and `end` keywords are on the same column in most cases.  Same for
+`repeat` and `until`, `case` and `end`, etcetera.
 
 Comments have one less indentation than the code if available.
 
 ~~~
 (* A good indentation example. *)
-  PROCEDURE Example (aParm: INTEGER);
-  BEGIN
-    IF aParm = Value THEN
+  procedure Example (aParm: INTEGER);
+  begin
+    if aParm = Value then
       DoSomething (Param)
-    ELSE BEGIN
+    else begin
       DoElse (Param);
-      WHILE aParm > 0 DO
-      BEGIN
+      while aParm > 0 do
+      begin
         DoOther (aParm);
-        DEC (aParm)
-      END
-    END;
+        Dec (aParm)
+      end
+    end;
   { Other more strict way.  It shows also comment indentation. }
-    IF aParm= Value THEN
+    if aParm = Value then
       DoSomething (aParm)
-    ELSE
-      BEGIN
+    else
+      begin
         DoElse (aParm);
       { This comments the loop. }
-        WHILE aParm > 0 DO
-          BEGIN
+        while aParm > 0 do
+          begin
             DoOther (aParm);
-            DEC (aParm)
-          END
-      END
-  END;
+            Dec (aParm)
+          end
+      end
+  end;
 ~~~
 
 
@@ -156,31 +157,31 @@ will make things easer to read.
 ~~~
 
 Use empty lines to separate logical blocks.  Use 3 empty lines to separate each
-`CLASS`, `PROCEDURE` or `FUNCTION` with others so it's easy to find where it
+`class`, `procedure` or `function` with others so it's easy to find where it
 starts and ends.  So do not put more than one empty line to separate code
-inside a `BEGIN...END` code block.
+inside a `begin...end` code block.
 
 ~~~
 (* This is a function to show how to use empty lines to separate
    logic blocs. *)
-  FUNCTION Example: BOOLEAN;
-  BEGIN
-    Example := TRUE
-  END;
+  function Example: Boolean;
+  begin
+    Example := True
+  end;
 
 
 
 (* This procedure is preceded by 3 empty lines so it's easy to
    find where the previous one finishes and where this one starts. *)
-  PROCEDURE Other;
-  BEGIN
-    IF Something THEN
+  procedure Other;
+  begin
+    if Something then
       DoThis;
     DoSometing;
 
   { The previous line separates a logic block. }
     DoMore
-  END;
+  end;
 ~~~
 
 
@@ -192,9 +193,9 @@ conditionals or everything else.  Use indentation to help reading.
 
 ~~~
 (* An example about how to split long lines. *)
-  IF (AbnormallyLongVariableName <> A_VERY_LONG_CONSTANT_NAME)
-  AND (AbnormallyLongVariableName < OTHER_CONSTANT)
-  THEN
+  if (AbnormallyLongVariableName <> aVeryLongConstantName)
+  and (AbnormallyLongVariableName < OtherConstant)
+  then
     ThisProcedureHasALongName (
       AbnormallyLongVariableName,
       AnObject.AnotherVeryLongNameForMethod (
@@ -230,4 +231,5 @@ properly.
 
 ## Other ##
 
-Do not use `WITH...DO` very often.  It makes the code harder to understand.
+Do not use `with...do` very often.  It makes the code harder to understand and
+would confuse the compiler too.

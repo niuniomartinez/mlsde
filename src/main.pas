@@ -30,7 +30,7 @@ interface
 
   const
   (* Name for the environment configuration section. *)
-    CFG_ENVIRONMENT = 'environment';
+    idEnvironmentConfig = 'environment';
 
   type
   (* Manages the environment configuration.
@@ -112,16 +112,16 @@ implementation
 
   const
   (* Section to store options. *)
-    ENV_SECTION = CFG_ENVIRONMENT;
+    EnvironmentSection = idEnvironmentConfig;
 
   function TEnvironmentConfiguration.GetLanguage: String;
   begin
-    Result := Self.GetValue (ENV_SECTION, 'language', '')
+    Result := Self.GetValue (EnvironmentSection, 'language', '')
   end;
 
   procedure TEnvironmentConfiguration.SetLanguage (const aValue: String);
   begin
-    Self.SetValue (ENV_SECTION, 'language', aValue)
+    Self.SetValue (EnvironmentSection, 'language', aValue)
   end;
 
 
@@ -156,7 +156,7 @@ implementation
   begin
     SetDefaultLang (
       TEnvironmentConfiguration (
-        fConfiguration.FindConfig (ENV_SECTION)
+        fConfiguration.FindConfig (EnvironmentSection)
       ).Language,
       LangDir
     )
@@ -188,8 +188,8 @@ implementation
   procedure TMLSDEApplication.Initialize;
   begin
   { Add configuration objects. }
-    fConfiguration.AddSection (TEnvironmentConfiguration.Create, ENV_SECTION);
-    fConfiguration.AddSection (TProjectConfiguration.Create, CfgProjectId);
+    fConfiguration.AddSection (TEnvironmentConfiguration.Create, EnvironmentSection);
+    fConfiguration.AddSection (TProjectConfiguration.Create, idProjectConfig);
   { Load configuration file. }
     fConfiguration.Initialize;
   { Parse command line options. }

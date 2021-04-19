@@ -1,23 +1,21 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: configuration.cfg_help_cfg
-msgctxt "configuration.cfg_help_cfg"
-msgid "Tells configuration file to use."
-msgstr "Indica qué archivo de configuración usar."
-
-#: configuration.cfg_help_help
-msgctxt "configuration.cfg_help_help"
+#: configuration.txthelphelp
+#, fuzzy
+msgctxt "configuration.txthelphelp"
 msgid "Shows this help."
 msgstr "Muestra esta ayuda"
 
-#: configuration.cfg_help_usage
-msgctxt "configuration.cfg_help_usage"
+#: configuration.txthelpusage
+#, fuzzy
+msgctxt "configuration.txthelpusage"
 msgid "Usage: %s [options]"
 msgstr "Uso: %s [opciones]"
 
-#: configuration.cfg_help_where
-msgctxt "configuration.cfg_help_where"
+#: configuration.txthelpwhere
+#, fuzzy
+msgctxt "configuration.txthelpwhere"
 msgid "Where options are:"
 msgstr "Donde 'opciones' son:"
 
@@ -72,7 +70,9 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr "Selecciona el idioma de la aplicación."
 
-#: projectviewframe.sorting
+#: projectviewframe.txtsortingfiles
+#, fuzzy
+msgctxt "projectviewframe.txtsortingfiles"
 msgid "Sorting files..."
 msgstr "Ordenando archivos..."
 
@@ -103,7 +103,7 @@ msgid "MLSDE  "
 msgstr ""
 
 #: taboutdialog.lblwebsite.caption
-msgid "https://www.sf.net/p/mlsde"
+msgid "https://github.com/niuniomartinez/mlsde"
 msgstr ""
 
 #: tconfigurationdlg.caption
@@ -139,7 +139,7 @@ msgstr "&Cerrar todas las lengüetas"
 msgid "Closes all tabs.  It doesn't save them!"
 msgstr ""
 "Cierra todas las lengüetas abiertas.\n"
-"¡No guarda cambios!"
+"¡No guarda cambios!\n"
 
 #: tmainwindow.actionconfigure.caption
 msgid "&Configuration..."

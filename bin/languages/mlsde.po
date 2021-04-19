@@ -1,23 +1,18 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: configuration.cfg_help_cfg
-msgctxt "configuration.cfg_help_cfg"
-msgid "Tells configuration file to use."
-msgstr ""
-
-#: configuration.cfg_help_help
-msgctxt "configuration.cfg_help_help"
+#: configuration.txthelphelp
+msgctxt "configuration.txthelphelp"
 msgid "Shows this help."
 msgstr ""
 
-#: configuration.cfg_help_usage
-msgctxt "configuration.cfg_help_usage"
+#: configuration.txthelpusage
+msgctxt "configuration.txthelpusage"
 msgid "Usage: %s [options]"
 msgstr ""
 
-#: configuration.cfg_help_where
-msgctxt "configuration.cfg_help_where"
+#: configuration.txthelpwhere
+msgctxt "configuration.txthelpwhere"
 msgid "Where options are:"
 msgstr ""
 
@@ -68,7 +63,8 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr ""
 
-#: projectviewframe.sorting
+#: projectviewframe.txtsortingfiles
+msgctxt "projectviewframe.txtsortingfiles"
 msgid "Sorting files..."
 msgstr ""
 
@@ -94,7 +90,7 @@ msgid "MLSDE  "
 msgstr ""
 
 #: taboutdialog.lblwebsite.caption
-msgid "https://www.sf.net/p/mlsde"
+msgid "https://github.com/niuniomartinez/mlsde"
 msgstr ""
 
 #: tconfigurationdlg.caption
