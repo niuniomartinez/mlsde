@@ -148,7 +148,7 @@ implementation
     txtHelpUsage  = 'Usage: %s [options]';
     txtHelpWhere  = 'Where options are:';
     txtHelpHelp   = 'Shows this help.';
-    { txtHelpConfig = 'Tells configuration file to use.'; }
+    txtHelpConfig = 'Tells configuration file to use.';
 
 (*
  * TCustomConfiguration
@@ -305,7 +305,7 @@ implementation
     WriteLn (Format (txtHelpUsage, [ExtractFileName (Application.ExeName)]));
     WriteLn;
     WriteLn (txtHelpWhere);
-    { WriteLn ('  --cfg=<config_file_paht>:  ', txtHelpConfig); }
+    WriteLn ('  --cfg=<config_file_paht>:  ', txtHelpConfig);
     WriteLn ('  --help: ', txtHelpHelp);
     for lConfigSection in fSectionList do lConfigSection.PrintCommandLineHelp
   end;

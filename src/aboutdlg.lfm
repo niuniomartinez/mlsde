@@ -31,9 +31,9 @@ object AboutDialog: TAboutDialog
     Height = 230
     Top = 0
     Width = 459
-    ActivePage = TabSheetLicense
+    ActivePage = TabSheetGeneral
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     object TabSheetGeneral: TTabSheet
       Caption = 'General'
