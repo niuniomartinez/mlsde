@@ -127,7 +127,8 @@ implementation
       Self.SynEdit.Lines.SaveToFile (fPath + fFileName);
       Self.SynEdit.Modified := False;
       Self.SynEditChange (Self.SynEdit)
-    end;
+    end
   end;
+
 end.
 

@@ -61,17 +61,10 @@ implementation
  *)
 
   uses
-    fileinfo, LCLIntf,
-{$IFDEF WINDOWS}
-    winpeimagereader
-{$ELSE}
- {$IF DEFINED(MACOS) OR DEFINED(DARWIN)}
-    machoreader
- {$ELSE}
-    elfreader
- {$ENDIF}
-{$ENDIF}
-    ;
+   { Not used while alpha/beta:
+     osUtils,
+   }
+    fileinfo, LCLIntf;
 
 {$R *.lfm}
 
@@ -95,7 +88,7 @@ implementation
       LblTitle.Caption := 'MLSDE '
                         + '1.α.0'
 { Use next line in production (non alpha nor beta).
-                        + lFileVersionInfo.VersionStrings.Values['FileVersion']
+                        + GetFileVersion
 }
     finally
       lFileVersionInfo.Free
