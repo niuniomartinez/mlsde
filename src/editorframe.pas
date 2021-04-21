@@ -64,7 +64,8 @@ interface
 implementation
 
   uses
-    Utils,
+GUIUtils,
+    Main, Utils,
     sysutils;
 
 {$R *.lfm}
@@ -113,7 +114,12 @@ implementation
     Self.Name := 'edit' + NormalizeIdentifier  (aSourceFileName);
     Self.Parent.Name := NormalizeIdentifier (aSourceFileName);
     Self.Parent.Caption := fFileName;
-  { TODO: Syntax hightlighter and autocomplete stuff. }
+    Self.SynEdit.Highlighter :=
+      MLSDEApplication.SynManager.GetHighlighterForExt (
+        GetFileExtension (aSourceFileName)
+      );
+    if Assigned (Self.SynEdit.Highlighter) then
+      GUIUtils.ShowInformation ('Info', 'Highlighter: ' + Self.SynEdit.Highlighter.Name);
     if Assigned (fOnChange) then fOnChange (Self)
   end;
 

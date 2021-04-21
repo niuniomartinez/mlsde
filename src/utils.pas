@@ -24,12 +24,22 @@ unit Utils;
  *)
 
 interface
+  uses
+    Types;
 
 (* Encodes a name (i.e. file path) so all characters are valid for identifiers.
  *)
   function NormalizeIdentifier (const aName: String): String;
+(* Finds the string in the list or returns -1 if not found. *)
+  function FindString (const aNeedle: String; aHaystack: TStringDynArray)
+    : Integer;
+(* Extracts file extension @bold(without dot and @italic(lowercased)). *)
+  function GetFileExtension (const aFileName: String): String;
 
 implementation
+
+  uses
+    sysutils;
 
 (* Encodes name. *)
   function NormalizeIdentifier (CONST aName: String): String;
@@ -44,6 +54,31 @@ implementation
         Result := Result + aName[Cnt]
       else
         Result := Result + '__'
+  end;
+
+
+
+(* Find string. *)
+  function FindString(const aNeedle: String; aHaystack: TStringDynArray)
+    : Integer;
+  var
+    Ndx: Integer;
+  begin
+    for Ndx := Low (aHaystack) to High (aHaystack) do
+      if aNeedle = aHaystack[Ndx] then Exit (Ndx);
+    Result := -1
+  end;
+
+
+
+(* Extracts file extension without dot. *)
+  function GetFileExtension (const aFileName: String): String;
+  begin
+    Result := LowerCase (ExtractFileExt (aFileName));
+    if Result = '.' then
+      Result := ''
+    else if Result <> '' then
+      Result := RightStr (Result, Length (Result) -1)
   end;
 
 end.

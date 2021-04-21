@@ -25,7 +25,7 @@ unit Main;
 interface
 
   uses
-    Configuration, Project,
+    Configuration, Project, SyntaxHighlighting,
     Classes;
 
   const
@@ -68,6 +68,7 @@ interface
     private
       fConfiguration: TConfiguration;
       fProject: TProject;
+      fSynManager: TSynManager;
 
     (* Sets up the language translation. *)
       procedure SetUpLanguage;
@@ -83,6 +84,8 @@ interface
       property Configuration: TConfiguration read fConfiguration;
     (* The currently loaded project. *)
       property Project: TProject read fProject;
+    (* reference to the syntax highlighters manager. *)
+      property SynManager: TSynManager read fSynManager;
     end;
 
   var
@@ -169,7 +172,8 @@ implementation
   begin
     inherited Create;
     fConfiguration := TConfiguration.Create;
-    fProject := TProject.Create
+    fProject := TProject.Create;
+    fSynManager := TSynManager.Create
   end;
 
 
@@ -178,6 +182,7 @@ implementation
   destructor TMLSDEApplication.Destroy;
   begin
     fProject.Free;
+    fSynManager.Free;
     fConfiguration.Free;
     inherited Destroy
   end;
@@ -208,7 +213,9 @@ implementation
         if not CreateDir (fConfiguration.ConfigurationDir) then
           ShowWarning (messageCantCreateConfigDir);
     { Configuration initiated. }
-      fConfiguration.Apply
+      fConfiguration.Apply;
+    { Loads and initializes the syntax highlighters. }
+      fSynManager.Initialize
     end
   end;
 
