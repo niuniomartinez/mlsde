@@ -64,7 +64,6 @@ interface
 implementation
 
   uses
-GUIUtils,
     Main, Utils,
     sysutils;
 
@@ -118,8 +117,6 @@ GUIUtils,
       MLSDEApplication.SynManager.GetHighlighterForExt (
         GetFileExtension (aSourceFileName)
       );
-    if Assigned (Self.SynEdit.Highlighter) then
-      GUIUtils.ShowInformation ('Info', 'Highlighter: ' + Self.SynEdit.Highlighter.Name);
     if Assigned (fOnChange) then fOnChange (Self)
   end;
 

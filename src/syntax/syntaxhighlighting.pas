@@ -54,17 +54,19 @@ interface
       fDefinitionList: array of THighlighterInfo;
       fNumHighlighters: Integer;
 
+    (* Removes all definitions. *)
+      procedure Clear;
     (* Looks for a highlighter by name and returns its index or -1 if not
        found. *)
       function GetHighlighterIndex (aName: String): Integer;
     (* Looks for a highlighter by extension and returns its index or -1 if not
        found. *)
       function GetExtensionIndex (aExtension: String): Integer;
-    (* Clears the list and rebuilds it. *)
-      procedure Reset;
     public
     (* Constructor. *)
       constructor Create;
+    (* Destructor. *)
+      destructor Destroy; override;
     (* Initializes the manager.
 
        Can be used to reset or re-initialize. *)
@@ -108,7 +110,7 @@ implementation
     inline;
   begin
     Result := BuiltInHighlighters[aNdx].HighlighterClass.Create (Nil);
-    Result.Name := BuiltInHighlighters[aNdx].Name
+    Result.Name := NormalizeIdentifier (BuiltInHighlighters[aNdx].Name)
   end;
 
 
@@ -159,6 +161,23 @@ implementation
   (* How much the lists grows when needed. *)
     ListGrow = 4;
 
+(* Removes definitions. *)
+  procedure TSynManager.Clear;
+  var
+    Ndx: Integer;
+  begin
+  { Destroy highlighters (if any). }
+    if fNumHighlighters > 0 then
+      for Ndx := 0 to fNumHighlighters - 1 do
+        if Assigned (fDefinitionList[Ndx].Highlighter) then
+          FreeAndNil (fDefinitionList[Ndx].Highlighter);
+    fNumHighlighters := 0;
+  { Reserve space for minimal space. }
+    SetLength (fDefinitionList, MinDefinitionList)
+  end;
+
+
+
 (* Looks for a highlighter by name. *)
   function TSynManager.GetHighlighterIndex (aName: String): Integer;
   var
@@ -177,15 +196,15 @@ implementation
 (* Looks for a highlighter by extension. *)
   function TSynManager.GetExtensionIndex (aExtension: String): Integer;
   var
-    Ndx: Integer;
+    Ndx, lExt: Integer;
     lExtensions: array of String;
   begin
     aExtension := LowerCase (aExtension);
     for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
     begin
       lExtensions := SplitString (fDefinitionList[Ndx].Extensions, ',');
-      Result := FindString (aExtension, lExtensions);
-      if Result >= 0 then Exit
+      lExt := FindString (aExtension, lExtensions);
+      if lExt >= 0 then Exit (Ndx)
     end;
   { Not found, so... }
     Result := -1
@@ -193,7 +212,26 @@ implementation
 
 
 
-  procedure TSynManager.Reset;
+(* Constructor. *)
+  constructor TSynManager.Create;
+  begin
+    inherited Create;
+    fNumHighlighters := 0
+  end;
+
+
+
+(* Destructor. *)
+  destructor TSynManager.Destroy;
+  begin
+    Self.Clear;
+    inherited Destroy
+  end;
+
+
+
+(* Initializes. *)
+  procedure TSynManager.Initialize;
 
     procedure AddHighlighter (aName, aExtensions: String; aBuiltIn: Boolean);
     begin
@@ -211,11 +249,8 @@ implementation
   var
     Ndx: Integer;
   begin
-  { Clear the list. }
-    for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
-      FreeAndNil (fDefinitionList[Ndx].Highlighter);
-    fNumHighlighters := 0;
-    SetLength (fDefinitionList, MinDefinitionList);
+  { Removes old list (if any). }
+    Self.Clear;
   { Adds built-in highlighters if non overriden. }
     for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
       if Self.GetHighlighterIndex (BuiltInHighlighters[Ndx].Name) < 0 then
@@ -224,23 +259,6 @@ implementation
           BuiltInHighlighters[Ndx].Extensions,
           True
         )
-  end;
-
-
-
-(* Constructor. *)
-  constructor TSynManager.Create;
-  begin
-    inherited Create;
-    Self.Reset
-  end;
-
-
-
-(* Initializes. *)
-  procedure TSynManager.Initialize;
-  begin
-    Self.Reset
   end;
 
 

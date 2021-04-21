@@ -315,6 +315,7 @@ implementation
     lProjectName, lProjectPath: String;
   begin
     Self.CloseAllTabs; { TODO: Only when loading new project? }
+    MLSDEApplication.SynManager.Initialize; { TODO: Only when loading new project? }
     Self.ProjectViewer.UpdateView;
     if MLSDEApplication.Project.Root <> Nil then
     begin
