@@ -1,21 +1,24 @@
 inherited EnvironmentConfigurationFrame: TEnvironmentConfigurationFrame
+  Width = 352
+  AutoSize = True
+  ClientWidth = 352
   DesignLeft = 338
   DesignTop = 196
   object TitleLanguage: TDividerBevel[0]
     Left = 0
     Height = 17
     Top = 0
-    Width = 320
+    Width = 352
     Caption = 'Language'
     Align = alTop
     Font.Style = [fsBold]
     ParentFont = False
   end
   object ListLanguages: TComboBoxEx[1]
-    Left = 16
+    Left = 0
     Height = 29
-    Top = 24
-    Width = 288
+    Top = 0
+    Width = 336
     Anchors = [akTop, akLeft, akRight]
     ItemHeight = 0
     ItemsEx = <    
@@ -30,5 +33,31 @@ inherited EnvironmentConfigurationFrame: TEnvironmentConfigurationFrame
       end>
     ItemIndex = 0
     TabOrder = 0
+  end
+  object TitleWindow: TDividerBevel[2]
+    Left = -16
+    Height = 17
+    Top = 32
+    Width = 368
+    Caption = 'Window'
+    Anchors = [akTop, akLeft, akRight]
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object chkTitleProjectFirst: TCheckBox[3]
+    Left = 0
+    Height = 21
+    Top = 56
+    Width = 330
+    Caption = 'Show project name at the beginning of the window title.'
+    TabOrder = 1
+  end
+  object chkTitleProjectDir: TCheckBox[4]
+    Left = 0
+    Height = 21
+    Top = 80
+    Width = 202
+    Caption = 'Window title shows project path.'
+    TabOrder = 2
   end
 end

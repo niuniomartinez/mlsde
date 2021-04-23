@@ -42,8 +42,16 @@ interface
      ) *)
     TEnvironmentConfiguration = class (TCustomConfiguration)
     private
+      fTitle: String;
+
       function GetLanguage: String;
       procedure SetLanguage (const aValue: String);
+      function GetWindowTitleProjectFirst: Boolean;
+      procedure SetWindowTitleProjectFirst (const aValue: Boolean);
+      function GetWindowTitleProjectShowDir: Boolean;
+      procedure SetWindowTitleProjectShowDir (const aValue: Boolean);
+
+      procedure BuildTitleTemplate;
     public
     (* Writes help of the supported command line options. *)
       procedure PrintCommandLineHelp; override;
@@ -52,6 +60,17 @@ interface
 
     (* Application language. *)
       property Language: String read GetLanguage write SetLanguage;
+    (* Tells if main window title should show the project first.
+       @seealso(WindowTitleProjectShowDir) @seealso(TitleTemplate) *)
+      property WindowTitleProjectFirst: Boolean
+        read GetWindowTitleProjectFirst write SetWindowTitleProjectFirst;
+    (* Tells if main window title should show the project directory.
+       @seealso(WindowTitleProjectFirst) @seealso(TitleTemplate) *)
+      property WindowTitleProjectShowDir: Boolean
+        read GetWindowTitleProjectShowDir write SetWindowTitleProjectShowDir;
+    (* Main window title template.
+       @seealso(WindowTitleProjectFirst) @seealso(WindowTitleProjectShowDir) *)
+      property TitleTemplate: String read fTitle;
     end;
 
 
@@ -102,6 +121,11 @@ implementation
   const
   (* Directory where .po/.mo files are. *)
     LangDir = 'languages';
+  (* To build the window title.  See TEnvironmentConfiguration. *)
+    WindowTitleProjectName = 'MLSDE - %s';
+    WindowTitleProjectDir = 'MLSDE - %s (%s)';
+    WindowTitleProjectNameFirst = '%s - MLSDE';
+    WindowTitleProjectDirFirst = '%s (%s) - MLSDE';
 
   resourcestring
     messageSelectAppLanguage = 'Selects the application language.';
@@ -124,7 +148,57 @@ implementation
 
   procedure TEnvironmentConfiguration.SetLanguage (const aValue: String);
   begin
-    Self.SetValue (EnvironmentSection, 'language', aValue)
+    if aValue <> Self.GetLanguage then
+      Self.SetValue (EnvironmentSection, 'language', aValue)
+  end;
+
+  function TEnvironmentConfiguration.GetWindowTitleProjectFirst: Boolean;
+  begin
+    Result := Self.GetBoolValue (EnvironmentSection, 'title_project_first', False)
+  end;
+
+  procedure TEnvironmentConfiguration.SetWindowTitleProjectFirst
+    (const aValue: Boolean);
+  begin
+    if aValue <> Self.GetWindowTitleProjectFirst then
+    begin
+      Self.SetBooleanValue (EnvironmentSection, 'title_project_first', aValue);
+      Self.BuildTitleTemplate
+    end;
+  end;
+
+  function TEnvironmentConfiguration.GetWindowTitleProjectShowDir: Boolean;
+  begin
+    Result := Self.GetBoolValue (EnvironmentSection, 'title_project_dir', True)
+  end;
+
+  procedure TEnvironmentConfiguration.SetWindowTitleProjectShowDir
+    (const aValue: Boolean);
+  begin
+    if aValue <> Self.GetWindowTitleProjectShowDir then
+    begin
+      Self.SetBooleanValue (EnvironmentSection, 'title_project_dir', aValue);
+      Self.BuildTitleTemplate
+    end;
+  end;
+
+
+
+  procedure TEnvironmentConfiguration.BuildTitleTemplate;
+  begin
+    if Self.GetWindowTitleProjectFirst then
+    begin
+      if Self.GetWindowTitleProjectShowDir then
+        fTitle := WindowTitleProjectDirFirst
+      else
+        fTitle := WindowTitleProjectNameFirst
+    end
+    else begin
+      if Self.GetWindowTitleProjectShowDir then
+        fTitle := WindowTitleProjectDir
+      else
+        fTitle := WindowTitleProjectName
+    end
   end;
 
 
@@ -146,6 +220,8 @@ implementation
     if (lOption = 'en') or (lOption = 'es') then
       Self.SetLanguage (lOption);
   { TODO: Wrong lOption! }
+  { Sets the title template. }
+    Self.BuildTitleTemplate
   end;
 
 

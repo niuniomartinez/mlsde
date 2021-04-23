@@ -119,6 +119,14 @@ msgctxt "tconfigurationdlg.caption"
 msgid "Configuration"
 msgstr "Configuración"
 
+#: tenvironmentconfigurationframe.chktitleprojectdir.caption
+msgid "Window title shows project path."
+msgstr "Mostrar la ruta del proyecto en el título."
+
+#: tenvironmentconfigurationframe.chktitleprojectfirst.caption
+msgid "Show project name at the beginning of the window title."
+msgstr "Poner el nombre del proyecto al principio del título."
+
 #: tenvironmentconfigurationframe.listlanguages.itemsex[0].caption
 msgid "Default (or English)"
 msgstr "Automático (o inglés)"
@@ -132,8 +140,13 @@ msgid "Spanish [es]"
 msgstr "Castellano [es]"
 
 #: tenvironmentconfigurationframe.titlelanguage.caption
+msgctxt "tenvironmentconfigurationframe.titlelanguage.caption"
 msgid "Language"
 msgstr "Idioma"
+
+#: tenvironmentconfigurationframe.titlewindow.caption
+msgid "Window"
+msgstr "Ventana"
 
 #: tmainwindow.actionabout.caption
 msgid "&About..."

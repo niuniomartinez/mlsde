@@ -171,9 +171,15 @@ implementation
       for Ndx := 0 to fNumHighlighters - 1 do
         if Assigned (fDefinitionList[Ndx].Highlighter) then
           FreeAndNil (fDefinitionList[Ndx].Highlighter);
-    fNumHighlighters := 0;
-  { Reserve space for minimal space. }
-    SetLength (fDefinitionList, MinDefinitionList)
+  { Reserve space for definition list.
+
+    First time, it reserves for the minimal, but later (when opening new
+    project) it reserves for all them as it knows how many they are. }
+    SetLength (fDefinitionList, 0);
+    if fNumHighlighters > 0 then
+      SetLength (fDefinitionList, fNumHighlighters)
+    else
+      SetLength (fDefinitionList, MinDefinitionList)
   end;
 
 

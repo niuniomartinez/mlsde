@@ -26,7 +26,7 @@ unit Configuration;
 interface
 
   uses
-    Classes, fgl, IniFiles,
+    Classes, fgl, IniFiles, Utils,
     sysutils;
 
   type
@@ -43,12 +43,16 @@ interface
   (* Base class for configuration objects.
 
      Each part (subsystem) of the IDE should define a class that extends this
-     one. *)
+     one.
+
+     To make it more efficent, child classes should call the @code(Set*Value)
+     methods only if value has really changed. *)
     TCustomConfiguration = class (TObject)
     private
       fOwner: TConfiguration;
       fName: String;
-      fOnApplyConfiguration: TNotifyEvent;
+      fChanged: Boolean;
+      fObserversSubject: TSubject;
     protected
     (* Returns the requested value. *)
       function GetValue (const aSection, aVariable, aDefault: String): String;
@@ -75,6 +79,10 @@ interface
         const aValue: Boolean
       );
     public
+    (* Constructor. *)
+      constructor Create;
+    (* Destructor. *)
+      destructor Destroy; override;
     (* Writes help of the supported command line options.
 
        By default it doesn't do anything. *)
@@ -86,9 +94,8 @@ interface
 
     (* Configuration name. *)
       property Name: String read fName write fName;
-    (* Event called when configuration changes and is applied. *)
-      property OnApplyConfiguration: TNotifyEvent
-        read fOnApplyConfiguration write fOnApplyConfiguration;
+    (* Observers should register here to know when configuration changes. *)
+      property Subject: TSubject read fObserversSubject;
     end;
 
 
@@ -168,7 +175,8 @@ implementation
   procedure TCustomConfiguration.SetValue
     (const aSection, aVariable, aValue: String);
   begin
-    fOwner.fFile.WriteString (aSection, aVariable, aValue)
+    fOwner.fFile.WriteString (aSection, aVariable, aValue);
+    fChanged := True
   end;
 
 
@@ -191,7 +199,8 @@ implementation
     const aValue: Integer
   );
   begin
-    fOwner.fFile.WriteInteger (aSection, aVariable, aValue)
+    fOwner.fFile.WriteInteger (aSection, aVariable, aValue);
+    fChanged := True
   end;
 
 
@@ -214,7 +223,26 @@ implementation
     const aValue: Boolean
   );
   begin
-    fOwner.fFile.WriteBool (aSection, aVariable, aValue)
+    fOwner.fFile.WriteBool (aSection, aVariable, aValue);
+    fChanged := True
+  end;
+
+
+
+(* Constructor. *)
+  constructor TCustomConfiguration.Create;
+  begin
+    inherited Create;
+    fObserversSubject := TSubject.Create (Self)
+  end;
+
+
+
+(* Destructor. *)
+  destructor TCustomConfiguration.Destroy;
+  begin
+    fObserversSubject.Free;
+    inherited Destroy
   end;
 
 
@@ -349,8 +377,13 @@ implementation
     lCfg: TCustomConfiguration;
   begin
     for lCfg in fSectionList do
-      if Assigned (lCfg.OnApplyConfiguration) then
-        lCfg.OnApplyConfiguration (lCfg)
+    begin
+      if lCfg.fChanged then
+      begin
+        lCfg.Subject.Notify;
+        lCfg.fChanged := False
+      end
+    end
   end;
 
 end.

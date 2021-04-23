@@ -79,7 +79,7 @@ implementation
     );
   { Files and directories. }
     lProjectConfiguration.ShowHiddenFiles := CheckHiddenFiles.Checked;
-    lProjectConfiguration.ShowHiddenDirs :=  CheckHiddenDirectories.Checked;
+    lProjectConfiguration.ShowHiddenDirs := CheckHiddenDirectories.Checked;
     lProjectConfiguration.DirDepth := EditDirectoryDepth.Value
   end;
 

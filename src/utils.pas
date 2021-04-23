@@ -25,7 +25,31 @@ unit Utils;
 
 interface
   uses
-    Types;
+    Classes, Types;
+
+  const
+  (* Max number of observers. *)
+    MaxObservers = 4;
+
+  type
+  (* A simple observer pattern implementation. *)
+    TSubject = class (TObject)
+    private
+      fOwner: TObject;
+      fObserverList: array [1..MaxObservers] of TNotifyEvent;
+    public
+    (* Constructor.
+       @param(aOwner The actual subject.  Will be passed as @code(Sender) to
+        the callback methods.) *)
+      constructor Create (aOwner: TObject); virtual;
+    (* Adds an observer. *)
+      procedure AddObserver (aObserverCallback: TNotifyEvent);
+    (* Removes observer. *)
+      procedure RemoveObserver (aObserverCallback: TNotifyEvent);
+    (* Notifies all observers. *)
+      procedure Notify;
+    end;
+
 
 (* Encodes a name (i.e. file path) so all characters are valid for identifiers.
  *)
@@ -79,6 +103,65 @@ implementation
       Result := ''
     else if Result <> '' then
       Result := RightStr (Result, Length (Result) -1)
+  end;
+
+
+(*
+ * TSubject
+ ***************************************************************************)
+
+(* Constructor. *)
+  constructor TSubject.Create (aOwner: TObject);
+  var
+    Ndx: Integer;
+  begin
+    inherited Create;
+    fOwner := aOwner;
+    for Ndx := Low (fObserverList) to High (fObserverList) do
+      fObserverList[Ndx] := Nil
+  end;
+
+
+
+(* Adds observer. *)
+  procedure TSubject.AddObserver(aObserverCallback: TNotifyEvent);
+  var
+    Ndx: Integer;
+  begin
+    for Ndx := Low (fObserverList) to High (fObserverList) do
+      if not Assigned (fObserverList[Ndx]) then
+      begin
+        fObserverList[Ndx] := aObserverCallback;
+        Exit
+      end;
+    raise Exception.Create ('No space for more observers!')
+  end;
+
+
+
+(* Removes observer. *)
+  procedure TSubject.RemoveObserver(aObserverCallback: TNotifyEvent);
+  var
+    Ndx: Integer;
+  begin
+    for Ndx := Low (fObserverList) to High (fObserverList) do
+      if fObserverList[Ndx] = aObserverCallback then
+        fObserverList[Ndx] := Nil
+  end;
+
+
+
+(* Does notification. *)
+  procedure TSubject.Notify;
+  var
+    Ndx: Integer;
+  begin
+    for Ndx := Low (fObserverList) to High (fObserverList) do
+      if Assigned (fObserverList[Ndx]) then
+      begin
+        fObserverList[Ndx] (fOwner);
+        Exit
+      end
   end;
 
 end.

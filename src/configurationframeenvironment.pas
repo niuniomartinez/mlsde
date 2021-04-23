@@ -34,6 +34,9 @@ interface
     TEnvironmentConfigurationFrame = class (TConfigurationFrame)
       TitleLanguage: TDividerBevel;
         Listlanguages: TComboBoxEx;
+      TitleWindow: TDividerBevel;
+        chkTitleProjectDir: TCheckBox;
+        chkTitleProjectFirst: TCheckBox;
     public
     (* Initializes the frame.
 
@@ -96,7 +99,12 @@ implementation
     );
   { Languaje. }
     Listlanguages.ItemIndex :=
-      GetLanguageIndex (lEnvironmentConfiguration.Language)
+      GetLanguageIndex (lEnvironmentConfiguration.Language);
+  { Window. }
+    chkTitleProjectFirst.Checked :=
+      lEnvironmentConfiguration.WindowTitleProjectFirst;
+    chkTitleProjectDir.Checked :=
+      lEnvironmentConfiguration.WindowTitleProjectShowDir
   end;
 
 
@@ -116,7 +124,12 @@ implementation
     begin
       lEnvironmentConfiguration.Language := lLanguageId;
       Self.NeedsToReinitialize
-    end
+    end;
+  { Window. }
+    lEnvironmentConfiguration.WindowTitleProjectFirst :=
+      chkTitleProjectFirst.Checked;
+    lEnvironmentConfiguration.WindowTitleProjectShowDir :=
+      chkTitleProjectDir.Checked
   end;
 
 end.

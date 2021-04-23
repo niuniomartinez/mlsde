@@ -83,8 +83,12 @@ interface
        a file. *)
       procedure EditorChanged (Sender: TObject);
     private
+    (* Configuration changed. *)
+      procedure ConfigurationChanged (Sender: TObject);
     (* Updates the state of the components related with files. *)
       procedure UpdateFileComponentStates;
+    (* Updates window title. *)
+      procedure UpdateWindowTitle;
     (* Returns the "editor" object of the given tab.
 
        If it doesn't find it then raises an exception. *)
@@ -113,8 +117,6 @@ implementation
 {$R *.lfm}
 
   const
-  (* To build the window title. *)
-    WindowTitle = '%s (%s) - MLSDE';
   (* Tag values for different actions. *)
     tagConfigure = 1;
     tagAboutDlg = 2;
@@ -179,6 +181,7 @@ implementation
   procedure TMainWindow.FormShow (Sender: TObject);
   begin
     Self.ProjectViewer.UpdateView;
+    Self.UpdateWindowTitle;
     Self.UpdateFileComponentStates
   end;
 
@@ -195,6 +198,9 @@ implementation
     Self.ProjectViewer.ProjectTree.OnDblClick := @Self.ProjectTreeDblClick;
     Self.MenuItemOpenPrj.Action := Self.ProjectViewer.ActionOpenProject;
     Self.tbtnOpenPrj.Action := Self.ProjectViewer.ActionOpenProject;
+    MLSDEApplication.Configuration.FindConfig (
+      idEnvironmentConfig
+    ).Subject.AddObserver (@Self.ConfigurationChanged);
 
     Self.UpdateFileComponentStates
   end;
@@ -229,6 +235,14 @@ implementation
 
 
 
+(* Configuration changed. *)
+  procedure TMainWindow.ConfigurationChanged(Sender: TObject);
+  begin
+    self.UpdateWindowTitle
+  end;
+
+
+
 (* Updates components. *)
   procedure TMainWindow.UpdateFileComponentStates;
   var
@@ -257,6 +271,30 @@ implementation
         end
       end
     end
+  end;
+
+
+
+(* Updates window title. *)
+  procedure TMainWindow.UpdateWindowTitle;
+  begin
+    if Assigned (MLSDEApplication.Project.Root) then
+      Self.Caption := Format (
+        TEnvironmentConfiguration (
+          MLSDEApplication.Configuration.FindConfig (idEnvironmentConfig)
+        ).TitleTemplate,
+        [
+          MLSDEApplication.Project.Root.Name,
+          ExcludeTrailingPathDelimiter (MLSDEApplication.Project.Root.GetPath)
+        ]
+      )
+    else
+      Self.Caption := Format (
+        TEnvironmentConfiguration (
+          MLSDEApplication.Configuration.FindConfig (idEnvironmentConfig)
+        ).TitleTemplate,
+        ['', '<n/a>']
+      )
   end;
 
 
@@ -311,24 +349,11 @@ implementation
 
 (* Project has changed. *)
   procedure TMainWindow.ProjectChanged (Sender: TObject);
-  var
-    lProjectName, lProjectPath: String;
   begin
     Self.CloseAllTabs; { TODO: Only when loading new project? }
     MLSDEApplication.SynManager.Initialize; { TODO: Only when loading new project? }
     Self.ProjectViewer.UpdateView;
-    if MLSDEApplication.Project.Root <> Nil then
-    begin
-      lProjectName := MLSDEApplication.Project.Root.Name;
-      lProjectPath := ExcludeTrailingPathDelimiter (
-        MLSDEApplication.Project.Root.GetPath
-      )
-    end
-    else begin
-      lProjectName := '<>';
-      lProjectPath := '.'
-    end;
-    Self.Caption := Format (WindowTitle, [lProjectName, lProjectPath]);
+    Self.UpdateWindowTitle;
     Self.UpdateFileComponentStates
   end;
 

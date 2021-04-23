@@ -179,6 +179,8 @@ interface
 
     (* Event to cancel the scanning. *)
       procedure CancelScan (aSender: TObject);
+    (* Configuration has changed. *)
+      procedure ConfigurationChanged (aSender: TObject);
     public
     (* Destructor. *)
       destructor Destroy; override;
@@ -230,7 +232,8 @@ implementation
   procedure TProjectConfiguration.SetDirectoryDepth (aValue: Integer);
   begin
     if 1 > aValue then aValue := DefaultDirDepth;
-    Self.SetIntValue (idProjectConfig, 'dir_depth', aValue)
+    if aValue <> Self.GetDirectoryDepth then
+      Self.SetIntValue (idProjectConfig, 'dir_depth', aValue)
   end;
 
 
@@ -244,7 +247,8 @@ implementation
 
   procedure TProjectConfiguration.SetShowHiddenFiles (aValue: Boolean);
   begin
-    Self.SetBooleanValue (idProjectConfig, 'show_hidden_files', aValue)
+    if aValue <> Self.GetShowHiddenFiles then
+      Self.SetBooleanValue (idProjectConfig, 'show_hidden_files', aValue)
   end;
 
 
@@ -258,7 +262,8 @@ implementation
 
   procedure TProjectConfiguration.SetShowHiddenDirectories (aValue: Boolean);
   begin
-    Self.SetBooleanValue (idProjectConfig, 'show_hidden_dir', aValue)
+    if aValue <> Self.GetShowHiddenDirectories then
+      Self.SetBooleanValue (idProjectConfig, 'show_hidden_dirs', aValue)
   end;
 
 
@@ -461,6 +466,15 @@ implementation
 
 
 
+(* Configuration has changed. *)
+  procedure TProject.ConfigurationChanged (aSender: TObject);
+  begin
+    Self.Scan;
+    if Assigned (fOnChange) then fOnChange (Self)
+  end;
+
+
+
 (* Destructor. *)
   destructor TProject.Destroy;
   begin
@@ -494,6 +508,10 @@ implementation
     end;
   { Populate. }
     Self.Scan;
+  { Events. }
+    MLSDEApplication.Configuration.FindConfig (
+      idProjectConfig
+    ).Subject.AddObserver (@Self.ConfigurationChanged);
     if Assigned (fOnChange) then fOnChange (Self)
   end;
 
@@ -526,6 +544,9 @@ implementation
 (* Clears project. *)
   procedure TProject.Clear;
   begin
+    MLSDEApplication.Configuration.FindConfig (
+      idProjectConfig
+    ).Subject.RemoveObserver (@Self.ConfigurationChanged);
     FreeAndNil (fRoot);
     fBasePath := ''
   end;
