@@ -230,6 +230,10 @@ msgstr "Muestra archivos ocultos."
 msgid "Directory depth:"
 msgstr "Profundidad:"
 
+#: tprojectconfigurationframe.lbldirectoryorder.caption
+msgid "Directory order:"
+msgstr "Orden de los directorios:"
+
 #: tprojectconfigurationframe.titlefilesndirs.caption
 msgid "Files and directories"
 msgstr "Archivos y directorios"

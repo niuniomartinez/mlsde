@@ -3,7 +3,7 @@ object ConfigurationDlg: TConfigurationDlg
   Height = 390
   Top = 114
   Width = 642
-  BorderStyle = bsDialog
+  BorderIcons = [biSystemMenu]
   Caption = 'Configuration'
   ClientHeight = 390
   ClientWidth = 642
@@ -12,8 +12,8 @@ object ConfigurationDlg: TConfigurationDlg
   LCLVersion = '2.0.10.0'
   object ButtonPanel: TButtonPanel
     Left = 6
-    Height = 41
-    Top = 343
+    Height = 35
+    Top = 349
     Width = 630
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -29,7 +29,7 @@ object ConfigurationDlg: TConfigurationDlg
   end
   object NoteBook: TNotebook
     Left = 174
-    Height = 337
+    Height = 343
     Top = 0
     Width = 468
     Align = alClient
@@ -37,17 +37,19 @@ object ConfigurationDlg: TConfigurationDlg
   end
   object TabList: TTreeView
     Left = 0
-    Height = 337
+    Height = 343
     Top = 0
     Width = 169
     Align = alLeft
+    ReadOnly = True
     ScrollBars = ssAutoBoth
     TabOrder = 2
     OnClick = TabListClick
+    Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
   end
   object ResizeBar: TSplitter
     Left = 169
-    Height = 337
+    Height = 343
     Top = 0
     Width = 5
   end

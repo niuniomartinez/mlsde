@@ -219,6 +219,10 @@ msgstr ""
 msgid "Directory depth:"
 msgstr ""
 
+#: tprojectconfigurationframe.lbldirectoryorder.caption
+msgid "Directory order:"
+msgstr ""
+
 #: tprojectconfigurationframe.titlefilesndirs.caption
 msgid "Files and directories"
 msgstr ""

@@ -31,10 +31,12 @@ interface
   type
     TProjectConfigurationFrame = class (TConfigurationFrame)
       TitleFilesNDirs: TDividerBevel;
-        CheckHiddenFiles: TCheckBox;
-        CheckHiddenDirectories: TCheckBox;
         lblDirectoryDepth: TLabel;
         EditDirectoryDepth: TSpinEdit;
+        selectDirOrder: TComboBox;
+        lblDirectoryOrder: TLabel;
+        CheckHiddenFiles: TCheckBox;
+        CheckHiddenDirectories: TCheckBox;
     public
     (* Initializes the frame.
 
@@ -65,7 +67,8 @@ implementation
   { Files and directories. }
     CheckHiddenFiles.Checked := lProjectConfiguration.ShowHiddenFiles;
     CheckHiddenDirectories.Checked := lProjectConfiguration.ShowHiddenDirs;
-    EditDirectoryDepth.Value := lProjectConfiguration.DirDepth
+    EditDirectoryDepth.Value := lProjectConfiguration.DirDepth;
+    selectDirOrder.ItemIndex := Ord (lProjectConfiguration.DirOrder);
   end;
 
 
@@ -80,7 +83,8 @@ implementation
   { Files and directories. }
     lProjectConfiguration.ShowHiddenFiles := CheckHiddenFiles.Checked;
     lProjectConfiguration.ShowHiddenDirs := CheckHiddenDirectories.Checked;
-    lProjectConfiguration.DirDepth := EditDirectoryDepth.Value
+    lProjectConfiguration.DirDepth := EditDirectoryDepth.Value;
+    lProjectConfiguration.DirOrder := TDirectoryOrder (selectDirOrder.ItemIndex)
   end;
 
 end.

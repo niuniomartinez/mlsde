@@ -68,11 +68,25 @@ interface
 
 
 
+  (* How directories are ordered. *)
+    TDirectoryOrder = (
+    (* No matter. *)
+      doAny,
+    (* Directories first. *)
+      doFirst,
+    (* Directories last. *)
+      doLast
+    );
+
+
+
   (* Manages project configuration. *)
     TProjectConfiguration = class (TCustomConfiguration)
     private
       function GetDirectoryDepth: Integer;
       procedure SetDirectoryDepth (aValue: Integer);
+      function GetDirectoryOrder: TDirectoryOrder;
+      procedure SetDirectoryOrder (aValue: TDirectoryOrder);
       function GetShowHiddenFiles: Boolean;
       procedure SetShowHiddenFiles (aValue: Boolean);
       function GetShowHiddenDirectories: Boolean;
@@ -80,6 +94,9 @@ interface
     public
     (* Tells depth when scanning directories. *)
       property DirDepth: Integer read GetDirectoryDepth write SetDirectoryDepth;
+    (* How to order the directories. *)
+      property DirOrder: TDirectoryOrder
+        read GetDirectoryOrder write SetDirectoryOrder;
     (* Tells if should show the hidden files in the project list. *)
       property ShowHiddenFiles: Boolean
          read GetShowHiddenFiles write SetShowHiddenFiles;
@@ -227,8 +244,6 @@ implementation
     Result := Self.GetIntValue (idProjectConfig, 'dir_depth', DefaultDirDepth)
   end;
 
-
-
   procedure TProjectConfiguration.SetDirectoryDepth (aValue: Integer);
   begin
     if 1 > aValue then aValue := DefaultDirDepth;
@@ -238,12 +253,25 @@ implementation
 
 
 
+  function TProjectConfiguration.GetDirectoryOrder: TDirectoryOrder;
+  begin
+    Result := TDirectoryOrder (
+      Self.GetIntValue (idProjectConfig, 'dir_order', Ord (doFirst))
+    )
+  end;
+
+  procedure TProjectConfiguration.SetDirectoryOrder (aValue: TDirectoryOrder);
+  begin
+    if aValue <> Self.GetDirectoryOrder then
+      Self.SetIntValue (idProjectConfig, 'dir_order', Ord (aValue))
+  end;
+
+
+
   function TProjectConfiguration.GetShowHiddenFiles: Boolean;
   begin
     Result := Self.GetBoolValue (idProjectConfig, 'show_hidden_files', False)
   end;
-
-
 
   procedure TProjectConfiguration.SetShowHiddenFiles (aValue: Boolean);
   begin
@@ -257,8 +285,6 @@ implementation
   begin
     Result := Self.GetBoolValue (idProjectConfig, 'show_hidden_dirs', False)
   end;
-
-
 
   procedure TProjectConfiguration.SetShowHiddenDirectories (aValue: Boolean);
   begin

@@ -116,12 +116,12 @@ implementation
     end;
 
   begin
-    case (Sender AS TComponent).Tag of
+    case (Sender as TComponent).Tag of
     tagOpenProject:
       OpenProject;
     else
     { This should never be rendered, so no translation required. }
-      GUIUtils.ShowError ('Action tag: %d', [(Sender AS TComponent).Tag]);
+      GUIUtils.ShowError ('Action tag: %d', [TComponent (Sender).Tag]);
     end;
   end;
 
@@ -130,23 +130,35 @@ implementation
 (* Tree sorting. *)
   function TProjectView.OrderNodes (aNode1, aNode2: TTreeNode): Integer;
 
-    function IsFile (const aNode: TTreeNode): Boolean; inline;
-    begin
-      Result := aNode.Data = Nil
-    end;
-
     function IsDirectory (const aNode: TTreeNode): Boolean; inline;
     begin
-      Result := aNode.Data <> Nil
+      Result := TObject (aNode.Data) is TDirectory
     end;
 
+  var
+    lProjectConfiguration: TProjectConfiguration;
+    IsDir1, IsDir2: Boolean;
   begin
     if Random (100) = 50 then Application.ProcessMessages;
-  { Directories before files. }
-    if IsDirectory (aNode1) and IsFile (aNode2) then Exit (-1);
-    if IsFile (aNode1) and IsDirectory (aNode2) then Exit ( 1);
-  { Same kind in alphabetical order. }
-    Result := AnsiStrIComp (PChar (aNode1.Text), PChar (aNode2.Text))
+    IsDir1 := IsDirectory (aNode1);
+    IsDir2 := IsDirectory (aNode2);
+    lProjectConfiguration := TProjectConfiguration (
+      MLSDEApplication.Configuration.FindConfig (idProjectConfig)
+    );
+  { What order to use. }
+    if (lProjectConfiguration.DirOrder <> doAny)
+    and (IsDir1 <> IsDir2)
+    then begin
+      if lProjectConfiguration.DirOrder = doFirst then
+      begin
+        if IsDir1 then Result := -1 else Result := 1
+      end
+      else begin
+        if IsDir1 then Result := 1 else Result := -1
+      end
+    end
+    else
+      Result := AnsiStrIComp (PChar (aNode1.Text), PChar (aNode2.Text))
   end;
 
 
