@@ -111,7 +111,7 @@
         <UnitName Value="Main"/>
       </Unit3>
       <Unit4>
-        <Filename Value="configurationdialogform.pas"/>
+        <Filename Value="configurationdialog/configurationdialogform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ConfigurationDlg"/>
         <HasResources Value="True"/>
@@ -119,12 +119,12 @@
         <UnitName Value="ConfigurationDialogForm"/>
       </Unit4>
       <Unit5>
-        <Filename Value="guiutils.pas"/>
+        <Filename Value="gui/guiutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="GUIUtils"/>
       </Unit5>
       <Unit6>
-        <Filename Value="configurationdialogframe.pas"/>
+        <Filename Value="configurationdialog/configurationdialogframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ConfigurationFrame"/>
         <HasResources Value="True"/>
@@ -132,7 +132,7 @@
         <UnitName Value="ConfigurationDialogFrame"/>
       </Unit6>
       <Unit7>
-        <Filename Value="configurationframeenvironment.pas"/>
+        <Filename Value="configurationdialog/configurationframeenvironment.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="EnvironmentConfigurationFrame"/>
         <HasResources Value="True"/>
@@ -169,7 +169,7 @@
         <UnitName Value="Configuration"/>
       </Unit11>
       <Unit12>
-        <Filename Value="configurationframeproject.pas"/>
+        <Filename Value="configurationdialog/configurationframeproject.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ProjectConfigurationFrame"/>
         <HasResources Value="True"/>
@@ -177,7 +177,7 @@
         <UnitName Value="ConfigurationFrameProject"/>
       </Unit12>
       <Unit13>
-        <Filename Value="progressdialogform.pas"/>
+        <Filename Value="gui/progressdialogform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ProgressDlg"/>
         <HasResources Value="True"/>
@@ -216,7 +216,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="syntax"/>
+      <OtherUnitFiles Value="configurationdialog;gui;syntax"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
