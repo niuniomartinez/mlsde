@@ -37,8 +37,8 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="syntax"/>
-            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="configurationdialog;gui;syntax"/>
+            <UnitOutputDirectory Value="../obj"/>
           </SearchPaths>
           <Parsing>
             <SyntaxOptions>
@@ -217,7 +217,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
       <OtherUnitFiles Value="configurationdialog;gui;syntax"/>
-      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="../obj"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>

@@ -80,7 +80,7 @@ interface
       );
     public
     (* Constructor. *)
-      constructor Create;
+      constructor Create; virtual;
     (* Destructor. *)
       destructor Destroy; override;
     (* Writes help of the supported command line options.

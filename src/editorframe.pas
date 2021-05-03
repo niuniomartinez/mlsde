@@ -28,9 +28,39 @@ unit EditorFrame;
 interface
 
   uses
-    Classes, Forms, SynEdit;
+    Configuration,
+    Classes, Forms, Graphics, SynEdit;
+
+  const
+  (* Name for the editor configuration section. *)
+    idEditorConfig = 'editor';
 
   type
+  (* Manages editor configuration. *)
+    TEditorConfiguration = class (TCustomConfiguration)
+    private
+      fFont: TFont;
+
+      function GetShowGutter: Boolean;
+      procedure SetShowGutter(const aValue: Boolean);
+    public
+    (* Constructor. *)
+      constructor Create; override;
+    (* Destructor. *)
+      destructor Destroy; override;
+    (* "Parses command line options." but actually loads the configuration. *)
+      procedure ParseCommandLineOptions; override;
+    (* Returns a reference to the text font. *)
+      function GetFont: TFont;
+    (* Gets font definition from given text font. *)
+      procedure CopyFont (aFont: TFont);
+
+    (* Show or hide gutter (line numbers, change marks). *)
+      property ShowGutter: Boolean read GetShowGutter write SetShowGutter;
+    end;
+
+
+
   (* Source editor frame.  This is created in a tab in the @link(MainWindow). *)
     TSourceEditorFrame = class (TFrame)
       SynEdit: TSynEdit;
@@ -70,6 +100,80 @@ implementation
 {$R *.lfm}
 
 (*
+ * TEditorConfiguration
+ ************************************************************************)
+
+  const
+    EditorSection = idEditorConfig;
+  { Defaults. }
+    ShowGutter = True;
+    FontName = 'Monospace';
+    FontSize = 12;
+    FontColor = clDefault;
+
+  function TEditorConfiguration.GetShowGutter: Boolean;
+  begin
+    Result := Self.GetBoolValue (EditorSection, 'show_gutter', True)
+  end;
+
+  procedure TEditorConfiguration.SetShowGutter (const aValue: Boolean);
+  begin
+    Self.SetBooleanValue (EditorSection, 'show_gutter', aValue)
+  end;
+
+
+
+(* Constructor. *)
+  constructor TEditorConfiguration.Create;
+  begin
+    inherited Create;
+    fFont := TFont.Create
+  end;
+
+
+
+  destructor TEditorConfiguration.Destroy;
+  begin
+    fFont.Free;
+    inherited Destroy
+  end;
+
+
+
+(* Gets configuration. *)
+  procedure TEditorConfiguration.ParseCommandLineOptions;
+  begin
+    inherited ParseCommandLineOptions;
+    fFont.Name := Self.GetValue (EditorSection, 'font', FontName);
+    fFont.Size := Self.GetIntValue (EditorSection, 'font_size', FontSize);
+    fFont.Color := TColor (Self.GetIntValue (
+      EditorSection, 'font_color',
+      Integer (FontColor)
+    ))
+  end;
+
+
+
+(* Returns font. *)
+  function TEditorConfiguration.GetFont: TFont;
+  begin
+    Result := fFont
+  end;
+
+
+
+(* Defines font. *)
+  procedure TEditorConfiguration.CopyFont(aFont: TFont);
+  begin
+    fFont.Assign (aFont);
+    Self.SetValue (EditorSection, 'font', fFont.Name);
+    Self.SetIntValue (EditorSection, 'font_size', fFont.Size);
+    Self.SetIntValue (EditorSection, 'font_color', Integer (fFont.Color))
+  end;
+
+
+
+(*
  * TSourceEditorFrame
  ************************************************************************)
 
@@ -94,11 +198,19 @@ implementation
 
 (* Constructor. *)
   constructor TSourceEditorFrame.Create (aOwer: TComponent);
+  var
+    lConfiguration: TEditorConfiguration;
   begin
     inherited Create (aOwer);
   { Remove name to avoid error "Duplicated component name". }
     Self.Name := '';
-    fOnChange := Nil
+    fOnChange := Nil;
+  { Set font. }
+    lConfiguration := TEditorConfiguration (
+      MLSDEApplication.Configuration.FindConfig (idEditorConfig)
+    );
+    Self.SynEdit.Font.Assign (lConfiguration.GetFont);
+    Self.SynEdit.Gutter.Visible := lConfiguration.ShowGutter
   end;
 
 

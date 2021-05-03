@@ -15,7 +15,7 @@ object SourceEditorFrame: TSourceEditorFrame
     Width = 320
     Align = alClient
     Font.Height = 13
-    Font.Name = 'DejaVu Sans Mono'
+    Font.Name = 'Monospace'
     Font.Pitch = fpFixed
     Font.Quality = fqNonAntialiased
     ParentColor = False
@@ -483,7 +483,7 @@ object SourceEditorFrame: TSourceEditorFrame
         MarkupInfo.Background = clBtnFace
         MarkupInfo.Foreground = clNone
         DigitCount = 2
-        ShowOnlyLineNumbersMultiplesOf = 1
+        ShowOnlyLineNumbersMultiplesOf = 10
         ZeroStart = False
         LeadingZeros = False
       end

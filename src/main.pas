@@ -103,7 +103,7 @@ interface
       property Configuration: TConfiguration read fConfiguration;
     (* The currently loaded project. *)
       property Project: TProject read fProject;
-    (* reference to the syntax highlighters manager. *)
+    (* Reference to the syntax highlighters manager. *)
       property SynManager: TSynManager read fSynManager;
     end;
 
@@ -114,7 +114,7 @@ interface
 implementation
 
   uses
-    GUIUtils,
+    GUIUtils, EditorFrame,
     LCLTranslator, { No need to put this in any other place. }
     Forms, sysutils;
 
@@ -271,6 +271,7 @@ implementation
   { Add configuration objects. }
     fConfiguration.AddSection (TEnvironmentConfiguration.Create, EnvironmentSection);
     fConfiguration.AddSection (TProjectConfiguration.Create, idProjectConfig);
+    fConfiguration.AddSection (TEditorConfiguration.Create, idEditorConfig);
   { Load configuration file. }
     fConfiguration.Initialize;
   { Parse command line options. }
