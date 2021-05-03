@@ -1,0 +1,78 @@
+inherited EditorConfigurationFrame: TEditorConfigurationFrame
+  Width = 399
+  ClientWidth = 399
+  DesignLeft = 393
+  DesignTop = 112
+  object chkBoxShowGutter: TCheckBox[0]
+    Left = 8
+    Height = 21
+    Top = 24
+    Width = 90
+    Caption = 'Show gutter'
+    TabOrder = 0
+  end
+  object editNthLineNumber: TSpinEdit[1]
+    Left = 213
+    Height = 26
+    Top = 19
+    Width = 50
+    MinValue = 1
+    TabOrder = 1
+    Value = 1
+  end
+  object lblNthLineNumber: TLabel[2]
+    Left = 269
+    Height = 15
+    Top = 27
+    Width = 118
+    Caption = 'Each nth line number'
+    ParentColor = False
+  end
+  object editFont: TLabeledEdit[3]
+    Left = 8
+    Height = 26
+    Top = 97
+    Width = 359
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.Height = 15
+    EditLabel.Width = 359
+    EditLabel.Caption = 'Editor text font'
+    EditLabel.ParentColor = False
+    ReadOnly = True
+    TabOrder = 2
+  end
+  object btnSelectFont: TButton[4]
+    Left = 367
+    Height = 25
+    Top = 96
+    Width = 20
+    Anchors = [akTop, akRight]
+    Caption = '...'
+    OnClick = btnSelectFontClick
+    TabOrder = 3
+  end
+  object editFontSize: TSpinEdit[5]
+    Left = 8
+    Height = 26
+    Top = 128
+    Width = 50
+    MinValue = 1
+    OnChange = editFontSizeChange
+    TabOrder = 4
+    Value = 1
+  end
+  object lblFontSize: TLabel[6]
+    Left = 64
+    Height = 15
+    Top = 136
+    Width = 50
+    Caption = 'Font Size'
+    ParentColor = False
+  end
+  object FontDialog: TFontDialog[7]
+    MinFontSize = 0
+    MaxFontSize = 0
+    Left = 336
+    Top = 136
+  end
+end

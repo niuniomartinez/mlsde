@@ -87,7 +87,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="18">
+    <Units Count="19">
       <Unit0>
         <Filename Value="mlsde.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -207,6 +207,14 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="SyntaxHighlighting"/>
       </Unit17>
+      <Unit18>
+        <Filename Value="configurationdialog/configurationframeeditor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="EditorConfigurationFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ConfigurationFrameEditor"/>
+      </Unit18>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -25,6 +25,10 @@ msgctxt "configurationdialogform.captionconfiguration"
 msgid "Configuration"
 msgstr ""
 
+#: configurationdialogform.captioneditor
+msgid "Editor"
+msgstr ""
+
 #: configurationdialogform.captionenvironment
 msgctxt "configurationdialogform.captionenvironment"
 msgid "Environment"
@@ -108,6 +112,26 @@ msgstr ""
 #: tconfigurationdlg.caption
 msgctxt "tconfigurationdlg.caption"
 msgid "Configuration"
+msgstr ""
+
+#: teditorconfigurationframe.btnselectfont.caption
+msgid "..."
+msgstr ""
+
+#: teditorconfigurationframe.chkboxshowgutter.caption
+msgid "Show gutter"
+msgstr ""
+
+#: teditorconfigurationframe.editfont.editlabel.caption
+msgid "Editor text font"
+msgstr ""
+
+#: teditorconfigurationframe.lblfontsize.caption
+msgid "Font Size"
+msgstr ""
+
+#: teditorconfigurationframe.lblnthlinenumber.caption
+msgid "Each nth line number"
 msgstr ""
 
 #: tenvironmentconfigurationframe.chktitleprojectdir.caption

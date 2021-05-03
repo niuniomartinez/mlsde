@@ -84,7 +84,8 @@ interface
       procedure EditorChanged (Sender: TObject);
     private
     (* Configuration changed. *)
-      procedure ConfigurationChanged (Sender: TObject);
+      procedure EnvironmentConfigurationChanged (Sender: TObject);
+      procedure EditorConfigurationChanged (Sender: TObject);
     (* Updates the state of the components related with files. *)
       procedure UpdateFileComponentStates;
     (* Updates window title. *)
@@ -200,7 +201,10 @@ implementation
     Self.tbtnOpenPrj.Action := Self.ProjectViewer.ActionOpenProject;
     MLSDEApplication.Configuration.FindConfig (
       idEnvironmentConfig
-    ).Subject.AddObserver (@Self.ConfigurationChanged);
+    ).Subject.AddObserver (@Self.EnvironmentConfigurationChanged);
+    MLSDEApplication.Configuration.FindConfig (
+      idEditorConfig
+    ).Subject.AddObserver (@Self.EditorConfigurationChanged);
 
     Self.UpdateFileComponentStates
   end;
@@ -236,9 +240,21 @@ implementation
 
 
 (* Configuration changed. *)
-  procedure TMainWindow.ConfigurationChanged(Sender: TObject);
+  procedure TMainWindow.EnvironmentConfigurationChanged (Sender: TObject);
   begin
     self.UpdateWindowTitle
+  end;
+
+  procedure TMainWindow.EditorConfigurationChanged (Sender: TObject);
+  var
+    Ndx: Integer;
+    lEditor: TSourceEditorFrame;
+  begin
+    for Ndx := 0 to Self.EditorList.PageCount - 1 do
+    begin
+      lEditor := Self.FindEditorInTab (Self.EditorList.Pages[Ndx]);
+      lEditor.ApplyEditorConfiguration
+    end;
   end;
 
 

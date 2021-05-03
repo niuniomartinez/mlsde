@@ -1,20 +1,22 @@
 object ConfigurationDlg: TConfigurationDlg
   Left = 392
-  Height = 390
+  Height = 400
   Top = 114
-  Width = 642
+  Width = 640
   BorderIcons = [biSystemMenu]
   Caption = 'Configuration'
-  ClientHeight = 390
-  ClientWidth = 642
+  ClientHeight = 400
+  ClientWidth = 640
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 640
   OnCreate = Initialize
   Position = poOwnerFormCenter
   LCLVersion = '2.0.10.0'
   object ButtonPanel: TButtonPanel
     Left = 6
     Height = 35
-    Top = 349
-    Width = 630
+    Top = 359
+    Width = 628
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
     OKButton.OnClick = Accept
@@ -29,15 +31,15 @@ object ConfigurationDlg: TConfigurationDlg
   end
   object NoteBook: TNotebook
     Left = 174
-    Height = 343
+    Height = 353
     Top = 0
-    Width = 468
+    Width = 466
     Align = alClient
     TabOrder = 1
   end
   object TabList: TTreeView
     Left = 0
-    Height = 343
+    Height = 353
     Top = 0
     Width = 169
     Align = alLeft
@@ -49,7 +51,7 @@ object ConfigurationDlg: TConfigurationDlg
   end
   object ResizeBar: TSplitter
     Left = 169
-    Height = 343
+    Height = 353
     Top = 0
     Width = 5
   end

@@ -68,7 +68,8 @@ interface
 implementation
 
   uses
-    ConfigurationFrameEnvironment, ConfigurationFrameProject,
+    ConfigurationFrameEditor, ConfigurationFrameEnvironment,
+    ConfigurationFrameProject,
     GUIUtils, Main, Controls,
     sysutils;
 
@@ -82,6 +83,7 @@ implementation
 
     captionEnvironment = 'Environment';
     captionProject = 'Project';
+    captionEditor = 'Editor';
 
 
 
@@ -125,6 +127,10 @@ implementation
     Self.AddTab (
       TProjectConfigurationFrame.Create (Self),
       captionProject
+    );
+    Self.AddTab (
+      TEditorConfigurationFrame.Create (Self),
+      captionEditor
     );
   { Initialize tabs. }
     for lTab in fConfigurationFrameList do lTab.Initialize;

@@ -42,7 +42,9 @@ interface
       fFont: TFont;
 
       function GetShowGutter: Boolean;
-      procedure SetShowGutter(const aValue: Boolean);
+      procedure SetShowGutter (const aValue: Boolean);
+      function GetShowLinesMultiplesOf: Integer;
+      procedure SetShowLinesMultiplesOf (const aValue: Integer);
     public
     (* Constructor. *)
       constructor Create; override;
@@ -57,6 +59,9 @@ interface
 
     (* Show or hide gutter (line numbers, change marks). *)
       property ShowGutter: Boolean read GetShowGutter write SetShowGutter;
+    (* Show lines multiples of... *)
+      property ShowLinesMultiplesOf: Integer
+        read GetShowLinesMultiplesOf write SetShowLinesMultiplesOf;
     end;
 
 
@@ -84,6 +89,8 @@ interface
 
        Note it saves in the same file it was loaded. *)
       procedure Save;
+    (* Applyes editor configuration. *)
+      procedure ApplyEditorConfiguration;
 
     (* Tells if source was modified. *)
       property Modified: Boolean read getModified;
@@ -95,6 +102,7 @@ implementation
 
   uses
     Main, Utils,
+    SynGutterLineNumber,
     sysutils;
 
 {$R *.lfm}
@@ -109,7 +117,7 @@ implementation
     ShowGutter = True;
     FontName = 'Monospace';
     FontSize = 12;
-    FontColor = clDefault;
+    ShowLinesNum = 10;
 
   function TEditorConfiguration.GetShowGutter: Boolean;
   begin
@@ -119,6 +127,22 @@ implementation
   procedure TEditorConfiguration.SetShowGutter (const aValue: Boolean);
   begin
     Self.SetBooleanValue (EditorSection, 'show_gutter', aValue)
+  end;
+
+
+
+  function TEditorConfiguration.GetShowLinesMultiplesOf: Integer;
+  begin
+    Result := Self.GetIntValue (
+      EditorSection,
+      'show_lines_multiples',
+      ShowLinesNum
+    )
+  end;
+
+  procedure TEditorConfiguration.SetShowLinesMultiplesOf(const aValue: Integer);
+  begin
+    Self.SetIntValue (EditorSection, 'show_lines_multiples', aValue)
   end;
 
 
@@ -145,11 +169,7 @@ implementation
   begin
     inherited ParseCommandLineOptions;
     fFont.Name := Self.GetValue (EditorSection, 'font', FontName);
-    fFont.Size := Self.GetIntValue (EditorSection, 'font_size', FontSize);
-    fFont.Color := TColor (Self.GetIntValue (
-      EditorSection, 'font_color',
-      Integer (FontColor)
-    ))
+    fFont.Size := Self.GetIntValue (EditorSection, 'font_size', FontSize)
   end;
 
 
@@ -167,8 +187,7 @@ implementation
   begin
     fFont.Assign (aFont);
     Self.SetValue (EditorSection, 'font', fFont.Name);
-    Self.SetIntValue (EditorSection, 'font_size', fFont.Size);
-    Self.SetIntValue (EditorSection, 'font_color', Integer (fFont.Color))
+    Self.SetIntValue (EditorSection, 'font_size', fFont.Size)
   end;
 
 
@@ -198,19 +217,13 @@ implementation
 
 (* Constructor. *)
   constructor TSourceEditorFrame.Create (aOwer: TComponent);
-  var
-    lConfiguration: TEditorConfiguration;
   begin
     inherited Create (aOwer);
   { Remove name to avoid error "Duplicated component name". }
     Self.Name := '';
     fOnChange := Nil;
-  { Set font. }
-    lConfiguration := TEditorConfiguration (
-      MLSDEApplication.Configuration.FindConfig (idEditorConfig)
-    );
-    Self.SynEdit.Font.Assign (lConfiguration.GetFont);
-    Self.SynEdit.Gutter.Visible := lConfiguration.ShowGutter
+  { Load configuration. }
+    Self.ApplyEditorConfiguration
   end;
 
 
@@ -243,6 +256,26 @@ implementation
       Self.SynEdit.Modified := False;
       Self.SynEditChange (Self.SynEdit)
     end
+  end;
+
+
+
+(* Applyes configuration. *)
+  procedure TSourceEditorFrame.ApplyEditorConfiguration;
+  var
+    lConfiguration: TEditorConfiguration;
+    lGutterLines: TSynGutterLineNumber;
+  begin
+    lConfiguration := TEditorConfiguration (
+      MLSDEApplication.Configuration.FindConfig (idEditorConfig)
+    );
+    Self.SynEdit.Font.Assign (lConfiguration.GetFont);
+    Self.SynEdit.Gutter.Visible := lConfiguration.ShowGutter;
+    lGutterLines := TSynGutterLineNumber (
+      Self.SynEdit.Gutter.Parts.ByClass[TSynGutterLineNumber, 0]
+    );
+    lGutterLines.ShowOnlyLineNumbersMultiplesOf :=
+      lConfiguration.ShowLinesMultiplesOf
   end;
 
 end.

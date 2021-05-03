@@ -1,0 +1,7 @@
+{"version":1,"strings":[
+{"hash":112544850,"name":"teditorconfigurationframe.chkboxshowgutter.caption","sourcebytes":[83,104,111,119,32,103,117,116,116,101,114],"value":"Show gutter"},
+{"hash":156544418,"name":"teditorconfigurationframe.lblnthlinenumber.caption","sourcebytes":[69,97,99,104,32,110,116,104,32,108,105,110,101,32,110,117,109,98,101,114],"value":"Each nth line number"},
+{"hash":67507604,"name":"teditorconfigurationframe.editfont.editlabel.caption","sourcebytes":[69,100,105,116,111,114,32,116,101,120,116,32,102,111,110,116],"value":"Editor text font"},
+{"hash":12558,"name":"teditorconfigurationframe.btnselectfont.caption","sourcebytes":[46,46,46],"value":"..."},
+{"hash":90566245,"name":"teditorconfigurationframe.lblfontsize.caption","sourcebytes":[70,111,110,116,32,83,105,122,101],"value":"Font Size"}
+]}
