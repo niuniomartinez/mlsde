@@ -1,4 +1,4 @@
-# Environment configuration #
+# Environment Configuration #
 
 Here you can change how MLSDE looks and works.
 

@@ -134,6 +134,7 @@ object MainWindow: TMainWindow
       Hint = 'Opens configuration dialog.'
       ImageIndex = 1
       OnExecute = ActionEnvironmentExecute
+      ShortCut = 24603
     end
     object ActionAbout: TAction
       Tag = 2

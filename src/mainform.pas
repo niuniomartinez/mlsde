@@ -28,7 +28,7 @@ interface
 
   uses
     EditorFrame, ProjectViewFrame,
-    Forms, Menus, ActnList, StdActns, ComCtrls, ExtCtrls;
+    ActnList, ComCtrls, ExtCtrls, Forms, Menus, StdActns;
 
   type
   (* Main window of the application.
