@@ -31,6 +31,7 @@ unit SyntaxHighlighting;
 interface
 
   uses
+    MLSDEHighlighter,
     SynEditHighlighter;
 
   type
@@ -51,6 +52,7 @@ interface
   (* Contains and manages the available syntax highlighters. *)
     TSynManager = class (TObject)
     private
+      fHighlightStyle: TMLSDEHighlightStyle;
       fDefinitionList: array of THighlighterInfo;
       fNumHighlighters: Integer;
 
@@ -222,6 +224,7 @@ implementation
   constructor TSynManager.Create;
   begin
     inherited Create;
+    fHighlightStyle := TMLSDEHighlightStyle.Create;
     fNumHighlighters := 0
   end;
 
@@ -231,6 +234,7 @@ implementation
   destructor TSynManager.Destroy;
   begin
     Self.Clear;
+    fHighlightStyle.Free;
     inherited Destroy
   end;
 

@@ -50,6 +50,9 @@ the source editor will appear on the right.
 
 ![Open file](images/open-file.png)
 
+**Pro tip:** You can change the size of the project viewer and the editor by
+clicking and dragging the separator between them.
+
 
 
 ## Edit Files ##

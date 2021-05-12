@@ -4,8 +4,8 @@
 
 This section allows to configure how the source editor looks.
 
-* **Show gutter.**  The gutter is the leftmos are of the editor, and it shows
-  the line numbers and marks changes.
+* **Show gutter.**  The gutter is the leftmost area of the editor, and it shows
+  the line numbers and change marks.
 * **Each nth line number.**  Tells what line numbers to show.  For example, if
   it is 10 then only lines multiples of 10 will be shown (10, 20, 30, 40...).
   The line were the cursor is is shown always.

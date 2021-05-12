@@ -87,7 +87,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="19">
+    <Units Count="20">
       <Unit0>
         <Filename Value="mlsde.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -215,6 +215,11 @@
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="ConfigurationFrameEditor"/>
       </Unit18>
+      <Unit19>
+        <Filename Value="syntax/mlsdehighlighter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MLSDEHighlighter"/>
+      </Unit19>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

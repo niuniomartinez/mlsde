@@ -5,3 +5,4 @@ TControl=TComponent
 TDataModule=TComponent
 TForm=TControl
 TFrame=TControl
+TSynCustomHighlighter=TComponent
