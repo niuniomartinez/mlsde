@@ -1,5 +1,5 @@
 unit MLSDEHighlighter;
-(*<Implements the base highlighters used by MLSDE. *)
+(*<Implements the base highlighter classes used by MLSDE. *)
 (*
   Copyright (c) 2018-2021 Guillermo Martínez J.
 
@@ -27,16 +27,23 @@ interface
 
   uses
     SynEditHighlighter,
-    Graphics;
+    Classes, Graphics;
 
   const
+  (* Attributes for data types. *)
+    MLSDE_ATTR_TYPE = 10;
   (* Attributes for operators. *)
-    MLSDE_ATTR_OPERATOR = 10;
+    MLSDE_ATTR_OPERATOR = 11;
+  (* Attributes for labels. *)
+    MLSDE_ATTR_LABEL = 12;
+  (* Attributes for errors. *)
+    MLSDE_ATTR_ERROR = 13;
 
 
 
   type
-  (* To identify tokens.  For internal use. *)
+  (* To identify tokens.  For internal use.
+     @seealso(TMLSDEHighlighter.TokenType) *)
     TToken = (
     (* Comment. *)
       tkComment    = SYN_ATTR_COMMENT,
@@ -58,8 +65,14 @@ interface
       tkAssembler  = SYN_ATTR_ASM,
     (* Variables.  Not RTL. *)
       tkVariable   = SYN_ATTR_VARIABLE,
+    (* Data types. *)
+      tkType       = MLSDE_ATTR_TYPE,
     (* Operators. *)
-      tkOperator   = MLSDE_ATTR_OPERATOR
+      tkOperator   = MLSDE_ATTR_OPERATOR,
+    (* Labels. *)
+      tkLabel      = MLSDE_ATTR_LABEL,
+    (* Errors. *)
+      tkError      = MLSDE_ATTR_ERROR
     );
 
 
@@ -95,21 +108,98 @@ interface
 
 
 
-  (* Base class for all MLSDE syntax highlihgters. *)
+  (* Identifies range. @seealso(TMLSDEHighlighter.Range) *)
+    TCodeRange = (
+    (* Outside any range. *)
+      crgNone,
+    (* Inside comments. *)
+      crgComment,
+    (* Inside text constant (i.e. heredoc, etc.). *)
+      crgTextConst
+    );
+
+
+
+  (* Base class for all MLSDE syntax highlihgters.
+
+     Defines default behavior and introduces attributes and API to be used by
+     MLSDE, as well as useful methods and properties.
+
+     None of the token lists are assigned by default.
+
+     This class is likely not used as it is.  It should be extended in a class
+     that actually does the parsing. *)
     TMLSDEHighlighter = class (TSynCustomHighlighter)
     private
       fStyle: TMLSDEHighlightStyle;
+      fKeywords, fTypes, fLibrary, fOperators: TStrings;
+      fSymbols: String;
+      fRange: TCodeRange;
+      fTokenType: TToken;
     protected
+    (* Code range.
+
+       Check to know current range and assign when it changes.
+       @seealso(ResetRange) @seealso(GetRange) @seealso(SetRange) *)
+      property Range: TCodeRange read fRange write fRange;
+    (* Last token. *)
+      property TokenType: TToken read fTokenType write fTokenType;
+
     (* Returns a reference to the style. *)
       function GetDefaultAttribute (aIndex: LongInt): TSynHighlighterAttributes;
         override;
     public
+    (* Constructor. *)
+      constructor Create (aOwner: TComponent); override;
+    (* Destructor. *)
+      destructor Destroy; override;
+
+    (* Checks if given word is a keyword. @seealso(Keywords) *)
+      function IsKeyword (const aIdent: String): Boolean; override;
+    (* Checks if given word is a data type. @seealso(DataTypes) *)
+      function IsType (const aIdent: String): Boolean; virtual;
+    (* Checks if given word is a library object (routine, variable...).
+       @seealso(LibraryObjects) *)
+      function IsLibraryObject (const aIdent: String): Boolean; virtual;
+    (* Checks if given word is an operator. @seealso(Operators) *)
+      function IsOperator (const aIdent: String): Boolean; virtual;
+    (* Checks if character is a symbol. @seealso(Symbols) *)
+      function IsSymbol (const aChar: Char): Boolean; virtual;
+
+    (* Resets range before parsing. @seealso(Range) *)
+      procedure ResetRange; override;
+    (* Assigns range before parsing current line. @seealso(Range) *)
+      procedure SetRange (aValue: Pointer); override;
+    (* Returns range after parsing line. @seealso(Range) *)
+      function GetRange: Pointer; override;
+
+    (* Returns last token attribute. *)
+      function GetTokenAttribute: TSynHighlighterAttributes; override;
+
     (* Reference to the style to apply to the highlighter. *)
       property Style: TMLSDEHighlightStyle read fStyle write fStyle;
+    (* Keyword list. @seealso(IsKeyword) *)
+      property Keywords: TStrings read fKeywords;
+    (* Data types. @seealso(IsType) *)
+      property DataTypes: TStrings read fTypes;
+    (* Library objects (variables, constants, routines...).
+       @seealso(IsLibraryObject)*)
+      property LibraryObjects: TStrings read fLibrary;
+    (* Symbol characters. @seealso(IsSymbol) *)
+      property Symbols: String read fSymbols write fSymbols;
 
+    (* Attributes for types. *)
+      property TypeAttribute: TSynHighlighterAttributes
+        index MLSDE_ATTR_TYPE read GetDefaultAttribute;
     (* Attributes for operators. *)
       property OperatorAttribute: TSynHighlighterAttributes
         index MLSDE_ATTR_OPERATOR read GetDefaultAttribute;
+    (* Attributes for labels. *)
+      property LabelAttribute: TSynHighlighterAttributes
+        index MLSDE_ATTR_LABEL read GetDefaultAttribute;
+    (* Attributes for errors. *)
+      property ErrorAttribute: TSynHighlighterAttributes
+        index MLSDE_ATTR_ERROR read GetDefaultAttribute;
     end;
 
 
@@ -119,11 +209,21 @@ interface
      This class allows to easily define new languages, to save the description
      in a disk file and to load such files. *)
     TMLSDECustomHighlighter = class (TMLSDEHighlighter)
+    private
+      fLanguageName, fSampleSource: String;
+    protected
+    (* Returns a code snippet that can be used as code example. *)
+      function GetSampleSource: String; override;
+    (* Assigns the sample source snippet. *)
+      procedure SetSampleSource (aValue: String); override;
     public
     (* Loads language description from the given disk file. *)
       procedure LoadFromFile (const aFileName: String);
     (* Saves language description in to the given disk file. *)
       procedure SaveToFile (const aFileName: String);
+
+    (* Returns the language name. *)
+      property LanguageName: String read fLanguageName write fLanguageName;
     end;
 
 implementation
@@ -158,7 +258,10 @@ implementation
     fAttributes[tkDirective] := TSynHighlighterAttributes.Create ('directives');
     fAttributes[tkAssembler] := TSynHighlighterAttributes.Create ('assembler');
     fAttributes[tkVariable]  := TSynHighlighterAttributes.Create ('variables');
+    fAttributes[tkType]      := TSynHighlighterAttributes.Create ('types');
     fAttributes[tkOperator]  := TSynHighlighterAttributes.Create ('operators');
+    fAttributes[tkLabel]     := TSynHighlighterAttributes.Create ('labels');
+    fAttributes[tkError]     := TSynHighlighterAttributes.Create ('errors');
     Self.Clear
   end;
 
@@ -192,24 +295,27 @@ implementation
   begin
     fFgColor := clBlack;
     fBgColor := clWhite;
-    SetAttributes (tkComment,    clDefault, clGray,    [fsItalic]);
+    SetAttributes (tkComment,    clDefault, clGreen,   [fsItalic]);
     SetAttributes (tkIdentifier, clDefault, clDefault, []);
-    SetAttributes (tkKeyword,    clDefault, clDefault, [fsBold]);
-    SetAttributes (tkString,     clDefault, clRed,     []);
+    SetAttributes (tkKeyword,    clDefault, clNavy,    [fsBold]);
+    SetAttributes (tkString,     clDefault, clBlue,    []);
     SetAttributes (tkUnknown,    clGray,    clDefault, []);
-    SetAttributes (tkSymbol,     clDefault, clDefault, [fsBold]);
-    SetAttributes (tkNumber,     clDefault, clFuchsia, []);
-    SetAttributes (tkDirective,  clDefault, clGray,    [fsItalic, fsBold]);
-    SetAttributes (tkAssembler,  clDefault, clDefault, [fsItalic]);
+    SetAttributes (tkSymbol,     clDefault, clNavy,    [fsBold]);
+    SetAttributes (tkNumber,     clDefault, clBlue,    []);
+    SetAttributes (tkDirective,  clDefault, clTeal,    []);
+    SetAttributes (tkAssembler,  clDefault, clBlack,   []);
     SetAttributes (tkVariable,   clDefault, clDefault, []);
-    SetAttributes (tkOperator,   clDefault, clDefault, [fsBold])
+    SetAttributes (tkType,       clDefault, clNavy,    [fsBold]);
+    SetAttributes (tkOperator,   clDefault, clNavy,    [fsBold]);
+    SetAttributes (tkLabel,      clDefault, clDefault, [fsbold]);
+    SetAttributes (tkError,      clRed,     clWhite,   [])
   end;
 
 
 
 (* Loads from file. *)
   procedure TMLSDEHighlightStyle.LoadFromFile (const aFileName: String);
-    var
+  var
     lFile: TIniFile;
     lAttributes: TSynHighlighterAttributes;
   begin
@@ -251,7 +357,7 @@ implementation
   function TMLSDEHighlighter.GetDefaultAttribute (aIndex: LongInt)
     : TSynHighlighterAttributes;
   begin
-    if (SYN_ATTR_COMMENT <= aIndex) and (aIndex <= MLSDE_ATTR_OPERATOR) then
+    if (SYN_ATTR_COMMENT <= aIndex) and (aIndex <= MLSDE_ATTR_ERROR) then
       Result := fStyle.Attributes[TToken (aIndex)]
     else
       Result := Nil
@@ -259,9 +365,134 @@ implementation
 
 
 
+(* Constructor. *)
+  constructor TMLSDEHighlighter.Create (aOwner: TComponent);
+  begin
+    inherited Create(aOwner);
+    fKeywords := TStringList.Create;
+    TStringList (fKeywords).Sorted := True;
+    fTypes := TStringList.Create;
+    TStringList (fTypes).Sorted := True;
+    fLibrary := TStringList.Create;
+    TStringList (fLibrary).Sorted := True;
+    fOperators := TStringList.Create;
+    TStringList (fOperators).Sorted := True
+  end;
+
+
+
+(* Destructor. *)
+  destructor TMLSDEHighlighter.Destroy;
+  begin
+    fKeywords.Free;
+    fTypes.Free;
+    fLibrary.Free;
+    fOperators.Free;
+    inherited Destroy
+  end;
+
+
+
+(* Checks if it is a keyword. *)
+  function TMLSDEHighlighter.IsKeyword (const aIdent: String): Boolean;
+  var
+    lNdx: Integer;
+  begin
+  { Implementation note:  Find uses binary search so it is quite fast. }
+    Result := TStringList (fKeywords).Find (aIdent, lNdx)
+  end;
+
+
+
+  (* Checks if it is a data type. *)
+  function TMLSDEHighlighter.IsType (const aIdent: String): Boolean;
+  var
+    lNdx: Integer;
+  begin
+    Result := TStringList (fTypes).Find (aIdent, lNdx)
+  end;
+
+
+
+(* Checks if it is a library object. *)
+  function TMLSDEHighlighter.IsLibraryObject (const aIdent: String): Boolean;
+  var
+    lNdx: Integer;
+  begin
+    Result := TStringList (fLibrary).Find (aIdent, lNdx)
+  end;
+
+
+
+(* Checks if it is an operator. *)
+  function TMLSDEHighlighter.IsOperator (const aIdent: String): Boolean;
+  var
+    lNdx: Integer;
+  begin
+    Result := TStringList (fOperators).Find (aIdent, lNdx)
+  end;
+
+
+
+(* Checks if it is a symbol. *)
+  function TMLSDEHighlighter.IsSymbol (const aChar: Char): Boolean;
+  begin
+    Result := Pos (aChar, fSymbols) > 0
+  end;
+
+
+
+(* Resets range. *)
+  procedure TMLSDEHighlighter.ResetRange;
+  begin
+    fRange := crgNone
+  end;
+
+
+
+(* Assigns range. *)
+  procedure TMLSDEHighlighter.SetRange (aValue: Pointer);
+  begin
+    fRange := TCodeRange (PtrUInt (aValue))
+  end;
+
+
+
+(* Returns range. *)
+  function TMLSDEHighlighter.GetRange: Pointer;
+  begin
+    Result := Pointer (PtrInt (Ord (fRange)))
+  end;
+
+
+
+(* Returns token attribute. *)
+  function TMLSDEHighlighter.GetTokenAttribute: TSynHighlighterAttributes;
+  begin
+    Result := fStyle.Attributes[fTokenType]
+  end;
+
+
+
 (*
  * TMLSDECustomHighlighter
  ***************************************************************************)
+
+(* Returns sample code. *)
+  function TMLSDECustomHighlighter.GetSampleSource: String;
+  begin
+    Result := fSampleSource
+  end;
+
+
+
+(* Assigns sample code. *)
+  procedure TMLSDECustomHighlighter.SetSampleSource (aValue: String);
+  begin
+    fSampleSource := aValue
+  end;
+
+
 
 (* Loads language description. *)
   procedure TMLSDECustomHighlighter.LoadFromFile (const aFileName: String);
