@@ -133,10 +133,27 @@ interface
     private
       fStyle: TMLSDEHighlightStyle;
       fKeywords, fTypes, fLibrary, fOperators: TStrings;
-      fSymbols: String;
+      fIdentifierChars: String;
       fRange: TCodeRange;
       fTokenType: TToken;
+      fLine: PChar;
+      fLineNumber: Integer;
     protected
+    (* Position of the current token in the current line.  Zero based.
+       @seealso(SetLine) @seealso(GetTokenEx)
+       @seealso(Line) @seealso(TokenLength) *)
+      TokenStart,
+    (* Length of current token.
+       @seealso(SetLine) @seealso(GetTokenEx)
+       @seealso(Line) @seealso(TokenStart) *)
+      TokenLength: Integer;
+
+    (* Current line number. @seealso(SetLine) *)
+      property LineNumber: Integer read fLineNumber;
+    (* Pointer to the current line.
+       @seealso(SetLine) @seealso(GetTokenEx)
+       @seealso(TokenStart) @seealso(TokenLength) *)
+      property Line: PChar read fLine;
     (* Code range.
 
        Check to know current range and assign when it changes.
@@ -144,7 +161,37 @@ interface
       property Range: TCodeRange read fRange write fRange;
     (* Last token. *)
       property TokenType: TToken read fTokenType write fTokenType;
+    protected
+    (* Gets until the end of the line.
 
+       You may use this to parse single line comments. *)
+      procedure JumpToEOL;
+    (* Parses spaces.  Call this if you find a space. *)
+      procedure ParseSpaces;
+    (* Parses a number.
+
+       This parses standard floating-point constant.  Raises an exeption if
+       there's a problem with parsing (i.e. it isn't a number or is bad
+       formatted). *)
+      function ParseNumber: Real;
+    (* Parses an integer.
+
+       This is a simple number.  Raises an exeption if there's a problem with
+       parsing (i.e. it isn't a number or is bad formatted). *)
+      function ParseInteger: LongInt;
+    (* Parses an hex number.
+
+       Raises an exeption if there's a problem with parsing (i.e. it isn't a
+       number or is bad formatted).*)
+      function ParseHex: LongInt;
+    (* Parses a simple string.
+
+       Raises an exeption if there's a problem with parsing (i.e. can't  find
+       the closing delimiter.
+       @param(aChar The string delimiter.) *)
+      procedure ParseStringConstant (const aChar: Char);
+    (* Parses identifiers. @seealso(IdentifierChars) *)
+      function ParseIdentifier: String;
     (* Returns a reference to the style. *)
       function GetDefaultAttribute (aIndex: LongInt): TSynHighlighterAttributes;
         override;
@@ -163,8 +210,15 @@ interface
       function IsLibraryObject (const aIdent: String): Boolean; virtual;
     (* Checks if given word is an operator. @seealso(Operators) *)
       function IsOperator (const aIdent: String): Boolean; virtual;
-    (* Checks if character is a symbol. @seealso(Symbols) *)
-      function IsSymbol (const aChar: Char): Boolean; virtual;
+
+    (* Sets the line to parse.
+
+       This assigns @link(Line) and @link(LineNumber), and sets
+       @link(TokenStart) to zero. *)
+      procedure SetLine (const aLineText: String; aLineNumber: Integer);
+        override;
+    (* Checks if in end of line. *)
+      function GetEol: Boolean; override;
 
     (* Resets range before parsing. @seealso(Range) *)
       procedure ResetRange; override;
@@ -172,7 +226,23 @@ interface
       procedure SetRange (aValue: Pointer); override;
     (* Returns range after parsing line. @seealso(Range) *)
       function GetRange: Pointer; override;
+    (* @exclude
+       Next methods are used to manage brackets and quotes (string constants).
+       They're not mandatory but must return apropriate values.  Maybe a future
+       version will implement something. *)
+      function GetToken: String; override;
+    (* @exclude *)
+      function getTokenPos: Integer; override;
+    (* @exclude *)
+      function GetTokenKind: Integer; override;
 
+
+    (* Returns token information.
+       @param(aTokenStart Pointer to the start of token.)
+       @param(aTokenLength Token length in bytes.)
+     *)
+      procedure GetTokenEx (out aTokenStart: PChar; out aTokenLength: Integer);
+        override;
     (* Returns last token attribute. *)
       function GetTokenAttribute: TSynHighlighterAttributes; override;
 
@@ -185,8 +255,12 @@ interface
     (* Library objects (variables, constants, routines...).
        @seealso(IsLibraryObject)*)
       property LibraryObjects: TStrings read fLibrary;
-    (* Symbol characters. @seealso(IsSymbol) *)
-      property Symbols: String read fSymbols write fSymbols;
+    (* Characters that can be used to define identifiers.
+
+       Default is alphanumerical characters.
+       @seealso(ParseIdentifier) *)
+      property IdentifierChars: String
+        read fIdentifierChars write fIdentifierChars;
 
     (* Attributes for types. *)
       property TypeAttribute: TSynHighlighterAttributes
@@ -202,6 +276,9 @@ interface
         index MLSDE_ATTR_ERROR read GetDefaultAttribute;
     end;
 
+  (* Class reference to highlighters. *)
+    TMLSDEHighlighterClass = class of TMLSDEHighlighter;
+
 
 
   (* Customizable hightlighter.
@@ -210,7 +287,7 @@ interface
      in a disk file and to load such files. *)
     TMLSDECustomHighlighter = class (TMLSDEHighlighter)
     private
-      fLanguageName, fSampleSource: String;
+      fSampleSource: String;
     protected
     (* Returns a code snippet that can be used as code example. *)
       function GetSampleSource: String; override;
@@ -221,15 +298,17 @@ interface
       procedure LoadFromFile (const aFileName: String);
     (* Saves language description in to the given disk file. *)
       procedure SaveToFile (const aFileName: String);
-
-    (* Returns the language name. *)
-      property LanguageName: String read fLanguageName write fLanguageName;
     end;
 
 implementation
 
   uses
     IniFiles, sysutils;
+
+  const
+  { Default identifier characters. }
+    DefaultIdentifierChars =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 (*
  * TMLSDEHighlightStyle
@@ -252,7 +331,7 @@ implementation
     fAttributes[tkIdentifier]:=TSynHighlighterAttributes.Create ('identifiers');
     fAttributes[tkKeyword]   := TSynHighlighterAttributes.Create ('keywords');
     fAttributes[tkString]    := TSynHighlighterAttributes.Create ('strings');
-    fAttributes[tkUnknown]   := TSynHighlighterAttributes.Create ('default');
+    fAttributes[tkUnknown]   := Nil;
     fAttributes[tkSymbol]    := TSynHighlighterAttributes.Create ('symbols');
     fAttributes[tkNumber]    := TSynHighlighterAttributes.Create ('numbers');
     fAttributes[tkDirective] := TSynHighlighterAttributes.Create ('directives');
@@ -295,20 +374,20 @@ implementation
   begin
     fFgColor := clBlack;
     fBgColor := clWhite;
-    SetAttributes (tkComment,    clDefault, clGreen,   [fsItalic]);
-    SetAttributes (tkIdentifier, clDefault, clDefault, []);
-    SetAttributes (tkKeyword,    clDefault, clNavy,    [fsBold]);
-    SetAttributes (tkString,     clDefault, clBlue,    []);
-    SetAttributes (tkUnknown,    clGray,    clDefault, []);
-    SetAttributes (tkSymbol,     clDefault, clNavy,    [fsBold]);
-    SetAttributes (tkNumber,     clDefault, clBlue,    []);
-    SetAttributes (tkDirective,  clDefault, clTeal,    []);
-    SetAttributes (tkAssembler,  clDefault, clBlack,   []);
-    SetAttributes (tkVariable,   clDefault, clDefault, []);
-    SetAttributes (tkType,       clDefault, clNavy,    [fsBold]);
-    SetAttributes (tkOperator,   clDefault, clNavy,    [fsBold]);
-    SetAttributes (tkLabel,      clDefault, clDefault, [fsbold]);
-    SetAttributes (tkError,      clRed,     clWhite,   [])
+    SetAttributes (tkComment,    fBgColor, clGreen,  [fsItalic]);
+    SetAttributes (tkIdentifier, fBgColor, fFgColor, []);
+    SetAttributes (tkKeyword,    fBgColor, clNavy,   [fsBold]);
+    SetAttributes (tkString,     fBgColor, clBlue,   []);
+    // SetAttributes (tkUnknown,    fBgColor, fFgColor, []);
+    SetAttributes (tkSymbol,     fBgColor, clNavy,   [fsBold]);
+    SetAttributes (tkNumber,     fBgColor, clBlue,   []);
+    SetAttributes (tkDirective,  fBgColor, clTeal,   []);
+    SetAttributes (tkAssembler,  fBgColor, clBlack,  []);
+    SetAttributes (tkVariable,   fBgColor, fFgColor, [fsBold]);
+    SetAttributes (tkType,       fBgColor, clNavy,   [fsBold]);
+    SetAttributes (tkOperator,   fBgColor, clNavy,   [fsBold]);
+    SetAttributes (tkLabel,      fBgColor, fFgColor, [fsbold]);
+    SetAttributes (tkError,      clRed,    clWhite,  [])
   end;
 
 
@@ -353,6 +432,117 @@ implementation
  * TMLSDEHighlighter
  ***************************************************************************)
 
+(* Parse to the end of the line. *)
+  procedure TMLSDEHighlighter.JumpToEOL;
+  begin
+    while not (Line[Self.TokenStart + Self.TokenLength] in [#0, #10, #13]) do
+      Inc (Self.TokenLength)
+  end;
+
+
+
+(* Parse spaces. *)
+  procedure TMLSDEHighlighter.ParseSpaces;
+  begin
+    while (#0 < fLine[Self.TokenStart + Self.TokenLength])
+      and (fLine[Self.TokenStart + Self.TokenLength] <= ' ')
+    do
+      Inc (Self.TokenLength)
+  end;
+
+
+
+(* Parses numbers. *)
+  function TMLSDEHighlighter.ParseNumber: Real;
+  const
+    lCharNums = ['0'..'9', '.'];
+  var
+    lNumber: String;
+    lFractPart: Integer;
+  begin
+    lFractPart := 0;
+    lNumber := '';
+    while fLine[Self.TokenStart + Self.TokenLength] in lCharNums do
+    begin
+      lNumber := Concat (lNumber, fLine[Self.TokenStart + Self.TokenLength]);
+      if fLine[Self.TokenStart + Self.TokenLength] = '.' then Inc (lFractPart);
+      Inc (Self.TokenLength)
+    end;
+    if lFractPart > 1 then
+      raise EConvertError.Create ('Error parsing number.');
+    Result := StrToFloat (lNumber)
+  end;
+
+
+
+(* Parses numbers. *)
+  function TMLSDEHighlighter.ParseInteger: LongInt;
+  const
+    lCharNums = ['0'..'9', '.'];
+  var
+    lNumber: String;
+    lFractPart: Integer;
+  begin
+    lFractPart := 0;
+    lNumber := '';
+    while fLine[Self.TokenStart + Self.TokenLength] in lCharNums do
+    begin
+      lNumber := Concat (lNumber, fLine[Self.TokenStart + Self.TokenLength]);
+      if fLine[Self.TokenStart + Self.TokenLength] = '.' then Inc (lFractPart);
+      Inc (Self.TokenLength)
+    end;
+    if lFractPart > 0 then
+      raise EConvertError.Create ('Error parsing number.');
+    Result := StrToInt (lNumber)
+  end;
+
+
+
+(* Parses numbers. *)
+  function TMLSDEHighlighter.ParseHex: LongInt;
+  const
+    lCharNums = ['0'..'9', 'A'..'F', 'a'..'f'];
+  var
+    lNumber: String;
+  begin
+    lNumber := '';
+    while fLine[Self.TokenStart + Self.TokenLength] in lCharNums do
+    begin
+      lNumber := Concat (lNumber, fLine[Self.TokenStart + Self.TokenLength]);
+      Inc (Self.TokenLength)
+    end;
+    Result := StrToInt (Concat ('$', lNumber))
+  end;
+
+
+
+(* Parses string. *)
+  procedure TMLSDEHighlighter.ParseStringConstant (const aChar: Char);
+  begin
+    repeat
+      Inc (Self.TokenLength)
+    until fLine[Self.TokenStart + Self.TokenLength] in [#0, aChar];
+    if fLine[Self.TokenStart + Self.TokenLength] = aChar then
+      Inc (Self.TokenLength)
+    else
+      raise Exception.Create ('Error parsing string constant.')
+  end;
+
+
+
+(* Parses an identifier. *)
+  function TMLSDEHighlighter.ParseIdentifier: String;
+  begin
+    Result := '';
+  { First character is alwais identifier. }
+    repeat
+      Result := Concat (Result, fLine[Self.TokenStart + Self.TokenLength]);
+      Inc (Self.TokenLength)
+    until Pos (fLine[Self.TokenStart + Self.TokenLength], fIdentifierChars) = 0
+  end;
+
+
+
 (* Get style. *)
   function TMLSDEHighlighter.GetDefaultAttribute (aIndex: LongInt)
     : TSynHighlighterAttributes;
@@ -376,7 +566,8 @@ implementation
     fLibrary := TStringList.Create;
     TStringList (fLibrary).Sorted := True;
     fOperators := TStringList.Create;
-    TStringList (fOperators).Sorted := True
+    TStringList (fOperators).Sorted := True;
+    fIdentifierChars := DefaultIdentifierChars
   end;
 
 
@@ -434,10 +625,23 @@ implementation
 
 
 
-(* Checks if it is a symbol. *)
-  function TMLSDEHighlighter.IsSymbol (const aChar: Char): Boolean;
+(* Sets the line to parse. *)
+  procedure TMLSDEHighlighter.SetLine (
+    const aLineText: String;
+    aLineNumber: Integer
+  );
   begin
-    Result := Pos (aChar, fSymbols) > 0
+    inherited SetLine (aLineText, aLineNumber);
+    fLine := PChar (aLineText); fLineNumber := aLineNumber;
+    Self.TokenStart := 0
+  end;
+
+
+
+(* Checks end of line. *)
+  function TMLSDEHighlighter.GetEol: Boolean;
+  begin
+    Result := fLine[Self.TokenStart] = #0
   end;
 
 
@@ -462,6 +666,36 @@ implementation
   function TMLSDEHighlighter.GetRange: Pointer;
   begin
     Result := Pointer (PtrInt (Ord (fRange)))
+  end;
+
+
+
+(* Needed stuff but unimplemented (maybe someday). *)
+  function TMLSDEHighlighter.GetToken: String;
+  begin
+    Result := ''
+  end;
+
+  function TMLSDEHighlighter.getTokenPos: Integer;
+  begin
+    Result := Self.TokenStart - 1
+  end;
+
+  function TMLSDEHighlighter.GetTokenKind: Integer;
+  begin
+    Result := 0
+  end;
+
+
+
+(* Returns token information. *)
+  procedure TMLSDEHighlighter.GetTokenEx (
+    out aTokenStart: PChar;
+    out aTokenLength: Integer
+  );
+  begin
+    aTokenStart := fLine + Self.TokenStart;
+    aTokenLength := Self.TokenLength
   end;
 
 

@@ -44,7 +44,7 @@ interface
     (* Used internally to know if it is a built-in one or not. *)
       BuiltIn: Boolean;
     (* Reference to the highlighter.  It may be @nil. *)
-      Highlighter: TSynCustomHighlighter
+      Highlighter: TMLSDEHighlighter
     end;
 
 
@@ -83,10 +83,7 @@ implementation
     Utils,
     StrUtils, sysutils,
   { Built-in syntax highlighters. }
-    SynHighlighterBat, SynHighlighterCpp, SynHighlighterCss, SynHighlighterHTML,
-    SynHighlighterIni, SynHighlighterJava, SynHighlighterJScript,
-    SynHighlighterPas, SynHighlighterPHP, SynHighlighterSQL,
-    synhighlighterunixshellscript, SynHighlighterVB, SynHighlighterXML;
+    MLSDEHighlighterINI;
 
 
 
@@ -94,21 +91,21 @@ implementation
  * Built-in syntax highlighters management.
  ***************************************************************************)
   type
-  (* Highlighter information. *)
+  (* Built in highlighter information. *)
     TBuiltInHighlighter = record
       Name, Extensions: String;
-      HighlighterClass: TSynCustomHighlighterClass;
+      HighlighterClass: TMLSDEHighlighterClass
     end;
 
   var
   (* List of built-in highlighters.
 
      This is populated at the initialization section. *)
-    BuiltInHighlighters: array [0..13] of TBuiltInHighlighter;
+    BuiltInHighlighters: array [0..0] of TBuiltInHighlighter;
 
 (* Helper to avoid duplicate code. *)
   function CreateBuiltInHighlighter (const aNdx: Integer)
-    : TSynCustomHighlighter;
+    : TMLSDEHighlighter;
     inline;
   begin
     Result := BuiltInHighlighters[aNdx].HighlighterClass.Create (Nil);
@@ -138,7 +135,7 @@ implementation
     Result := Nil
   end;
 
-  function GetBuiltInHighlighterForName (aName: String): TSynCustomHighlighter;
+  function GetBuiltInHighlighterForName (aName: String): TMLSDEHighlighter;
   var
     lNdx: Integer;
   begin
@@ -288,8 +285,10 @@ implementation
       { Create the highlighter. }
         if fDefinitionList[Ndx].BuiltIn then
           fDefinitionList[Ndx].Highlighter :=
-            GetBuiltInHighlighterForName (fDefinitionList[Ndx].Name)
+            GetBuiltInHighlighterForName (fDefinitionList[Ndx].Name);
       { TODO: Create from external definition. }
+        if Assigned (fDefinitionList[Ndx].Highlighter) then
+          fDefinitionList[Ndx].Highlighter.Style := fHighlightStyle
       end;
     { Returns highlighter reference. }
       Exit (fDefinitionList[Ndx].Highlighter);
@@ -306,7 +305,7 @@ implementation
   procedure SetBuiltInHighlighter (
     const aNdx: Integer;
     aName, aExtensions: String;
-    aHighlighterClass: TSynCustomHighlighterClass
+    aHighlighterClass: TMLSDEHighlighterClass
   );
   begin;
     BuiltInHighlighters[aNdx].Name := Trim (aName);
@@ -315,20 +314,14 @@ implementation
   end;
 
 initialization
-  SetBuiltInHighlighter ( 0, 'bat',        'bat',            TSynBatSyn);
-  SetBuiltInHighlighter ( 1, 'C',          'c;h',            TSynCppSyn);
-  SetBuiltInHighlighter ( 2, 'C++',        'cpp,c++,hpp',    TSynCppSyn);
-  SetBuiltInHighlighter ( 3, 'CSS',        'css',            TSynCssSyn);
-  SetBuiltInHighlighter ( 4, 'HTML',       'htm,html',       TSynHTMLSyn);
-  SetBuiltInHighlighter ( 5, 'INI',        'ini',            TSynIniSyn);
-  SetBuiltInHighlighter ( 6, 'Java',       'jav',            TSynJavaSyn);
-  SetBuiltInHighlighter ( 7, 'JavaScript', 'js',             TSynJScriptSyn);
-  SetBuiltInHighlighter ( 8, 'Pascal',     'pas,pp,dpr,lpr', TSynPasSyn);
-  SetBuiltInHighlighter ( 9, 'PHP',        'php',            TSynPHPSyn);
-  SetBuiltInHighlighter (10, 'UNIX shell', 'sh',        TSynUNIXShellScriptSyn);
-  SetBuiltInHighlighter (11, 'VisualBasic','vb',             TSynVBSyn);
-  SetBuiltInHighlighter (12, 'SQL',        'sql',            TSynSQLSyn);
-  SetBuiltInHighlighter (13, 'XML',        'xml,rss',        TSynXMLSyn)
+(* Create built-in highlighter list.
+
+   The decision of what languages are built-in and what aren't is simple.  The
+   idea is to help make it portable.  People use portable editors to fix stuff,
+   so only command, script and configuration are built-in.
+
+   Of course, MLSDE internals are also built-in. *)
+  SetBuiltInHighlighter ( 0, 'INI',        'ini',            TMLSDEINISyn)
 finalization
   ;
 end.
