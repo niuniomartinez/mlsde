@@ -64,10 +64,16 @@ implementation
 
 (* Constructor. *)
   constructor TMLSDEINISyn.Create (aOwner: TComponent);
+  const
+    ReservedWords: array [0..1] of String = ('true', 'false');
+  var
+    lToken: String;
   begin
     inherited Create (aOwner);
     Self.SampleSource := SampleCodeINI;
-    Self.IdentifierChars := Concat (Self.IdentifierChars, '-_')
+    Self.IdentifierChars := Concat (Self.IdentifierChars, '-_');
+    for lToken in ReservedWords do Self.LibraryObjects.Append (lToken);
+    Self.Operators.Append ('=')
   end;
 
 
@@ -109,10 +115,9 @@ implementation
     end;
 
     procedure ParseIdentifier; inline;
-    const
-      ReservedWords: array [0..1] of String = ('true', 'false');
     var
       lIdentifier: String;
+      lNdx: Integer;
     begin
       lIdentifier := LowerCase (Self.ParseIdentifier);
       Inc (fTokenIndex);
@@ -122,7 +127,7 @@ implementation
         2:
           fInErrorState := True;
         otherwise
-          if FindString (lIdentifier, ReservedWords) >= 0 then
+          if TStringList (Self.LibraryObjects).Find (lIdentifier, lNdx) then
             Self.TokenType := tkIdentifier
           else
             Self.TokenType := tkString;

@@ -134,12 +134,24 @@ msgstr ""
 msgid "Each nth line number"
 msgstr ""
 
+#: tenvironmentconfigurationframe.chkshowmenu.caption
+msgid "Show menu"
+msgstr ""
+
+#: tenvironmentconfigurationframe.chkshowstatusbar.caption
+msgid "Show status bar"
+msgstr ""
+
+#: tenvironmentconfigurationframe.chkshowtoolbar.caption
+msgid "Show tool bar"
+msgstr ""
+
 #: tenvironmentconfigurationframe.chktitleprojectdir.caption
-msgid "Window title shows project path."
+msgid "Window title shows project path"
 msgstr ""
 
 #: tenvironmentconfigurationframe.chktitleprojectfirst.caption
-msgid "Show project name at the beginning of the window title."
+msgid "Show project name at the beginning of the window title"
 msgstr ""
 
 #: tenvironmentconfigurationframe.listlanguages.itemsex[0].caption
@@ -204,7 +216,7 @@ msgid "&Save file"
 msgstr ""
 
 #: tmainwindow.actionsavefile.hint
-msgid "Saves file."
+msgid "Saves current file."
 msgstr ""
 
 #: tmainwindow.caption
@@ -232,19 +244,19 @@ msgid "Working..."
 msgstr ""
 
 #: tprojectconfigurationframe.checkhiddendirectories.caption
-msgid "Show hidden directories."
+msgid "Show hidden directories"
 msgstr ""
 
 #: tprojectconfigurationframe.checkhiddenfiles.caption
-msgid "Show hidden files."
+msgid "Show hidden files"
 msgstr ""
 
 #: tprojectconfigurationframe.lbldirectorydepth.caption
-msgid "Directory depth:"
+msgid "Directory depth"
 msgstr ""
 
 #: tprojectconfigurationframe.lbldirectoryorder.caption
-msgid "Directory order:"
+msgid "Directory order"
 msgstr ""
 
 #: tprojectconfigurationframe.titlefilesndirs.caption

@@ -1,7 +1,7 @@
 {"version":1,"strings":[
 {"hash":237415475,"name":"tprojectconfigurationframe.titlefilesndirs.caption","sourcebytes":[70,105,108,101,115,32,97,110,100,32,100,105,114,101,99,116,111,114,105,101,115],"value":"Files and directories"},
-{"hash":229371710,"name":"tprojectconfigurationframe.checkhiddenfiles.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,102,105,108,101,115,46],"value":"Show hidden files."},
-{"hash":146650270,"name":"tprojectconfigurationframe.checkhiddendirectories.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,100,105,114,101,99,116,111,114,105,101,115,46],"value":"Show hidden directories."},
-{"hash":218342282,"name":"tprojectconfigurationframe.lbldirectorydepth.caption","sourcebytes":[68,105,114,101,99,116,111,114,121,32,100,101,112,116,104,58],"value":"Directory depth:"},
-{"hash":247952746,"name":"tprojectconfigurationframe.lbldirectoryorder.caption","sourcebytes":[68,105,114,101,99,116,111,114,121,32,111,114,100,101,114,58],"value":"Directory order:"}
+{"hash":114999027,"name":"tprojectconfigurationframe.checkhiddenfiles.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,102,105,108,101,115],"value":"Show hidden files"},
+{"hash":210492227,"name":"tprojectconfigurationframe.checkhiddendirectories.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,100,105,114,101,99,116,111,114,105,101,115],"value":"Show hidden directories"},
+{"hash":63978040,"name":"tprojectconfigurationframe.lbldirectorydepth.caption","sourcebytes":[68,105,114,101,99,116,111,114,121,32,100,101,112,116,104],"value":"Directory depth"},
+{"hash":65828690,"name":"tprojectconfigurationframe.lbldirectoryorder.caption","sourcebytes":[68,105,114,101,99,116,111,114,121,32,111,114,100,101,114],"value":"Directory order"}
 ]}

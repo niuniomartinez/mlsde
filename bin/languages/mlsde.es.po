@@ -143,13 +143,25 @@ msgstr "Tamaño de letra"
 msgid "Each nth line number"
 msgstr "Cada n-ésimo número de línea"
 
+#: tenvironmentconfigurationframe.chkshowmenu.caption
+msgid "Show menu"
+msgstr "Mostrar menú"
+
+#: tenvironmentconfigurationframe.chkshowstatusbar.caption
+msgid "Show status bar"
+msgstr "Mostrar barra de estado"
+
+#: tenvironmentconfigurationframe.chkshowtoolbar.caption
+msgid "Show tool bar"
+msgstr "Mostrar barra de tareas"
+
 #: tenvironmentconfigurationframe.chktitleprojectdir.caption
-msgid "Window title shows project path."
-msgstr "Mostrar la ruta del proyecto en el título."
+msgid "Window title shows project path"
+msgstr "Mostrar la ruta del proyecto en el título"
 
 #: tenvironmentconfigurationframe.chktitleprojectfirst.caption
-msgid "Show project name at the beginning of the window title."
-msgstr "Poner el nombre del proyecto al principio del título."
+msgid "Show project name at the beginning of the window title"
+msgstr "Poner el nombre del proyecto al principio del título"
 
 #: tenvironmentconfigurationframe.listlanguages.itemsex[0].caption
 msgid "Default (or English)"
@@ -215,8 +227,8 @@ msgid "&Save file"
 msgstr "&Guardar archivo"
 
 #: tmainwindow.actionsavefile.hint
-msgid "Saves file."
-msgstr "Guarda el archivo."
+msgid "Saves current file."
+msgstr "Guarda el archivo actual."
 
 #: tmainwindow.caption
 msgid "MLSDE"
@@ -243,20 +255,20 @@ msgid "Working..."
 msgstr "Trabajando..."
 
 #: tprojectconfigurationframe.checkhiddendirectories.caption
-msgid "Show hidden directories."
-msgstr "Muestra directorios ocultos."
+msgid "Show hidden directories"
+msgstr "Mostrar directorios ocultos"
 
 #: tprojectconfigurationframe.checkhiddenfiles.caption
-msgid "Show hidden files."
-msgstr "Muestra archivos ocultos."
+msgid "Show hidden files"
+msgstr "Mostrar archivos ocultos"
 
 #: tprojectconfigurationframe.lbldirectorydepth.caption
-msgid "Directory depth:"
-msgstr "Profundidad:"
+msgid "Directory depth"
+msgstr "Profundidad"
 
 #: tprojectconfigurationframe.lbldirectoryorder.caption
-msgid "Directory order:"
-msgstr "Orden de los directorios:"
+msgid "Directory order"
+msgstr "Orden de los directorios"
 
 #: tprojectconfigurationframe.titlefilesndirs.caption
 msgid "Files and directories"

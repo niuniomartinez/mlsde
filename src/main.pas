@@ -50,6 +50,12 @@ interface
       procedure SetWindowTitleProjectFirst (const aValue: Boolean);
       function GetWindowTitleProjectShowDir: Boolean;
       procedure SetWindowTitleProjectShowDir (const aValue: Boolean);
+      function GetShowMenu: Boolean;
+      procedure SetShowMenu (const aValue: Boolean);
+      function GetShowToolBar: Boolean;
+      procedure SetShowToolBar (const aValue: Boolean);
+      function GetShowStatusBar: Boolean;
+      procedure SetShowStatusBar (const aValue: Boolean);
 
       procedure BuildTitleTemplate;
     public
@@ -71,6 +77,13 @@ interface
     (* Main window title template.
        @seealso(WindowTitleProjectFirst) @seealso(WindowTitleProjectShowDir) *)
       property TitleTemplate: String read fTitle;
+    (* Tells if show the menu. *)
+      property ShowMenu: Boolean read GetShowMenu write SetShowMenu;
+    (* Tells if show the tool bar. *)
+      property ShowToolBar: Boolean read GetShowToolBar write SetShowToolBar;
+    (* Tells if show the status bar. *)
+      property ShowStatusBar: Boolean
+        read GetShowStatusBar write SetShowStatusBar;
     end;
 
 
@@ -179,7 +192,40 @@ implementation
     begin
       Self.SetBooleanValue (EnvironmentSection, 'title_project_dir', aValue);
       Self.BuildTitleTemplate
-    end;
+    end
+  end;
+
+  function TEnvironmentConfiguration.GetShowMenu: Boolean;
+  begin
+    Result := Self.GetBoolValue (EnvironmentSection, 'show_menu', True)
+  end;
+
+  procedure TEnvironmentConfiguration.SetShowMenu(const aValue: Boolean);
+  begin
+    if aValue <> Self.GetShowMenu then
+      Self.SetBooleanValue (EnvironmentSection, 'show_menu', aValue)
+  end;
+
+  function TEnvironmentConfiguration.GetShowToolBar: Boolean;
+  begin
+    Result := Self.GetBoolValue (EnvironmentSection, 'show_toolbar', True)
+  end;
+
+  procedure TEnvironmentConfiguration.SetShowToolBar (const aValue: Boolean);
+  begin
+    if aValue <> Self.GetShowToolBar then
+      Self.SetBooleanValue (EnvironmentSection, 'show_toolbar', aValue)
+  end;
+
+  function TEnvironmentConfiguration.GetShowStatusBar: Boolean;
+  begin
+    Result := Self.GetBoolValue (EnvironmentSection, 'show_statuslbar', True)
+  end;
+
+  procedure TEnvironmentConfiguration.SetShowStatusBar(const aValue: Boolean);
+  begin
+   if aValue <> Self.GetShowStatusBar then
+      Self.SetBooleanValue (EnvironmentSection, 'show_statuslbar', aValue)
   end;
 
 

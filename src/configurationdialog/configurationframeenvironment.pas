@@ -37,6 +37,9 @@ interface
       TitleWindow: TDividerBevel;
         chkTitleProjectDir: TCheckBox;
         chkTitleProjectFirst: TCheckBox;
+        chkShowMenu: TCheckBox;
+        chkShowToolBar: TCheckBox;
+        chkShowStatusBar: TCheckBox;
     public
     (* Initializes the frame.
 
@@ -104,7 +107,11 @@ implementation
     chkTitleProjectFirst.Checked :=
       lEnvironmentConfiguration.WindowTitleProjectFirst;
     chkTitleProjectDir.Checked :=
-      lEnvironmentConfiguration.WindowTitleProjectShowDir
+      lEnvironmentConfiguration.WindowTitleProjectShowDir;
+
+    chkShowMenu.Checked := lEnvironmentConfiguration.ShowMenu;
+    chkShowToolBar.Checked := lEnvironmentConfiguration.ShowToolBar;
+    chkShowStatusBar.Checked := lEnvironmentConfiguration.ShowStatusBar
   end;
 
 
@@ -129,7 +136,15 @@ implementation
     lEnvironmentConfiguration.WindowTitleProjectFirst :=
       chkTitleProjectFirst.Checked;
     lEnvironmentConfiguration.WindowTitleProjectShowDir :=
-      chkTitleProjectDir.Checked
+      chkTitleProjectDir.Checked;
+
+    if lEnvironmentConfiguration.ShowMenu <> chkShowMenu.Checked then
+    begin
+      lEnvironmentConfiguration.ShowMenu := chkShowMenu.Checked;
+      Self.NeedsToReinitialize
+    end;
+    lEnvironmentConfiguration.ShowToolBar := chkShowToolBar.Checked;
+    lEnvironmentConfiguration.ShowStatusBar := chkShowStatusBar.Checked
   end;
 
 end.

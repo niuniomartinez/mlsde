@@ -250,6 +250,8 @@ interface
       property Style: TMLSDEHighlightStyle read fStyle write fStyle;
     (* Keyword list. @seealso(IsKeyword) *)
       property Keywords: TStrings read fKeywords;
+    (* Operators. @seealso(IsOperator) *)
+      property Operators: TStrings read fOperators;
     (* Data types. @seealso(IsType) *)
       property DataTypes: TStrings read fTypes;
     (* Library objects (variables, constants, routines...).

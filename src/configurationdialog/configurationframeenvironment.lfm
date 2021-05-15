@@ -47,16 +47,40 @@ inherited EnvironmentConfigurationFrame: TEnvironmentConfigurationFrame
     Left = 8
     Height = 21
     Top = 80
-    Width = 330
-    Caption = 'Show project name at the beginning of the window title.'
+    Width = 327
+    Caption = 'Show project name at the beginning of the window title'
     TabOrder = 1
   end
   object chkTitleProjectDir: TCheckBox[4]
     Left = 8
     Height = 21
     Top = 104
-    Width = 202
-    Caption = 'Window title shows project path.'
+    Width = 199
+    Caption = 'Window title shows project path'
     TabOrder = 2
+  end
+  object chkShowToolBar: TCheckBox[5]
+    Left = 8
+    Height = 21
+    Top = 160
+    Width = 99
+    Caption = 'Show tool bar'
+    TabOrder = 4
+  end
+  object chkShowMenu: TCheckBox[6]
+    Left = 8
+    Height = 21
+    Top = 136
+    Width = 88
+    Caption = 'Show menu'
+    TabOrder = 3
+  end
+  object chkShowStatusBar: TCheckBox[7]
+    Left = 8
+    Height = 21
+    Top = 184
+    Width = 112
+    Caption = 'Show status bar'
+    TabOrder = 5
   end
 end

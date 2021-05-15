@@ -15,16 +15,16 @@ inherited ProjectConfigurationFrame: TProjectConfigurationFrame
     Left = 8
     Height = 21
     Top = 112
-    Width = 123
-    Caption = 'Show hidden files.'
+    Width = 120
+    Caption = 'Show hidden files'
     TabOrder = 2
   end
   object CheckHiddenDirectories: TCheckBox[2]
     Left = 8
     Height = 21
     Top = 136
-    Width = 160
-    Caption = 'Show hidden directories.'
+    Width = 157
+    Caption = 'Show hidden directories'
     TabOrder = 3
   end
   object EditDirectoryDepth: TSpinEdit[3]
@@ -41,16 +41,16 @@ inherited ProjectConfigurationFrame: TProjectConfigurationFrame
     Left = 8
     Height = 15
     Top = 16
-    Width = 90
-    Caption = 'Directory depth:'
+    Width = 87
+    Caption = 'Directory depth'
     ParentColor = False
   end
   object lblDirectoryOrder: TLabel[5]
     Left = 8
     Height = 15
     Top = 64
-    Width = 89
-    Caption = 'Directory order:'
+    Width = 86
+    Caption = 'Directory order'
     ParentColor = False
   end
   object selectDirOrder: TComboBox[6]

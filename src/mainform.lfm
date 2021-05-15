@@ -7,7 +7,8 @@ object MainWindow: TMainWindow
   ClientHeight = 355
   ClientWidth = 643
   Menu = MainMenu
-  OnCreate = Initialize
+  OnActivate = FormActivate
+  OnCreate = FormCreate
   OnShow = FormShow
   Position = poDefault
   LCLVersion = '2.0.10.0'
@@ -145,7 +146,7 @@ object MainWindow: TMainWindow
     object ActionSaveFile: TAction
       Tag = 1
       Caption = '&Save file'
-      Hint = 'Saves file.'
+      Hint = 'Saves current file.'
       ImageIndex = 4
       OnExecute = ActionSourceFileExecute
     end

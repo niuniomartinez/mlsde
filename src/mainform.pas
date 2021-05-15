@@ -71,10 +71,12 @@ interface
       procedure ActionEnvironmentExecute (Sender: TObject);
     (* Event trigered when a file action is executed. *)
       procedure ActionSourceFileExecute (Sender: TObject);
+    (* Creates the window. *)
+      procedure FormCreate (Sender: TObject);
+    (* Activates teh window. *)
+      procedure FormActivate(Sender: TObject);
     (* Event triggered when form is shown. *)
       procedure FormShow (Sender: TObject);
-    (* Initializes the window. *)
-      procedure Initialize (Sender: TObject);
     (* User clicks on tree. *)
       procedure ProjectTreeDblClick (Sender: TObject);
     (* There are changes in the editor.
@@ -83,6 +85,11 @@ interface
        a file. *)
       procedure EditorChanged (Sender: TObject);
     private
+    (* Some initialization may result in internal error if done in onCreate
+       event, so they're done in onActivate instead using this flag to know if
+       it is an initialization. *)
+      fInitializing: Boolean;
+
     (* Configuration changed. *)
       procedure EnvironmentConfigurationChanged (Sender: TObject);
       procedure EditorConfigurationChanged (Sender: TObject);
@@ -178,19 +185,10 @@ implementation
 
 
 
-(* Shows window. *)
-  procedure TMainWindow.FormShow (Sender: TObject);
-  begin
-    Self.ProjectViewer.UpdateView;
-    Self.UpdateWindowTitle;
-    Self.UpdateFileComponentStates
-  end;
-
-
-
 (* Initializes. *)
-  procedure TMainWindow.Initialize (Sender: TObject);
+  procedure TMainWindow.FormCreate (Sender: TObject);
   begin
+    fInitializing := True;
   { Create project view. }
     Self.ProjectViewer.Project := MLSDEApplication.Project;
   { Project management. }
@@ -205,7 +203,28 @@ implementation
     MLSDEApplication.Configuration.FindConfig (
       idEditorConfig
     ).Subject.AddObserver (@Self.EditorConfigurationChanged);
+  end;
 
+
+
+(* Activates window. *)
+  procedure TMainWindow.FormActivate(Sender: TObject);
+  begin
+    if fInitializing then
+    begin
+    { Components state. }
+      Self.UpdateFileComponentStates;
+      Self.EnvironmentConfigurationChanged (Nil)
+    end
+  end;
+
+
+
+(* Shows window. *)
+  procedure TMainWindow.FormShow (Sender: TObject);
+  begin
+    Self.ProjectViewer.UpdateView;
+    Self.UpdateWindowTitle;
     Self.UpdateFileComponentStates
   end;
 
@@ -241,8 +260,25 @@ implementation
 
 (* Configuration changed. *)
   procedure TMainWindow.EnvironmentConfigurationChanged (Sender: TObject);
+  var
+    lConfiguration: TEnvironmentConfiguration;
   begin
-    self.UpdateWindowTitle
+    Self.UpdateWindowTitle;
+    lConfiguration := TEnvironmentConfiguration (
+      MLSDEApplication.Configuration.FindConfig (idEnvironmentConfig)
+    );
+    if lConfiguration.ShowMenu then
+    begin
+      if not Assigned (Self.MainMenu.Parent) then
+      begin
+        Self.MainMenu.Parent := Self;
+        Self.MainMenu.HandleNeeded
+      end
+    end
+    else
+      Self.MainMenu.Parent := Nil;
+    Self.ToolBar.Visible := lConfiguration.ShowToolbar;
+    Self.StatusBar.Visible := lConfiguration.ShowStatusBar
   end;
 
   procedure TMainWindow.EditorConfigurationChanged (Sender: TObject);
