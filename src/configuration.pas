@@ -259,7 +259,7 @@ implementation
 
   function TConfiguration.GetConfigurationDir: String;
   begin
-    Result := IncludeTrailingPathDelimiter (GetAppConfigDir (False))
+    Result := GetAppConfigDir (False)
   end;
 
   function TConfiguration.GetConfigurationFileName: String;

@@ -111,6 +111,26 @@ interface
       destructor Destroy; override;
     (* Initializes the object. *)
       procedure Initialize;
+    (* Looks for the file in the application and user directories.
+
+       It looks first in the user directory, then in the directory where the
+       exectuable is and finally in the application directory.
+       @param(aFile The file to look for.  Should include directory.)
+       @return(If file is found, the full path.  If not found, @code(aFile)
+               content as it is.)
+       @seealso(FindDirectory)
+     *)
+      function FindFile (const aFile: String): String;
+    (* Looks for the directory inside in the application and user directories.
+
+       It looks first in the user directory, then in the directory where the
+       exectuable is and finally in the application directory.
+       @param(aDir The directory to look for.)
+       @return(If directory is found, the full path.  If not found, @code(aDir)
+               content as it is.)
+       @seealso(FindFile)
+     *)
+      function FindDirectory (const aDir: String): String;
 
     (* Application configuration. *)
       property Configuration: TConfiguration read fConfiguration;
@@ -135,16 +155,17 @@ implementation
   (* Directory where .po/.mo files are. *)
     LangDir = 'languages';
   (* To build the window title.  See TEnvironmentConfiguration. *)
-    WindowTitleProjectName = 'MLSDE - %s';
-    WindowTitleProjectDir = 'MLSDE - %s (%s)';
-    WindowTitleProjectNameFirst = '%s - MLSDE';
-    WindowTitleProjectDirFirst = '%s (%s) - MLSDE';
+    WindowTitleProjectFmt = 'MLSDE - %s';
+    WindowTitleProjectDirFmt = 'MLSDE - %s (%s)';
+    WindowTitleProjectFirstFmt = '%s - MLSDE';
+    WindowTitleProjectDirFirstFmt = '%s (%s) - MLSDE';
 
   resourcestring
     messageSelectAppLanguage = 'Selects the application language.';
-
     messageCantCreateConfigDir = 'Cannot create configuration directory.'#10+
                                  'Configuration changes won''t be saved.';
+
+
 
 (*
  * TEnvironmentConfiguration
@@ -235,15 +256,15 @@ implementation
     if Self.GetWindowTitleProjectFirst then
     begin
       if Self.GetWindowTitleProjectShowDir then
-        fTitle := WindowTitleProjectDirFirst
+        fTitle := WindowTitleProjectDirFirstFmt
       else
-        fTitle := WindowTitleProjectNameFirst
+        fTitle := WindowTitleProjectFirstFmt
     end
     else begin
       if Self.GetWindowTitleProjectShowDir then
-        fTitle := WindowTitleProjectDir
+        fTitle := WindowTitleProjectDirFmt
       else
-        fTitle := WindowTitleProjectName
+        fTitle := WindowTitleProjectFmt
     end
   end;
 
@@ -283,7 +304,7 @@ implementation
       TEnvironmentConfiguration (
         fConfiguration.FindConfig (EnvironmentSection)
       ).Language,
-      LangDir
+      Self.FindDirectory (LangDir)
     )
   end;
 
@@ -341,6 +362,95 @@ implementation
       fSynManager.Initialize
     end
   end;
+
+
+
+(* Looks for file. *)
+  function TMLSDEApplication.FindFile (const aFile: String): String;
+
+    function FindFileInApplicationDir: String; inline;
+    begin
+      Result :=
+{$IFDEF WINDOWS}
+      '' { Windows doesn't has this directory. }
+{$ELSE}
+      concat ('/usr/share/mlsde/', aFile)
+{$ENDIF}
+    end;
+
+    function FindFileInExecutableDir: String; inline;
+    begin
+      Result := Concat (
+        IncludeTrailingPathDelimiter (ExtractFileDir (ParamStr (0))),
+        aFile
+      )
+    end;
+
+    function FindFileInUserDir: String; inline;
+    begin
+      Result := Concat (GetAppConfigDir (False), aFile)
+    end;
+
+  begin
+    Result := FindFileInUserDir;
+    if not FileExists (Result) then
+    begin
+      Result := FindFileInExecutableDir;
+      if not FileExists (Result) then
+      begin
+        Result := FindFileInApplicationDir;
+        if not FileExists (Result) then
+        begin
+        { Not found, so... }
+          Result := aFile
+        end
+      end
+    end
+  end;
+
+
+
+  function TMLSDEApplication.FindDirectory (const aDir: String): String;
+
+    function GetInApplicationDir: String; inline;
+    begin
+      Result :=
+  {$IFDEF WINDOWS}
+      '' { Windows doesn't has this directory. }
+  {$ELSE}
+      concat ('/usr/share/mlsde/', aDir)
+  {$ENDIF}
+    end;
+
+    function GetInExecutableDir: String; inline;
+    begin
+      Result := Concat (
+        IncludeTrailingPathDelimiter (ExtractFileDir (ParamStr (0))),
+        aDir
+      )
+    end;
+
+    function GetInUserDir: String; inline;
+    begin
+      Result := Concat (GetAppConfigDir (False), aDir)
+    end;
+
+    begin
+      Result := GetInUserDir;
+      if not DirectoryExists (Result) then
+      begin
+        Result := GetInExecutableDir;
+        if not DirectoryExists (Result+ '/') then
+        begin
+          Result := GetInApplicationDir;
+          if not DirectoryExists (Result) then
+          begin
+          { Not found, so... }
+            Result := aDir;
+          end
+        end
+      end
+    end;
 
 end.
 
