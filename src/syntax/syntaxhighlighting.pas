@@ -75,6 +75,9 @@ interface
       procedure Initialize;
     (* Returns the highlighter for the given extension. *)
       function GetHighlighterForExt (aExt: String): TSynCustomHighlighter;
+
+    (* Reference to the highlight style. *)
+      property Style: TMLSDEHighlightStyle read fHighlightStyle;
     end;
 
 implementation

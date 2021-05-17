@@ -114,14 +114,17 @@ implementation
   const
     EditorSection = idEditorConfig;
   { Defaults. }
-    ShowGutter = True;
-    FontName = 'Monospace';
-    FontSize = 12;
-    ShowLinesNum = 10;
+    ShowGutterDefault = True;
+    FontNameDefault = 'Monospace';
+    FontSizeDefault = 12;
+    ShowLinesNumDefault = 10;
 
   function TEditorConfiguration.GetShowGutter: Boolean;
   begin
-    Result := Self.GetBoolValue (EditorSection, 'show_gutter', True)
+    Result := Self.GetBoolValue (
+      EditorSection, 'show_gutter',
+      ShowGutterDefault
+    )
   end;
 
   procedure TEditorConfiguration.SetShowGutter (const aValue: Boolean);
@@ -134,9 +137,8 @@ implementation
   function TEditorConfiguration.GetShowLinesMultiplesOf: Integer;
   begin
     Result := Self.GetIntValue (
-      EditorSection,
-      'show_lines_multiples',
-      ShowLinesNum
+      EditorSection, 'show_lines_multiples',
+      ShowLinesNumDefault
     )
   end;
 
@@ -168,8 +170,8 @@ implementation
   procedure TEditorConfiguration.ParseCommandLineOptions;
   begin
     inherited ParseCommandLineOptions;
-    fFont.Name := Self.GetValue (EditorSection, 'font', FontName);
-    fFont.Size := Self.GetIntValue (EditorSection, 'font_size', FontSize)
+    fFont.Name := Self.GetValue (EditorSection, 'font', FontNameDefault);
+    fFont.Size := Self.GetIntValue (EditorSection, 'font_size', FontSizeDefault)
   end;
 
 
@@ -264,18 +266,32 @@ implementation
   procedure TSourceEditorFrame.ApplyEditorConfiguration;
   var
     lConfiguration: TEditorConfiguration;
-    lGutterLines: TSynGutterLineNumber;
+
+    procedure ConfigureEditor; inline;
+    begin
+      Self.SynEdit.Font.Assign (lConfiguration.GetFont);
+      Self.SynEdit.Color := MLSDEApplication.SynManager.Style.Background;
+      Self.SynEdit.Font.Color := MLSDEApplication.SynManager.Style.Foreground
+    end;
+
+    procedure ConfigureGutter; inline;
+    var
+      lGutterLines: TSynGutterLineNumber;
+    begin
+      Self.SynEdit.Gutter.Visible := lConfiguration.ShowGutter;
+      lGutterLines := TSynGutterLineNumber (
+        Self.SynEdit.Gutter.Parts.ByClass[TSynGutterLineNumber, 0]
+      );
+      lGutterLines.ShowOnlyLineNumbersMultiplesOf :=
+        lConfiguration.ShowLinesMultiplesOf
+    end;
+
   begin
     lConfiguration := TEditorConfiguration (
       MLSDEApplication.Configuration.FindConfig (idEditorConfig)
     );
-    Self.SynEdit.Font.Assign (lConfiguration.GetFont);
-    Self.SynEdit.Gutter.Visible := lConfiguration.ShowGutter;
-    lGutterLines := TSynGutterLineNumber (
-      Self.SynEdit.Gutter.Parts.ByClass[TSynGutterLineNumber, 0]
-    );
-    lGutterLines.ShowOnlyLineNumbersMultiplesOf :=
-      lConfiguration.ShowLinesMultiplesOf
+    ConfigureEditor;
+    ConfigureGutter
   end;
 
 end.

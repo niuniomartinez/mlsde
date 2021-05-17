@@ -1,4 +1,4 @@
-# MultiLanguage Scriptable Development Environment ##
+# MultiLanguage Scriptable Development Environment #
 
 The **MultiLanguage Scriptable Development Environment** (**MLSDE**) aims to be
 a flexible source editor not engaged to any language.  Right now it is in an
@@ -35,9 +35,9 @@ and execute `makedocs.sh`.
 
 ## How to use ##
 
-At the moment it doesn't do anything.
+At the moment it allows simple edition only.
 
-You have more detailed documentation at the `~/docs` directory.
+You have detailed documentation at the `~/docs/usermanual` directory.
 
 
 
