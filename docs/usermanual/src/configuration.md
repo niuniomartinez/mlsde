@@ -5,7 +5,7 @@ main menu.
 
 ![Configuration option](images/menu-cfg.png)
 
-You can also press `[Ctrl]+[Shift]+[Esc]`.
+You can also press `[Ctrl]+[Alt]+[F10]`.
 
 The configuration dialog is divided in two parts:  The _configuration sections_
 on the left and the _configuration options_ on the right.

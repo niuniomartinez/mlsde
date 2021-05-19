@@ -55,9 +55,6 @@ interface
 
 implementation
 
-  uses
-    Utils;
-
 (*
  * TMLSDEINISyn
  ***************************************************************************)
