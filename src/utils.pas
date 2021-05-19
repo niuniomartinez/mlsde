@@ -66,7 +66,7 @@ implementation
     sysutils;
 
 (* Encodes name. *)
-  function NormalizeIdentifier (CONST aName: String): String;
+  function NormalizeIdentifier (const aName: String): String;
   const
     lValidChars = [ 'A'..'Z', '0'..'9', 'a'..'z', '_'];
   var
@@ -75,7 +75,7 @@ implementation
     Result := '';
     for Cnt := 1 to Length (aName) do
       if aName[Cnt] in lValidChars then
-        Result := Result + aName[Cnt]
+        Result := Concat (Result + aName[Cnt])
       else
         Result := Result + '__'
   end;

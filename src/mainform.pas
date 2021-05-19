@@ -142,7 +142,7 @@ implementation
 (* Executes an environment action. *)
   procedure TMainWindow.ActionEnvironmentExecute (Sender: TObject);
   begin
-    case (Sender AS TComponent).Tag of
+    case (Sender as TComponent).Tag of
     tagConfigure:
       GUIUtils.RunModalDialog (TConfigurationDlg.Create (Self));
     tagAboutDlg:
@@ -151,7 +151,7 @@ implementation
       Self.CloseAllTabs;
     else
     { This should never be rendered, so no translation required. }
-      ShowError ('Action environment tag: %d', [(Sender AS TComponent).Tag]);
+      ShowError ('Action environment tag: %d', [(Sender as TComponent).Tag]);
     end
   end;
 
@@ -179,7 +179,7 @@ implementation
         end;
     else
     { This should never be rendered, so no translation required. }
-      ShowError ('Action source file tag: %d', [(Sender AS TComponent).Tag]);
+      ShowError ('Action source file tag: %d', [(Sender as TComponent).Tag]);
     end
   end;
 

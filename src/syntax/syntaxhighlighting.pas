@@ -86,7 +86,7 @@ implementation
     Utils,
     StrUtils, sysutils,
   { Built-in syntax highlighters. }
-    MLSDEHighlighterINI;
+    MLSDEHighlighterINI, MLSDEHighlighterMLSDE;
 
 
 
@@ -104,7 +104,13 @@ implementation
   (* List of built-in highlighters.
 
      This is populated at the initialization section. *)
-    BuiltInHighlighters: array [0..0] of TBuiltInHighlighter;
+    BuiltInHighlighters: array [0..1] of TBuiltInHighlighter = (
+      (Name: 'INI'; Extensions: 'ini'; HighlighterClass: TMLSDEINISyn),
+      (Name: 'Syntax definition file';
+       Extensions: 'sld';
+       HighlighterClass: TMLSDESyntaxDefinitionSyn
+      )
+    );
 
 (* Helper to avoid duplicate code. *)
   function CreateBuiltInHighlighter (const aNdx: Integer)
@@ -300,32 +306,5 @@ implementation
     Result := Nil
   end;
 
-
-
-(****************************************************************************)
-
-(* Sets information for built-in highlighter. *)
-  procedure SetBuiltInHighlighter (
-    const aNdx: Integer;
-    aName, aExtensions: String;
-    aHighlighterClass: TMLSDEHighlighterClass
-  );
-  begin;
-    BuiltInHighlighters[aNdx].Name := Trim (aName);
-    BuiltInHighlighters[aNdx].Extensions := LowerCase (Trim (aExtensions));
-    BuiltInHighlighters[aNdx].HighlighterClass := aHighlighterClass
-  end;
-
-initialization
-(* Create built-in highlighter list.
-
-   The decision of what languages are built-in and what aren't is simple.  The
-   idea is to help make it portable.  People use portable editors to fix stuff,
-   so only command, script and configuration are built-in.
-
-   Of course, MLSDE internals are also built-in. *)
-  SetBuiltInHighlighter ( 0, 'INI',        'ini',            TMLSDEINISyn)
-finalization
-  ;
 end.
 

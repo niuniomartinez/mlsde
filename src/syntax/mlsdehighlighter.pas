@@ -115,7 +115,9 @@ interface
     (* Inside comments. *)
       crgComment,
     (* Inside text constant (i.e. heredoc, etc.). *)
-      crgTextConst
+      crgTextConst,
+    (* Inside a code block. *)
+      crgBlock
     );
 
 

@@ -166,7 +166,7 @@ implementation
           fInErrorState := True
       except
         fInErrorState := True
-      end;
+      end
     end;
 
     procedure ParseValue; inline;
