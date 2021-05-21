@@ -127,7 +127,11 @@ msgstr "Configuración"
 msgid "..."
 msgstr ""
 
-#: teditorconfigurationframe.chkboxshowgutter.caption
+#: teditorconfigurationframe.chkshowchangemarks.caption
+msgid "Show change marks"
+msgstr "Mostrar marcas de cambios"
+
+#: teditorconfigurationframe.chkshowgutter.caption
 msgid "Show gutter"
 msgstr "Mostrar columna de marcas"
 
@@ -142,6 +146,14 @@ msgstr "Tamaño de letra"
 #: teditorconfigurationframe.lblnthlinenumber.caption
 msgid "Each nth line number"
 msgstr "Cada n-ésimo número de línea"
+
+#: teditorconfigurationframe.titlegutter.caption
+msgid "Gutter"
+msgstr "Columna de marcas"
+
+#: teditorconfigurationframe.titletextfont.caption
+msgid "Text font"
+msgstr "Tipografía"
 
 #: tenvironmentconfigurationframe.chkshowmenu.caption
 msgid "Show menu"

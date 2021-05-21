@@ -45,6 +45,8 @@ interface
       procedure SetShowGutter (const aValue: Boolean);
       function GetShowLinesMultiplesOf: Integer;
       procedure SetShowLinesMultiplesOf (const aValue: Integer);
+      function GetShowChangeMarks: Boolean;
+      procedure SetShowChangeMarks (const aValue: Boolean);
     public
     (* Constructor. *)
       constructor Create; override;
@@ -62,6 +64,9 @@ interface
     (* Show lines multiples of... *)
       property ShowLinesMultiplesOf: Integer
         read GetShowLinesMultiplesOf write SetShowLinesMultiplesOf;
+    (* Show change marks. *)
+      property ShowChangeMarks: Boolean
+        read GetShowChangeMarks write SetShowChangeMarks;
     end;
 
 
@@ -102,7 +107,7 @@ implementation
 
   uses
     Main, Utils,
-    SynGutterLineNumber,
+    SynGutterLineNumber, SynGutterChanges,
     sysutils;
 
 {$R *.lfm}
@@ -115,6 +120,7 @@ implementation
     EditorSection = idEditorConfig;
   { Defaults. }
     ShowGutterDefault = True;
+    ShowCHangeMarksDefault = True;
     FontNameDefault = 'Monospace';
     FontSizeDefault = 12;
     ShowLinesNumDefault = 10;
@@ -142,9 +148,24 @@ implementation
     )
   end;
 
-  procedure TEditorConfiguration.SetShowLinesMultiplesOf(const aValue: Integer);
+  procedure TEditorConfiguration.SetShowLinesMultiplesOf (const aValue: Integer);
   begin
     Self.SetIntValue (EditorSection, 'show_lines_multiples', aValue)
+  end;
+
+
+
+  function TEditorConfiguration.GetShowChangeMarks: Boolean;
+  begin
+    Result := Self.GetBoolValue (
+      EditorSection, 'show_change_marks',
+      ShowCHangeMarksDefault
+    )
+  end;
+
+  procedure TEditorConfiguration.SetShowChangeMarks (const aValue: Boolean);
+  begin
+    Self.SetBooleanValue (EditorSection, 'show_change_marks', aValue)
   end;
 
 
@@ -275,15 +296,16 @@ implementation
     end;
 
     procedure ConfigureGutter; inline;
-    var
-      lGutterLines: TSynGutterLineNumber;
     begin
       Self.SynEdit.Gutter.Visible := lConfiguration.ShowGutter;
-      lGutterLines := TSynGutterLineNumber (
+      TSynGutterLineNumber (
         Self.SynEdit.Gutter.Parts.ByClass[TSynGutterLineNumber, 0]
-      );
-      lGutterLines.ShowOnlyLineNumbersMultiplesOf :=
-        lConfiguration.ShowLinesMultiplesOf
+      ).ShowOnlyLineNumbersMultiplesOf :=
+        lConfiguration.ShowLinesMultiplesOf;
+      TSynGutterChanges (
+        Self.SynEdit.Gutter.Parts.ByClass[TSynGutterChanges, 0]
+      ).Visible :=
+        lConfiguration.ShowChangeMarks
     end;
 
   begin

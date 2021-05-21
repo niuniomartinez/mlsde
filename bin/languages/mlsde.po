@@ -118,7 +118,12 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: teditorconfigurationframe.chkboxshowgutter.caption
+#: teditorconfigurationframe.chkshowchangemarks.caption
+msgid "Show change marks"
+msgstr ""
+
+#: teditorconfigurationframe.chkshowgutter.caption
+msgctxt "teditorconfigurationframe.chkshowgutter.caption"
 msgid "Show gutter"
 msgstr ""
 
@@ -132,6 +137,14 @@ msgstr ""
 
 #: teditorconfigurationframe.lblnthlinenumber.caption
 msgid "Each nth line number"
+msgstr ""
+
+#: teditorconfigurationframe.titlegutter.caption
+msgid "Gutter"
+msgstr ""
+
+#: teditorconfigurationframe.titletextfont.caption
+msgid "Text font"
 msgstr ""
 
 #: tenvironmentconfigurationframe.chkshowmenu.caption

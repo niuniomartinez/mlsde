@@ -27,19 +27,26 @@ interface
 
   uses
     ConfigurationDialogFrame,
-    Graphics, StdCtrls, Spin, ExtCtrls, Dialogs, Classes;
+    Graphics, StdCtrls, Spin, ExtCtrls, Dialogs, DividerBevel, Classes;
 
   type
+  (* Contains and manages the controls that allows to configure the
+     source editor. *)
     TEditorConfigurationFrame = class (TConfigurationFrame)
-      btnSelectFont: TButton;
-      chkBoxShowGutter: TCheckBox;
-      editFont: TLabeledEdit;
-      FontDialog: TFontDialog;
-      lblFontSize: TLabel;
-      lblNthLineNumber: TLabel;
-      editNthLineNumber: TSpinEdit;
-      editFontSize: TSpinEdit;
+      TitleGutter: TDividerBevel;
+       chkShowGutter: TCheckBox;
+       lblNthLineNumber: TLabel;
+       editNthLineNumber: TSpinEdit;
+       chkShowChangeMarks: TCheckBox;
+      TitleTextFont: TDividerBevel;
+       editFont: TLabeledEdit;
+       btnSelectFont: TButton;
+       FontDialog: TFontDialog;
+       lblFontSize: TLabel;
+       editFontSize: TSpinEdit;
 
+    (* Activate or deactivate the gutter. *)
+      procedure chkShowGutterChange (Sender: TObject);
     (* User wants to select the text font from dialog. *)
       procedure btnSelectFontClick (Sender: TObject);
     (* Font size changed. *)
@@ -67,6 +74,15 @@ implementation
 (*
  * TEditorConfigurationFrame
  **************************************************************************)
+
+(* Activates or deactivates the gutter. *)
+  procedure TEditorConfigurationFrame.chkShowGutterChange (Sender: TObject);
+  begin
+    Self.editNthLineNumber.Enabled := Self.chkShowGutter.Checked;
+    Self.chkShowChangeMarks.Enabled := Self.chkShowGutter.Checked
+  end;
+
+
 
 (* Selects font. *)
   procedure TEditorConfigurationFrame.btnSelectFontClick (Sender: TObject);
@@ -118,8 +134,9 @@ implementation
     lEditorConfiguration := TEditorConfiguration (
       MLSDEApplication.Configuration.FindConfig (idEditorConfig)
     );
-    Self.chkBoxShowGutter.Checked := lEditorConfiguration.ShowGutter;
+    Self.chkShowGutter.Checked := lEditorConfiguration.ShowGutter;
     Self.editNthLineNumber.Value := lEditorConfiguration.ShowLinesMultiplesOf;
+    Self.chkShowChangeMarks.Checked := lEditorConfiguration.ShowChangeMarks;
     fFont.Assign (lEditorConfiguration.GetFont);
     Self.editFont.Text := fFont.Name;
     Self.editFontSize.Value := fFont.Size
@@ -135,8 +152,9 @@ implementation
     lEditorConfiguration := TEditorConfiguration (
       MLSDEApplication.Configuration.FindConfig (idEditorConfig)
     );
-    lEditorConfiguration.ShowGutter := Self.chkBoxShowGutter.Checked;
+    lEditorConfiguration.ShowGutter := Self.chkShowGutter.Checked;
     lEditorConfiguration.ShowLinesMultiplesOf := Self.editNthLineNumber.Value;
+    lEditorConfiguration.ShowChangeMarks := Self.chkShowChangeMarks.Checked;
     lEditorConfiguration.CopyFont (fFont)
   end;
 
