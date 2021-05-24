@@ -56,11 +56,11 @@ interface
       fDefinitionList: array of THighlighterInfo;
       fNumHighlighters: Integer;
 
+      function GetHighlighterInfo (const Ndx: Integer): THighlighterInfo;
+        inline;
+
     (* Removes all definitions. *)
       procedure Clear;
-    (* Looks for a highlighter by name and returns its index or -1 if not
-       found. *)
-      function GetHighlighterIndex (aName: String): Integer;
     (* Looks for a highlighter by extension and returns its index or -1 if not
        found. *)
       function GetExtensionIndex (aExtension: String): Integer;
@@ -74,10 +74,16 @@ interface
        Can be used to reset or re-initialize. *)
       procedure Initialize;
     (* Returns the highlighter for the given extension. *)
-      function GetHighlighterForExt (aExt: String): TSynCustomHighlighter;
+      function GetHighlighterForExt (aExt: String): TMLSDEHighlighter;
 
     (* Reference to the highlight style. *)
       property Style: TMLSDEHighlightStyle read fHighlightStyle;
+    (* How many highlighters available. *)
+      property Count: Integer read fNumHighlighters;
+    (* Access to the highligthers information.
+       @seealso(GetHighlighterForExt) *)
+      property Highlighters[Ndx: Integer]: THighlighterInfo
+        read GetHighlighterInfo;
     end;
 
 implementation
@@ -91,7 +97,7 @@ implementation
 
 
 (*
- * Built-in syntax highlighters management.
+ * Built-in syntax highlighters.
  ***************************************************************************)
   type
   (* Built in highlighter information. *)
@@ -112,51 +118,6 @@ implementation
       )
     );
 
-(* Helper to avoid duplicate code. *)
-  function CreateBuiltInHighlighter (const aNdx: Integer)
-    : TMLSDEHighlighter;
-    inline;
-  begin
-    Result := BuiltInHighlighters[aNdx].HighlighterClass.Create (Nil);
-    Result.Name := NormalizeIdentifier (BuiltInHighlighters[aNdx].Name)
-  end;
-
-
-
-(* Creates a built-in highlighter.
-
-   Note that it will create a new syntax highlighter every time it is requested.
-
-   Returns the reference for the syntax highlighter or Nil if it can't find it.
- *)
-  function GetBuiltInHighlighterForExt (aExt: String): TSynCustomHighlighter;
-  var
-    lNdx, lHighlighterNdx: Integer;
-    lExtensions: array of String;
-  begin
-    for lNdx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
-    begin
-      lExtensions := SplitString (BuiltInHighlighters[lNdx].Extensions, ';');
-      lHighlighterNdx := FindString (aExt, lExtensions);
-      if lHighlighterNdx >= 0 then
-        Exit (CreateBuiltInHighlighter (lNdx))
-    end;
-    Result := Nil
-  end;
-
-  function GetBuiltInHighlighterForName (aName: String): TMLSDEHighlighter;
-  var
-    lNdx: Integer;
-  begin
-    aName := LowerCase (aName);
-    for lNdx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
-    begin
-      if LowerCase (BuiltInHighlighters[lNdx].Name) = aName then
-        Exit (CreateBuiltInHighlighter (lNdx))
-    end;
-    Result := Nil
-  end;
-
 
 
 (*
@@ -168,6 +129,16 @@ implementation
     MinDefinitionList = 16;
   (* How much the lists grows when needed. *)
     ListGrow = 4;
+
+  function TSynManager.GetHighlighterInfo (const Ndx: Integer)
+    : THighlighterInfo;
+  begin
+    if Ndx >= fNumHighlighters then
+      raise ERangeError.Create ('Index out of range.');
+    Result := fDefinitionList[Ndx]
+  end;
+
+
 
 (* Removes definitions. *)
   procedure TSynManager.Clear;
@@ -188,21 +159,6 @@ implementation
       SetLength (fDefinitionList, fNumHighlighters)
     else
       SetLength (fDefinitionList, MinDefinitionList)
-  end;
-
-
-
-(* Looks for a highlighter by name. *)
-  function TSynManager.GetHighlighterIndex (aName: String): Integer;
-  var
-    Ndx: Integer;
-  begin
-    aName := LowerCase (aName);
-    for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
-      if aName = LowerCase (fDefinitionList[Ndx].Name) then
-        Exit (Ndx);
-  { Not found, so... }
-    Result := -1
   end;
 
 
@@ -249,16 +205,27 @@ implementation
 (* Initializes. *)
   procedure TSynManager.Initialize;
 
+    function HighlighterExists (aName: String): Boolean;
+    var
+      Ndx: Integer;
+    begin
+      aName := LowerCase (aName);
+      for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
+        if LowerCase (fDefinitionList[Ndx].Name) = aName then
+          Exit (True);
+      Result := False
+    end;
+
     procedure AddHighlighter (aName, aExtensions: String; aBuiltIn: Boolean);
     begin
-    { Does the list need to grow. }
+    { Does the list need to grow? }
       if fNumHighlighters >= Length (fDefinitionList) then
         SetLength (fDefinitionList, Length (fDefinitionList) + ListGrow);
     { Adds information. }
       fDefinitionList[fNumHighlighters].Name := aName;
       fDefinitionList[fNumHighlighters].Extensions := aExtensions;
       fDefinitionList[fNumHighlighters].BuiltIn := aBuiltIn;
-      fDefinitionList[fNumHighlighters].Highlighter := Nil;{Not sure if needed.}
+      fDefinitionList[fNumHighlighters].Highlighter := Nil;
       Inc (fNumHighlighters)
     end;
 
@@ -267,9 +234,9 @@ implementation
   begin
   { Removes old list (if any). }
     Self.Clear;
-  { Adds built-in highlighters if non overriden. }
+  { Adds built-in highlighters if not overriden. }
     for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
-      if Self.GetHighlighterIndex (BuiltInHighlighters[Ndx].Name) < 0 then
+      if not HighlighterExists (BuiltInHighlighters[Ndx].Name) then
         AddHighlighter (
           BuiltInHighlighters[Ndx].Name,
           BuiltInHighlighters[Ndx].Extensions,
@@ -281,7 +248,19 @@ implementation
 
 (* Returns the highlighter for the given extension. *)
   function TSynManager.GetHighlighterForExt (aExt: String)
-    : TSynCustomHighlighter;
+    : TMLSDEHighlighter;
+
+    function GetBuiltInHighlighter (aName: String): TMLSDEHighlighter;
+    var
+      Ndx: Integer;
+    begin
+      aName := LowerCase (aName);
+      for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
+        if LowerCase (BuiltInHighlighters[Ndx].Name) = aName then
+          Exit (BuiltInHighlighters[Ndx].HighlighterClass.Create (Nil));
+      Result := Nil
+    end;
+
   var
     Ndx: Integer;
   begin
@@ -294,7 +273,7 @@ implementation
       { Create the highlighter. }
         if fDefinitionList[Ndx].BuiltIn then
           fDefinitionList[Ndx].Highlighter :=
-            GetBuiltInHighlighterForName (fDefinitionList[Ndx].Name);
+            GetBuiltInHighlighter (fDefinitionList[Ndx].Name);
       { TODO: Create from external definition. }
         if Assigned (fDefinitionList[Ndx].Highlighter) then
           fDefinitionList[Ndx].Highlighter.Style := fHighlightStyle
