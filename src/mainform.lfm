@@ -94,6 +94,7 @@ object MainWindow: TMainWindow
         Width = 50
       end>
     SimplePanel = False
+    OnMouseDown = StatusBarMouseDown
     OnResize = StatusBarResize
   end
   object MainMenu: TMainMenu

@@ -61,6 +61,10 @@ msgstr "Error"
 msgid "Warning"
 msgstr "¡Atención!"
 
+#: languageselectordialogform.nilhighlighterstring
+msgid "Text"
+msgstr ""
+
 #: main.messagecantcreateconfigdir
 msgctxt "main.messagecantcreateconfigdir"
 msgid ""
@@ -195,6 +199,10 @@ msgstr "Idioma"
 #: tenvironmentconfigurationframe.titlewindow.caption
 msgid "Window"
 msgstr "Ventana"
+
+#: tlanguageselectordlg.caption
+msgid "Languages"
+msgstr "Lenguajes"
 
 #: tmainwindow.actionabout.caption
 msgid "&About..."

@@ -28,7 +28,7 @@ interface
 
   uses
     EditorFrame, ProjectViewFrame,
-    ActnList, ComCtrls, ExtCtrls, Forms, Menus, StdActns;
+    ActnList, Classes, ComCtrls, Controls, ExtCtrls, Forms, Menus, StdActns;
 
   const
   (* Index of the information status panel. *)
@@ -92,6 +92,13 @@ interface
        This event is triggered when a file changed, and also when user selects
        a file. *)
       procedure EditorChanged (Sender: TObject);
+    (* Click in the status bar. *)
+      procedure StatusBarMouseDown (
+        aSender: TObject;
+        aButton: TMouseButton;
+        aShift: TShiftState;
+        aX, aY: Integer
+      );
     (* Status bar size changed. *)
       procedure StatusBarResize (Sender: TObject);
     private
@@ -128,9 +135,9 @@ interface
 implementation
 
   uses
-    AboutDlg, ConfigurationDialogForm, GUIUtils, Main,
-    Project, Utils,
-    Classes, Controls, Dialogs, sysutils;
+    AboutDlg, ConfigurationDialogForm, GUIUtils, LanguageSelectorDialogform,
+    Main, Project, Utils,
+    Dialogs, sysutils;
 
 {$R *.lfm}
 
@@ -255,7 +262,7 @@ implementation
       if TObject (lProjectTree.Selected.Data) is TFile then
       begin
         lFileInfo := TFile (lProjectTree.Selected.Data);
-        Self.OpenFile (lFileInfo.GetPath + lFileInfo.Name);
+        Self.OpenFile (Concat (lFileInfo.GetPath, lFileInfo.Name));
         Self.UpdateFileComponentStates
       end
     end
@@ -268,6 +275,38 @@ implementation
   begin
     Self.UpdateFileComponentStates;
     Self.FindEditorInTab (Self.EditorList.ActivePage).SetFocus
+  end;
+
+
+
+(* Click in the status bar. *)
+  procedure TMainWindow.StatusBarMouseDown (
+    aSender: TObject;
+    aButton: TMouseButton;
+    aShift: TShiftState;
+    aX, aY: Integer);
+  var
+    lDlgLanguage: TLanguageSelectorDlg;
+    lEditor: TSourceEditorFrame;
+  begin
+  { Only if there are a file open. }
+    if Assigned (Self.EditorList.ActivePage) then
+    begin
+      if (aButton = mbLeft) and (aShift = [ssLeft])
+      and (aX > Self.StatusBar.Width - LanguagePanelWidth) then
+      try
+        lDlgLanguage := TLanguageSelectorDlg.Create (Self);
+        lEditor := Self.FindEditorInTab (Self.EditorList.ActivePage);
+        if Assigned (lEditor.SynEdit.Highlighter) then
+          lDlgLanguage.Select (lEditor.SynEdit.Highlighter.LanguageName)
+        else
+          lDlgLanguage.Select ('');
+        if lDlgLanguage.ShowModal = mrOK then
+          lEditor.SetLanguage (lDlgLanguage.Language)
+      finally
+        lDlgLanguage.Free
+      end
+    end
   end;
 
 

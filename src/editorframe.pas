@@ -111,6 +111,8 @@ interface
       procedure UpdateStatusBarInfo;
     (* Sets focus. *)
       procedure SetFocus; override;
+    (* Forces the language. *)
+      procedure SetLanguage (aLanguage: String);
 
     (* Tells if source was modified. *)
       property Modified: Boolean read getModified;
@@ -121,7 +123,7 @@ interface
 implementation
 
   uses
-    Main, MainForm, Utils,
+    Main, MainForm, MLSDEHighlighter, Utils,
     SynGutterLineNumber, SynGutterChanges,
     sysutils;
 
@@ -311,7 +313,7 @@ implementation
     Self.SynEdit.Lines.LoadFromFile (aSourceFileName);
     fPath := IncludeTrailingPathDelimiter (ExtractFileDir (aSourceFileName));
     fFileName := ExtractFileName (aSourceFileName);
-    Self.Name := 'edit' + NormalizeIdentifier  (aSourceFileName);
+    Self.Name := Concat ('edit', NormalizeIdentifier  (aSourceFileName));
     Self.Parent.Name := NormalizeIdentifier (aSourceFileName);
     Self.Parent.Caption := fFileName;
     Self.SynEdit.Highlighter :=
@@ -379,7 +381,7 @@ implementation
       Self.UpdateCursorPositionPanel;
       if Assigned (Self.SynEdit.Highlighter) then
         MainWindow.StatusBar.Panels[LanguageStatusPanel].Text :=
-          Self.SynEdit.Highlighter.Name
+          TMLSDEHighlighter (Self.SynEdit.Highlighter).LanguageName
       else
         MainWindow.StatusBar.Panels[LanguageStatusPanel].Text := ''
     end
@@ -391,6 +393,16 @@ implementation
   procedure TSourceEditorFrame.SetFocus;
   begin
     Self.SynEdit.SetFocus
+  end;
+
+
+
+(* Forces language. *)
+  procedure TSourceEditorFrame.SetLanguage(aLanguage: String);
+  begin
+    Self.SynEdit.Highlighter :=
+      MLSDEApplication.SynManager.GetHighlighter (aLanguage);
+    Self.UpdateStatusBarInfo
   end;
 
 end.

@@ -134,6 +134,7 @@ interface
     TMLSDEHighlighter = class (TSynCustomHighlighter)
     private
       fStyle: TMLSDEHighlightStyle;
+      fLanguageName: String;
       fKeywords, fTypes, fLibrary, fOperators: TStrings;
       fIdentifierChars: String;
       fRange: TCodeRange;
@@ -250,6 +251,8 @@ interface
 
     (* Reference to the style to apply to the highlighter. *)
       property Style: TMLSDEHighlightStyle read fStyle write fStyle;
+    (* Language name. *)
+      property LanguageName: String read fLanguageName write fLanguageName;
     (* Keyword list. @seealso(IsKeyword) *)
       property Keywords: TStrings read fKeywords;
     (* Operators. @seealso(IsOperator) *)

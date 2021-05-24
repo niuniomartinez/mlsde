@@ -61,9 +61,16 @@ interface
 
     (* Removes all definitions. *)
       procedure Clear;
+    (* Looks for a highlighter by name and returns its index or -1 if not found.
+     *)
+      function GetLanguageIndex (aLanguage: String): Integer;
     (* Looks for a highlighter by extension and returns its index or -1 if not
        found. *)
       function GetExtensionIndex (aExtension: String): Integer;
+    (* Returns the highlighter for the given index.
+
+       May return Nil. *)
+      function GetHighlighter (const aNdx: Integer): TMLSDEHighlighter; inline;
     public
     (* Constructor. *)
       constructor Create;
@@ -73,6 +80,8 @@ interface
 
        Can be used to reset or re-initialize. *)
       procedure Initialize;
+    (* Returns the highlighter for the given language. *)
+      function GetHighlighter (aLanguage: String): TMLSDEHighlighter;
     (* Returns the highlighter for the given extension. *)
       function GetHighlighterForExt (aExt: String): TMLSDEHighlighter;
 
@@ -120,6 +129,24 @@ implementation
 
 
 
+ (* Creates a built-in highlighter. *)
+  function GetBuiltInHighlighter (aName: String): TMLSDEHighlighter;
+  var
+    Ndx: Integer;
+  begin
+    aName := LowerCase (aName);
+    for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
+      if LowerCase (BuiltInHighlighters[Ndx].Name) = aName then
+      begin
+        Result := BuiltInHighlighters[Ndx].HighlighterClass.Create (Nil);
+        Result.LanguageName := BuiltInHighlighters[Ndx].Name;
+        Exit
+      end;
+    Result := Nil
+  end;
+
+
+
 (*
  * TSynManager
  ***************************************************************************)
@@ -150,6 +177,7 @@ implementation
       for Ndx := 0 to fNumHighlighters - 1 do
         if Assigned (fDefinitionList[Ndx].Highlighter) then
           FreeAndNil (fDefinitionList[Ndx].Highlighter);
+    fNumHighlighters := 0;
   { Reserve space for definition list.
 
     First time, it reserves for the minimal, but later (when opening new
@@ -159,6 +187,22 @@ implementation
       SetLength (fDefinitionList, fNumHighlighters)
     else
       SetLength (fDefinitionList, MinDefinitionList)
+  end;
+
+
+
+(* Looks for a highlighter. *)
+  function TSynManager.GetLanguageIndex (aLanguage: String): Integer;
+  var
+    Ndx: Integer;
+  begin
+    aLanguage := LowerCase (aLanguage);
+    for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
+    begin
+      if LowerCase (fDefinitionList[Ndx].Name) = aLanguage then Exit (Ndx)
+    end;
+  { Not found, so... }
+    Result := -1
   end;
 
 
@@ -178,6 +222,31 @@ implementation
     end;
   { Not found, so... }
     Result := -1
+  end;
+
+
+
+(* Returns highlighter. *)
+  function TSynManager.GetHighlighter (const aNdx: Integer): TMLSDEHighlighter;
+  begin
+    if (-1 < aNdx) and (aNdx < fNumHighlighters) then
+    begin
+    { Was the highlighter created yet? }
+      if not Assigned (fDefinitionList[aNdx].Highlighter) then
+      begin
+      { Create the highlighter. }
+        if fDefinitionList[aNdx].BuiltIn then
+          fDefinitionList[aNdx].Highlighter :=
+            GetBuiltInHighlighter (fDefinitionList[aNdx].Name);
+      { TODO: Create from external definition. }
+        if Assigned (fDefinitionList[aNdx].Highlighter) then
+          fDefinitionList[aNdx].Highlighter.Style := fHighlightStyle
+      end;
+    { Returns highlighter reference. }
+      Exit (fDefinitionList[aNdx].Highlighter);
+    end;
+  { No highlighter available. }
+    Result := Nil
   end;
 
 
@@ -273,47 +342,18 @@ implementation
 
 
 
-(* Returns the highlighter for the given extension. *)
-  function TSynManager.GetHighlighterForExt (aExt: String)
-    : TMLSDEHighlighter;
-
-    function GetBuiltInHighlighter (aName: String): TMLSDEHighlighter;
-    var
-      Ndx: Integer;
-    begin
-      aName := LowerCase (aName);
-      for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
-        if LowerCase (BuiltInHighlighters[Ndx].Name) = aName then
-        begin
-          Result := BuiltInHighlighters[Ndx].HighlighterClass.Create (Nil);
-          Result.Name := BuiltInHighlighters[Ndx].Name;
-          Exit
-        end;
-      Result := Nil
-    end;
-
-  var
-    Ndx: Integer;
+(* Returns the highlighter for the given language. *)
+  function TSynManager.GetHighlighter (aLanguage: String): TMLSDEHighlighter;
   begin
-    Ndx := Self.GetExtensionIndex (aExt);
-    if Ndx > -1 then
-    begin
-    { Was the highlighter created yet? }
-      if not Assigned (fDefinitionList[Ndx].Highlighter) then
-      begin
-      { Create the highlighter. }
-        if fDefinitionList[Ndx].BuiltIn then
-          fDefinitionList[Ndx].Highlighter :=
-            GetBuiltInHighlighter (fDefinitionList[Ndx].Name);
-      { TODO: Create from external definition. }
-        if Assigned (fDefinitionList[Ndx].Highlighter) then
-          fDefinitionList[Ndx].Highlighter.Style := fHighlightStyle
-      end;
-    { Returns highlighter reference. }
-      Exit (fDefinitionList[Ndx].Highlighter);
-    end;
-  { No highlighter available. }
-    Result := Nil
+    Result := Self.GetHighlighter (Self.GetLanguageIndex (aLanguage))
+  end;
+
+
+
+(* Returns the highlighter for the given extension. *)
+  function TSynManager.GetHighlighterForExt (aExt: String): TMLSDEHighlighter;
+  begin
+    Result := Self.GetHighlighter (Self.GetExtensionIndex (aExt))
   end;
 
 end.
