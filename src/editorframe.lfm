@@ -21,6 +21,8 @@ object SourceEditorFrame: TSourceEditorFrame
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    OnClick = SynEditClick
+    OnKeyUp = SynEditKeyUp
     Gutter.Width = 19
     Gutter.MouseActions = <>
     RightGutter.Width = 0

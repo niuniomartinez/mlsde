@@ -30,6 +30,14 @@ interface
     EditorFrame, ProjectViewFrame,
     ActnList, ComCtrls, ExtCtrls, Forms, Menus, StdActns;
 
+  const
+  (* Index of the information status panel. *)
+    InformationStatusPanel = 0;
+  (* Index of the cursor information status panel. *)
+    CursorPosStatusPanel = 1;
+  (* Index of the language information status panel. *)
+    LanguageStatusPanel = 2;
+
   type
   (* Main window of the application.
 
@@ -84,6 +92,8 @@ interface
        This event is triggered when a file changed, and also when user selects
        a file. *)
       procedure EditorChanged (Sender: TObject);
+    (* Status bar size changed. *)
+      procedure StatusBarResize (Sender: TObject);
     private
     (* Some initialization may result in internal error if done in onCreate
        event, so they're done in onActivate instead using this flag to know if
@@ -132,6 +142,9 @@ implementation
 
     tagSaveFile = 1;
     tagSaveAllFiles = 2;
+  (* Sizes of the status panels. *)
+    CursorPanelWidth = 50;
+    LanguagePanelWidth = 100;
 
 
 
@@ -253,7 +266,23 @@ implementation
 (* There are changes in the editor. *)
   procedure TMainWindow.EditorChanged (Sender: TObject);
   begin
-    Self.UpdateFileComponentStates
+    Self.UpdateFileComponentStates;
+    Self.FindEditorInTab (Self.EditorList.ActivePage).SetFocus
+  end;
+
+
+
+(* Status bar changed size. *)
+  procedure TMainWindow.StatusBarResize (Sender: TObject);
+  var
+    lStatusBar: TStatusBar absolute Sender;
+  begin
+    if lStatusBar.Visible then
+    begin
+      lStatusBar.Panels[InformationStatusPanel].Width :=
+        lStatusBar.Width - (CursorPanelWidth + LanguagePanelWidth);
+      lStatusBar.Panels[CursorPosStatusPanel].Width := CursorPanelWidth
+    end
   end;
 
 
@@ -297,16 +326,11 @@ implementation
 
 (* Updates components. *)
   procedure TMainWindow.UpdateFileComponentStates;
-  var
-    Ndx: Integer;
-    lEditor: TSourceEditorFrame;
-  begin
-    Self.ActionCloseAllTabs.Enabled := Self.EditorList.PageCount > 0;
-  { Initially, all save options are disabled. }
-    Self.ActionSaveFile.Enabled := False;
-    Self.ActionSaveAll.Enabled := False;
-  { Are there opened files? }
-    if Self.EditorList.PageCount > 0 then
+
+    procedure OpenedFiles;
+    var
+      Ndx: Integer;
+      lEditor: TSourceEditorFrame;
     begin
     { Is any of them modified? }
       for Ndx := 0 to Self.EditorList.PageCount - 1 do
@@ -322,6 +346,23 @@ implementation
           Exit
         end
       end
+    end;
+
+  begin
+    Self.ActionCloseAllTabs.Enabled := Self.EditorList.PageCount > 0;
+  { Initially, all save options are disabled. }
+    Self.ActionSaveFile.Enabled := False;
+    Self.ActionSaveAll.Enabled := False;
+  { Are there opened files? }
+    if Self.EditorList.PageCount > 0 then
+    begin
+      OpenedFiles;
+      Self.FindEditorInTab (Self.EditorList.ActivePage).UpdateStatusBarInfo
+    end
+    else begin
+      Self.StatusBar.Panels[InformationStatusPanel].Text := '';
+      Self.StatusBar.Panels[CursorPosStatusPanel].Text := '';
+      Self.StatusBar.Panels[LanguageStatusPanel].Text := ''
     end
   end;
 

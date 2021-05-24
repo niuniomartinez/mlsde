@@ -83,7 +83,18 @@ object MainWindow: TMainWindow
     Height = 23
     Top = 333
     Width = 643
-    Panels = <>
+    Panels = <    
+      item
+        Width = 50
+      end    
+      item
+        Width = 50
+      end    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+    OnResize = StatusBarResize
   end
   object MainMenu: TMainMenu
     Images = GlobalData.IconList

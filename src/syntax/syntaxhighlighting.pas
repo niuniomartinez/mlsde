@@ -205,6 +205,10 @@ implementation
 (* Initializes. *)
   procedure TSynManager.Initialize;
 
+  { I know, this is not the most efficient way to do it (insert first, then
+    order by Bubble-Sort); I should use direct insertion (faster than insert
+    first; then order by Quick-Sort) but I'm not in the mood right now. }
+
     function HighlighterExists (aName: String): Boolean;
     var
       Ndx: Integer;
@@ -229,6 +233,27 @@ implementation
       Inc (fNumHighlighters)
     end;
 
+    procedure OrderList;
+    var
+      Ndx: Integer;
+      lOrdered: Boolean;
+      lTmp: THighlighterInfo;
+    begin
+      if fNumHighlighters < 3 then Exit; { TODO: Remove in production. }
+    { Let's do it the wrong way (bubble sort). }
+      lOrdered := True;
+      repeat
+        for Ndx := Low (fDefinitionList) to fNumHighlighters - 2 do
+          if LowerCase (fDefinitionList[Ndx].Name) > LowerCase (fDefinitionList[Ndx + 1].Name)
+          then begin
+            lTmp := fDefinitionList[Ndx];
+            fDefinitionList[Ndx] := fDefinitionList[Ndx + 1];
+            fDefinitionList[Ndx + 1] := lTmp;
+            lOrdered := False
+          end;
+      until lOrdered
+    end;
+
   var
     Ndx: Integer;
   begin
@@ -241,7 +266,9 @@ implementation
           BuiltInHighlighters[Ndx].Name,
           BuiltInHighlighters[Ndx].Extensions,
           True
-        )
+        );
+  { Order by name. }
+    OrderList
   end;
 
 
@@ -257,7 +284,11 @@ implementation
       aName := LowerCase (aName);
       for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
         if LowerCase (BuiltInHighlighters[Ndx].Name) = aName then
-          Exit (BuiltInHighlighters[Ndx].HighlighterClass.Create (Nil));
+        begin
+          Result := BuiltInHighlighters[Ndx].HighlighterClass.Create (Nil);
+          Result.Name := BuiltInHighlighters[Ndx].Name;
+          Exit
+        end;
       Result := Nil
     end;
 

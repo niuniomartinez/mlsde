@@ -9,11 +9,11 @@ object AboutDialog: TAboutDialog
   ClientWidth = 459
   OnActivate = FormActivate
   Position = poOwnerFormCenter
-  LCLVersion = '2.0.10.0'
+  LCLVersion = '2.0.12.0'
   object ButtonPannel: TButtonPanel
     Left = 6
-    Height = 35
-    Top = 236
+    Height = 34
+    Top = 237
     Width = 447
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -28,7 +28,7 @@ object AboutDialog: TAboutDialog
   end
   object PageControl: TPageControl
     Left = 0
-    Height = 230
+    Height = 231
     Top = 0
     Width = 459
     ActivePage = TabSheetGeneral
@@ -37,13 +37,13 @@ object AboutDialog: TAboutDialog
     TabOrder = 1
     object TabSheetGeneral: TTabSheet
       Caption = 'General'
-      ClientHeight = 195
-      ClientWidth = 453
+      ClientHeight = 203
+      ClientWidth = 451
       object LblTitle: TLabel
         Left = 0
-        Height = 35
+        Height = 37
         Top = 0
-        Width = 453
+        Width = 451
         Align = alTop
         Alignment = taCenter
         Caption = 'MLSDE  '
@@ -54,9 +54,9 @@ object AboutDialog: TAboutDialog
       end
       object LblDescription: TLabel
         Left = 0
-        Height = 98
-        Top = 35
-        Width = 453
+        Height = 96
+        Top = 37
+        Width = 451
         Align = alClient
         Alignment = taCenter
         Caption = #10'MultiLanguage Scriptable Development Environment'#10#10'A proposal for a flexible multi-language IDE.'#13#10'This software is published under the The zlib/libpng License.'#13
@@ -65,8 +65,8 @@ object AboutDialog: TAboutDialog
       object LblCopyright: TLabel
         Left = 0
         Height = 15
-        Top = 180
-        Width = 453
+        Top = 188
+        Width = 451
         Align = alBottom
         Alignment = taCenter
         Caption = 'Copyright © 2018-2020 Guillermo Martínez J.'
@@ -75,9 +75,9 @@ object AboutDialog: TAboutDialog
       object LblWebsite: TLabel
         Cursor = crHandPoint
         Left = 0
-        Height = 47
+        Height = 55
         Top = 133
-        Width = 453
+        Width = 451
         Align = alBottom
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -91,16 +91,16 @@ object AboutDialog: TAboutDialog
     end
     object TabSheetLicense: TTabSheet
       Caption = 'License'
-      ClientHeight = 195
-      ClientWidth = 453
+      ClientHeight = 203
+      ClientWidth = 451
       object MemoLicense: TMemo
         Left = 0
-        Height = 195
+        Height = 203
         Top = 0
-        Width = 453
+        Width = 451
         Align = alClient
         Lines.Strings = (
-          'Copyright (c) 2018-2020 Guillermo Martínez J.'
+          'Copyright (c) 2018-2021 Guillermo Martínez J.'
           ''
           'This software is provided ''as-is'', without any express or implied'
           'warranty. In no event will the authors be held liable for any damages'

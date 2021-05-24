@@ -77,11 +77,22 @@ interface
 
     (* User modified the text. *)
       procedure SynEditChange (Sender: TObject);
+    (* User clicked in the editor with mouse. *)
+      procedure SynEditClick (Sender: TObject);
+    (* user pressed a key. *)
+      procedure SynEditKeyUp (
+        Sender: TObject;
+        var Key: Word;
+        Shift: TShiftState
+      );
     private
       fFileName, fPath: String;
+      fOldCaretX, fOldCaretY: LongInt;
       fOnChange: TNotifyEvent;
 
       function getModified: Boolean; inline;
+    (* Updates cursor position panel in main window status bar. *)
+      procedure UpdateCursorPositionPanel;
     public
     (* Constructor. *)
       constructor Create (aOwer: TComponent); override;
@@ -96,6 +107,10 @@ interface
       procedure Save;
     (* Applyes editor configuration. *)
       procedure ApplyEditorConfiguration;
+    (* Updates status bar information. *)
+      procedure UpdateStatusBarInfo;
+    (* Sets focus. *)
+      procedure SetFocus; override;
 
     (* Tells if source was modified. *)
       property Modified: Boolean read getModified;
@@ -106,7 +121,7 @@ interface
 implementation
 
   uses
-    Main, Utils,
+    Main, MainForm, Utils,
     SynGutterLineNumber, SynGutterChanges,
     sysutils;
 
@@ -226,6 +241,18 @@ implementation
 
 
 
+(* Updates cursor position panel in main window status bar. *)
+  procedure TSourceEditorFrame.UpdateCursorPositionPanel;
+  begin
+    fOldCaretX := Self.SynEdit.CaretX;
+    fOldCaretY := Self.SynEdit.CaretY;
+    if MainWindow.StatusBar.Visible then
+      MainWindow.StatusBar.Panels[CursorPosStatusPanel].Text :=
+        Format ('%d, %d', [fOldCaretY, fOldCaretX])
+  end;
+
+
+
 (* User modified the file. *)
   procedure TSourceEditorFrame.SynEditChange (Sender: TObject);
   begin
@@ -234,6 +261,32 @@ implementation
     else
       Self.Parent.Caption := fFileName;
     if Assigned (fOnChange) then fOnChange (Self)
+  end;
+
+
+
+(* Mouse click. *)
+  procedure TSourceEditorFrame.SynEditClick (Sender: TObject);
+  begin
+    if (fOldCaretX <> Self.SynEdit.CaretX)
+    or (fOldCaretY <> Self.SynEdit.CaretY)
+    then
+      Self.UpdateCursorPositionPanel
+  end;
+
+
+
+(* Keyboard. *)
+  procedure TSourceEditorFrame.SynEditKeyUp (
+    Sender: TObject;
+    var Key: Word;
+    Shift: TShiftState
+  );
+  begin
+    if (fOldCaretX <> Self.SynEdit.CaretX)
+    or (fOldCaretY <> Self.SynEdit.CaretY)
+    then
+      Self.UpdateCursorPositionPanel
   end;
 
 
@@ -314,6 +367,30 @@ implementation
     );
     ConfigureEditor;
     ConfigureGutter
+  end;
+
+
+
+(* Updates status bar information. *)
+  procedure TSourceEditorFrame.UpdateStatusBarInfo;
+  begin
+    if MainWindow.StatusBar.Visible then
+    begin
+      Self.UpdateCursorPositionPanel;
+      if Assigned (Self.SynEdit.Highlighter) then
+        MainWindow.StatusBar.Panels[LanguageStatusPanel].Text :=
+          Self.SynEdit.Highlighter.Name
+      else
+        MainWindow.StatusBar.Panels[LanguageStatusPanel].Text := ''
+    end
+  end;
+
+
+
+(* Sets focus. *)
+  procedure TSourceEditorFrame.SetFocus;
+  begin
+    Self.SynEdit.SetFocus
   end;
 
 end.
