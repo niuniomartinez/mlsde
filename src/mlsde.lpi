@@ -87,7 +87,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="23">
+    <Units Count="24">
       <Unit0>
         <Filename Value="mlsde.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -238,6 +238,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="LanguageSelectorDialogform"/>
       </Unit22>
+      <Unit23>
+        <Filename Value="syntax/colorschemaframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ColorShcemaEditor"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ColorSchemaFrame"/>
+      </Unit23>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

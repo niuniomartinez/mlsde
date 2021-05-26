@@ -60,14 +60,26 @@ interface
     }
       fConfigurationFrameList: array of TConfigurationFrame;
 
+    (* Adds a new page to the configuration and returns the associated tree
+       node. *)
+      function AddTab (
+        aTab: TConfigurationFrame;
+        aName: String;
+        aParentNode: TTreeNode=Nil
+      ): TTreeNode;
     (* Adds a new page to the configuration. *)
-      procedure AddTab (aTab: TConfigurationFrame; aName: String);
+      procedure AppendTab (
+        aTab: TConfigurationFrame;
+        aName: String;
+        aParentNode: TTreeNode=Nil
+      );
     end;
 
 
 implementation
 
   uses
+    ColorSchemaFrame,
     ConfigurationFrameEditor, ConfigurationFrameEnvironment,
     ConfigurationFrameProject,
     GUIUtils, Main, Controls,
@@ -84,6 +96,7 @@ implementation
     captionEnvironment = 'Environment';
     captionProject = 'Project';
     captionEditor = 'Editor';
+    captionColorSchema = 'Color shcema';
 
 
 
@@ -118,19 +131,25 @@ implementation
   procedure TConfigurationDlg.Initialize (Sender: TObject);
   var
     lTab: TConfigurationFrame;
+    lNode: TTreeNode;
   begin
   { Create the frames and set them in tabs. }
-    Self.AddTab (
+    Self.AppendTab (
       TEnvironmentConfigurationFrame.Create (Self),
       captionEnvironment
     );
-    Self.AddTab (
+    Self.AppendTab (
       TProjectConfigurationFrame.Create (Self),
       captionProject
     );
-    Self.AddTab (
+    lNode := Self.AddTab (
       TEditorConfigurationFrame.Create (Self),
       captionEditor
+    );
+    Self.AppendTab (
+      TColorShcemaEditor.Create (Self),
+      captionColorSchema,
+      lNode
     );
   { Initialize tabs. }
     for lTab in fConfigurationFrameList do lTab.Initialize;
@@ -142,20 +161,23 @@ implementation
 
 (* User clicked option list. *)
   procedure TConfigurationDlg.TabListClick (aSender: TObject);
+  var
+    lOptionList: TTreeView absolute aSender;
   begin
-    if aSender IS TTreeView then
-      Self.NoteBook.PageIndex := TTreeView (aSender).Selected.Index
-    else
-      RAISE Exception.Create ('[TDlgConfiguracion.OpcionesConfiguracionClick] ¡Se llamó al evento equivocado!')
+    if Assigned (lOptionList.Selected) then
+      Self.NoteBook.PageIndex := TPage (lOptionList.Selected.Data).PageIndex
   end;
 
 
 
 (* Adds a new page to the configuration. *)
-  procedure TConfigurationDlg.AddTab (aTab: TConfigurationFrame; aName: String);
+  function TConfigurationDlg.AddTab (
+    aTab: TConfigurationFrame;
+    aName: String;
+    aParentNode: TTreeNode
+  ): TTreeNode;
   var
     lTabIndex: Integer;
-    lNode: TTreeNode;
     lPage: TPage;
   begin
   { Get space for the new tab. }
@@ -173,14 +195,32 @@ implementation
     fConfigurationFrameList[lTabIndex].Align := alClient;
     fConfigurationFrameList[lTabIndex].Tag := TabList.Items.Count;
 
-    if Self.TabList.Items.Count = 0 then
-      lNode := Self.TabList.Items.AddFirst (Nil, aName)
+    if Assigned (aParentNode) then
+      Result := Self.TabList.Items.AddChild (aParentNode, aName)
+    else if Self.TabList.Items.Count = 0 then
+      Result := Self.TabList.Items.AddFirst (Nil, aName)
     else
-      lNode := Self.TabList.Items.Add (
+      Result := Self.TabList.Items.Add (
         Self.TabList.Items[TabList.Items.Count - 1], aName
       );
-    if lNode = Nil then
-      RAISE Exception.Create ('Can''t add page to configuration dialog.')
+    if Result = Nil then
+      RAISE Exception.Create ('Can''t add page to configuration dialog.');
+  { Binds tab with tree node. }
+    Result.Data := lPage
+  end;
+
+
+
+(* Adds a new page to the configuration. *)
+  procedure TConfigurationDlg.AppendTab (
+    aTab: TConfigurationFrame;
+    aName: String;
+    aParentNode: TTreeNode
+  );
+  var
+    Ignore: TTreeNode;
+  begin
+    Ignore := Self.AddTab (aTab, aName, aParentNode)
   end;
 
 end.

@@ -234,7 +234,8 @@ implementation
     begin
     { Components state. }
       Self.UpdateFileComponentStates;
-      Self.EnvironmentConfigurationChanged (Nil)
+      Self.EnvironmentConfigurationChanged (Nil);
+      fInitializing := false
     end
   end;
 

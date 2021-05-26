@@ -11,11 +11,11 @@ object ConfigurationDlg: TConfigurationDlg
   Constraints.MinWidth = 640
   OnCreate = Initialize
   Position = poOwnerFormCenter
-  LCLVersion = '2.0.10.0'
+  LCLVersion = '2.0.12.0'
   object ButtonPanel: TButtonPanel
     Left = 6
-    Height = 35
-    Top = 359
+    Height = 34
+    Top = 360
     Width = 628
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -31,7 +31,7 @@ object ConfigurationDlg: TConfigurationDlg
   end
   object NoteBook: TNotebook
     Left = 174
-    Height = 353
+    Height = 354
     Top = 0
     Width = 466
     Align = alClient
@@ -39,7 +39,7 @@ object ConfigurationDlg: TConfigurationDlg
   end
   object TabList: TTreeView
     Left = 0
-    Height = 353
+    Height = 354
     Top = 0
     Width = 169
     Align = alLeft
@@ -51,7 +51,7 @@ object ConfigurationDlg: TConfigurationDlg
   end
   object ResizeBar: TSplitter
     Left = 169
-    Height = 353
+    Height = 354
     Top = 0
     Width = 5
   end

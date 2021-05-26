@@ -20,6 +20,10 @@ msgctxt "configuration.txthelpwhere"
 msgid "Where options are:"
 msgstr ""
 
+#: configurationdialogform.captioncolorschema
+msgid "Color shcema"
+msgstr ""
+
 #: configurationdialogform.captionconfiguration
 msgctxt "configurationdialogform.captionconfiguration"
 msgid "Configuration"
@@ -111,6 +115,46 @@ msgstr ""
 
 #: taboutdialog.tabsheetlicense.caption
 msgid "License"
+msgstr ""
+
+#: tcolorshcemaeditor.btnreloadschema.caption
+msgid "btnReloadSchema"
+msgstr ""
+
+#: tcolorshcemaeditor.btnsaveschema.caption
+msgid "btnSaveSchema"
+msgstr ""
+
+#: tcolorshcemaeditor.chkbold.caption
+msgid "Bold"
+msgstr ""
+
+#: tcolorshcemaeditor.chkitalic.caption
+msgid "Italic"
+msgstr ""
+
+#: tcolorshcemaeditor.chkunderlined.caption
+msgid "Underlined"
+msgstr ""
+
+#: tcolorshcemaeditor.editschemalist.text
+msgid "editSchemaList"
+msgstr ""
+
+#: tcolorshcemaeditor.lblbackgroundcolor.caption
+msgid "Background:"
+msgstr ""
+
+#: tcolorshcemaeditor.lblcolortexto.caption
+msgid "Text color:"
+msgstr ""
+
+#: tcolorshcemaeditor.titleattributeedition.caption
+msgid "Attributes"
+msgstr ""
+
+#: tcolorshcemaeditor.titleschema.caption
+msgid "Color schema"
 msgstr ""
 
 #: tconfigurationdlg.caption
