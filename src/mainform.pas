@@ -136,7 +136,7 @@ implementation
 
   uses
     AboutDlg, ConfigurationDialogForm, GUIUtils, LanguageSelectorDialogform,
-    Main, Project, Utils,
+    Main, MLSDEHighlighter, Project, Utils,
     Dialogs, sysutils;
 
 {$R *.lfm}
@@ -197,7 +197,7 @@ implementation
           lEditor := Self.FindEditorInTab (Self.EditorList.Pages[Ndx]);
           if lEditor.Modified then lEditor.Save
         end;
-    else
+    otherwise
     { This should never be rendered, so no translation required. }
       ShowError ('Action source file tag: %d', [(Sender as TComponent).Tag]);
     end
@@ -298,7 +298,9 @@ implementation
         lDlgLanguage := TLanguageSelectorDlg.Create (Self);
         lEditor := Self.FindEditorInTab (Self.EditorList.ActivePage);
         if Assigned (lEditor.SynEdit.Highlighter) then
-          lDlgLanguage.Select (lEditor.SynEdit.Highlighter.LanguageName)
+          lDlgLanguage.Select (
+            TMLSDEHighlighter (lEditor.SynEdit.Highlighter).Language
+          )
         else
           lDlgLanguage.Select ('');
         if lDlgLanguage.ShowModal = mrOK then

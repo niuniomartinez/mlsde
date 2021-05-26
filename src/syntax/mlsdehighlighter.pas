@@ -251,8 +251,10 @@ interface
 
     (* Reference to the style to apply to the highlighter. *)
       property Style: TMLSDEHighlightStyle read fStyle write fStyle;
-    (* Language name. *)
-      property LanguageName: String read fLanguageName write fLanguageName;
+    (* Language name.
+
+       @bold(Note:) Use this instead of @code(LanguageName). *)
+      property Language: String read fLanguageName write fLanguageName;
     (* Keyword list. @seealso(IsKeyword) *)
       property Keywords: TStrings read fKeywords;
     (* Operators. @seealso(IsOperator) *)

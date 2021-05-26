@@ -381,7 +381,7 @@ implementation
       Self.UpdateCursorPositionPanel;
       if Assigned (Self.SynEdit.Highlighter) then
         MainWindow.StatusBar.Panels[LanguageStatusPanel].Text :=
-          TMLSDEHighlighter (Self.SynEdit.Highlighter).LanguageName
+          TMLSDEHighlighter (Self.SynEdit.Highlighter).Language
       else
         MainWindow.StatusBar.Panels[LanguageStatusPanel].Text := ''
     end

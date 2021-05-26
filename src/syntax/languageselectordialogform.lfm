@@ -32,6 +32,7 @@ object LanguageSelectorDlg: TLanguageSelectorDlg
     Width = 200
     Align = alClient
     ItemHeight = 0
+    OnDblClick = LanguageListDblClick
     TabOrder = 1
   end
 end

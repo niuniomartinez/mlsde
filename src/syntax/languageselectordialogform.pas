@@ -36,6 +36,8 @@ interface
 
     (* Constructor. *)
       procedure FormCreate (aSender: TObject);
+    (* User double click. *)
+      procedure LanguageListDblClick (Sender: TObject);
     private
       function GetLanguage: String; inline;
     public
@@ -49,7 +51,8 @@ interface
 implementation
 
   uses
-    Main;
+    Main,
+    Controls;
 
 {$R *.lfm}
 
@@ -74,6 +77,16 @@ implementation
 
 
 
+(* User double click. *)
+  procedure TLanguageSelectorDlg.LanguageListDblClick (Sender: TObject);
+  var
+    lList: TListBox absolute Sender;
+  begin
+    if lList.ItemIndex > -1 then Self.ModalResult := mrOK
+  end;
+
+
+
   function TLanguageSelectorDlg.GetLanguage: String;
   begin
     Result := Self.LanguageList.Items[Self.LanguageList.ItemIndex]
@@ -82,7 +95,7 @@ implementation
 
 
 (* Selects language. *)
-  procedure TLanguageSelectorDlg.Select(aLanguage: String);
+  procedure TLanguageSelectorDlg.Select (aLanguage: String);
   var
     Ndx: Integer;
   begin

@@ -139,7 +139,7 @@ implementation
       if LowerCase (BuiltInHighlighters[Ndx].Name) = aName then
       begin
         Result := BuiltInHighlighters[Ndx].HighlighterClass.Create (Nil);
-        Result.LanguageName := BuiltInHighlighters[Ndx].Name;
+        Result.Language := BuiltInHighlighters[Ndx].Name;
         Exit
       end;
     Result := Nil

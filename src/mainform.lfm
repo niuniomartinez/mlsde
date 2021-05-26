@@ -4,7 +4,7 @@ object MainWindow: TMainWindow
   Top = 136
   Width = 643
   Caption = 'MLSDE'
-  ClientHeight = 356
+  ClientHeight = 357
   ClientWidth = 643
   Menu = MainMenu
   OnActivate = FormActivate
@@ -13,27 +13,27 @@ object MainWindow: TMainWindow
   Position = poDefault
   LCLVersion = '2.0.12.0'
   inline ProjectViewer: TProjectView
-    Height = 301
+    Height = 305
     Top = 32
     Width = 187
     Align = alLeft
-    ClientHeight = 301
+    ClientHeight = 305
     ClientWidth = 187
     TabOrder = 1
     inherited ProjectTree: TTreeView
-      Height = 301
+      Height = 305
       Width = 187
     end
   end
   object ResizeBar: TSplitter
     Left = 187
-    Height = 301
+    Height = 305
     Top = 32
     Width = 8
   end
   object EditorList: TPageControl
     Left = 195
-    Height = 301
+    Height = 305
     Top = 32
     Width = 448
     Align = alClient
@@ -80,8 +80,8 @@ object MainWindow: TMainWindow
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 23
-    Top = 333
+    Height = 20
+    Top = 337
     Width = 643
     Panels = <    
       item
