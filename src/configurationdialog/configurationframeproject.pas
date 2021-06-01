@@ -26,14 +26,14 @@ unit ConfigurationFrameProject;
 interface
 
   uses
-    ConfigurationDialogFrame, DividerBevel, StdCtrls, Spin;
+    ConfigurationDialogFrame, DividerBevel, StdCtrls, Spin, ComboEx;
 
   type
     TProjectConfigurationFrame = class (TConfigurationFrame)
       TitleFilesNDirs: TDividerBevel;
         lblDirectoryDepth: TLabel;
         EditDirectoryDepth: TSpinEdit;
-        selectDirOrder: TComboBox;
+        selectDirOrder: TComboBoxEx;
         lblDirectoryOrder: TLabel;
         CheckHiddenFiles: TCheckBox;
         CheckHiddenDirectories: TCheckBox;

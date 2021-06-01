@@ -1,80 +1,78 @@
 inherited EditorConfigurationFrame: TEditorConfigurationFrame
-  Width = 399
-  ClientWidth = 399
   DesignLeft = 393
   DesignTop = 112
   object chkShowGutter: TCheckBox[0]
     Left = 8
-    Height = 19
+    Height = 17
     Top = 24
-    Width = 84
+    Width = 79
     Caption = 'Show gutter'
     OnChange = chkShowGutterChange
     TabOrder = 0
   end
   object editNthLineNumber: TSpinEdit[1]
-    Left = 213
-    Height = 23
-    Top = 19
+    Left = 152
+    Height = 21
+    Top = 20
     Width = 50
     MinValue = 1
     TabOrder = 1
     Value = 1
   end
   object lblNthLineNumber: TLabel[2]
-    Left = 269
-    Height = 15
-    Top = 27
-    Width = 113
+    Left = 213
+    Height = 13
+    Top = 24
+    Width = 100
     Caption = 'Each nth line number'
     ParentColor = False
   end
   object editFont: TLabeledEdit[3]
     Left = 8
-    Height = 23
-    Top = 129
-    Width = 359
+    Height = 21
+    Top = 105
+    Width = 280
     Anchors = [akTop, akLeft, akRight]
-    EditLabel.Height = 15
-    EditLabel.Width = 359
+    EditLabel.Height = 13
+    EditLabel.Width = 280
     EditLabel.Caption = 'Editor text font'
     EditLabel.ParentColor = False
     ReadOnly = True
-    TabOrder = 2
+    TabOrder = 3
   end
   object btnSelectFont: TButton[4]
-    Left = 367
+    Left = 288
     Height = 25
-    Top = 128
+    Top = 104
     Width = 20
     Anchors = [akTop, akRight]
     Caption = '...'
     OnClick = btnSelectFontClick
-    TabOrder = 3
+    TabOrder = 4
   end
   object editFontSize: TSpinEdit[5]
     Left = 8
-    Height = 23
-    Top = 160
+    Height = 21
+    Top = 136
     Width = 50
     MinValue = 1
     OnChange = editFontSizeChange
-    TabOrder = 4
+    TabOrder = 5
     Value = 1
   end
   object lblFontSize: TLabel[6]
     Left = 64
-    Height = 15
-    Top = 168
-    Width = 47
+    Height = 13
+    Top = 144
+    Width = 44
     Caption = 'Font Size'
     ParentColor = False
   end
   object TitleGutter: TDividerBevel[7]
     Left = 0
-    Height = 15
+    Height = 13
     Top = 0
-    Width = 399
+    Width = 320
     Caption = 'Gutter'
     Anchors = [akTop, akLeft, akRight]
     Font.Style = [fsBold]
@@ -82,22 +80,22 @@ inherited EditorConfigurationFrame: TEditorConfigurationFrame
   end
   object TitleTextFont: TDividerBevel[8]
     Left = 0
-    Height = 15
-    Top = 88
-    Width = 399
+    Height = 13
+    Top = 72
+    Width = 320
     Caption = 'Text font'
     Anchors = [akTop, akLeft, akRight]
     Font.Style = [fsBold]
     ParentFont = False
   end
   object chkShowChangeMarks: TCheckBox[9]
-    Left = 213
-    Height = 19
+    Left = 152
+    Height = 17
     Top = 52
-    Width = 126
+    Width = 115
     Caption = 'Show change marks'
     OnChange = chkShowGutterChange
-    TabOrder = 5
+    TabOrder = 2
   end
   object FontDialog: TFontDialog[10]
     MinFontSize = 0

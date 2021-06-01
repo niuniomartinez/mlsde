@@ -1,24 +1,21 @@
 inherited EnvironmentConfigurationFrame: TEnvironmentConfigurationFrame
-  Width = 352
-  AutoSize = True
-  ClientWidth = 352
   DesignLeft = 395
   DesignTop = 189
   object TitleLanguage: TDividerBevel[0]
-    Left = -8
-    Height = 15
+    Left = 0
+    Height = 13
     Top = 0
-    Width = 360
+    Width = 320
     Caption = 'Language'
     Anchors = [akTop, akLeft, akRight]
     Font.Style = [fsBold]
     ParentFont = False
   end
   object ListLanguages: TComboBoxEx[1]
-    Left = 0
-    Height = 24
+    Left = 8
+    Height = 22
     Top = 24
-    Width = 344
+    Width = 304
     Anchors = [akTop, akLeft, akRight]
     ItemHeight = 16
     ItemsEx = <    
@@ -35,52 +32,52 @@ inherited EnvironmentConfigurationFrame: TEnvironmentConfigurationFrame
     TabOrder = 0
   end
   object TitleWindow: TDividerBevel[2]
-    Left = -24
-    Height = 15
+    Left = 0
+    Height = 13
     Top = 56
-    Width = 376
+    Width = 320
     Caption = 'Window'
     Anchors = [akTop, akLeft, akRight]
     Font.Style = [fsBold]
     ParentFont = False
   end
   object chkTitleProjectFirst: TCheckBox[3]
-    Left = 0
-    Height = 19
+    Left = 8
+    Height = 17
     Top = 80
-    Width = 314
+    Width = 285
     Caption = 'Show project name at the beginning of the window title'
     TabOrder = 1
   end
   object chkTitleProjectDir: TCheckBox[4]
-    Left = 0
-    Height = 19
+    Left = 8
+    Height = 17
     Top = 104
-    Width = 190
+    Width = 174
     Caption = 'Window title shows project path'
     TabOrder = 2
   end
   object chkShowToolBar: TCheckBox[5]
-    Left = 0
-    Height = 19
+    Left = 8
+    Height = 17
     Top = 160
-    Width = 93
+    Width = 86
     Caption = 'Show tool bar'
     TabOrder = 4
   end
   object chkShowMenu: TCheckBox[6]
-    Left = 0
-    Height = 19
+    Left = 8
+    Height = 17
     Top = 136
-    Width = 83
+    Width = 75
     Caption = 'Show menu'
     TabOrder = 3
   end
   object chkShowStatusBar: TCheckBox[7]
-    Left = 0
-    Height = 19
+    Left = 8
+    Height = 17
     Top = 184
-    Width = 103
+    Width = 98
     Caption = 'Show status bar'
     TabOrder = 5
   end

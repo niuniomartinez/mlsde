@@ -1,6 +1,5 @@
 {"version":1,"strings":[
 {"hash":54517361,"name":"tcolorshcemaeditor.titleschema.caption","sourcebytes":[67,111,108,111,114,32,115,99,104,101,109,97],"value":"Color schema"},
-{"hash":20828148,"name":"tcolorshcemaeditor.editschemalist.text","sourcebytes":[101,100,105,116,83,99,104,101,109,97,76,105,115,116],"value":"editSchemaList"},
 {"hash":53114001,"name":"tcolorshcemaeditor.btnsaveschema.caption","sourcebytes":[98,116,110,83,97,118,101,83,99,104,101,109,97],"value":"btnSaveSchema"},
 {"hash":169195761,"name":"tcolorshcemaeditor.btnreloadschema.caption","sourcebytes":[98,116,110,82,101,108,111,97,100,83,99,104,101,109,97],"value":"btnReloadSchema"},
 {"hash":150815091,"name":"tcolorshcemaeditor.titleattributeedition.caption","sourcebytes":[65,116,116,114,105,98,117,116,101,115],"value":"Attributes"},

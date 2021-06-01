@@ -27,28 +27,29 @@ interface
 
   uses
     ConfigurationDialogFrame, DividerBevel, SynEdit, StdCtrls, Buttons,
-    ExtCtrls, ColorBox, Dialogs, Classes;
+    ExtCtrls, Dialogs;
 
   type
+  (* Color schema editor. *)
     TColorShcemaEditor = class (TConfigurationFrame)
-      btnTextColor: TColorButton;
-      chkBold: TCheckBox;
-      chkItalic: TCheckBox;
-      chkUnderlined: TCheckBox;
-      ColorButton1: TColorButton;
-      lblBackgroundColor: TLabel;
-      lblColorTexto: TLabel;
-      titleAttributeEdition: TDividerBevel;
-      listTokenTypes: TListBox;
-      panelAttributeEdition: TPanel;
       panelColorSchema: TPanel;
-      spliterShowSchema: TSplitter;
-      editSourceSample: TSynEdit;
-        titleSchema: TDividerBevel;
-        editSchemaList: TComboBox;
-        btnReloadSchema: TBitBtn;
-        btnSaveSchema: TBitBtn;
+       titleSchema: TDividerBevel;
+       editSchemaList: TComboBox;
+       btnReloadSchema: TBitBtn;
+       btnSaveSchema: TBitBtn;
       panelSchemaView: TPanel;
+       listTokenTypes: TListBox;
+       spliterShowSchema: TSplitter;
+       editSourceSample: TSynEdit;
+      panelAttributeEdition: TPanel;
+       titleAttributeEdition: TDividerBevel;
+       lblColorTexto: TLabel;
+       btnTextColor: TColorButton;
+       lblBackgroundColor: TLabel;
+       btnBackgroundColor: TColorButton;
+       chkBold: TCheckBox;
+       chkItalic: TCheckBox;
+       chkUnderlined: TCheckBox;
     public
     (* Initializes the frame. *)
       procedure Initialize; override;
@@ -59,6 +60,10 @@ interface
 implementation
 
 {$R *.lfm}
+
+(*
+ * TColorShcemaEditor
+ ************************************************************************)
 
 procedure TColorShcemaEditor.Initialize;
 begin

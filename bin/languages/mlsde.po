@@ -137,10 +137,6 @@ msgstr ""
 msgid "Underlined"
 msgstr ""
 
-#: tcolorshcemaeditor.editschemalist.text
-msgid "editSchemaList"
-msgstr ""
-
 #: tcolorshcemaeditor.lblbackgroundcolor.caption
 msgid "Background:"
 msgstr ""
@@ -322,6 +318,18 @@ msgstr ""
 
 #: tprojectconfigurationframe.lbldirectoryorder.caption
 msgid "Directory order"
+msgstr ""
+
+#: tprojectconfigurationframe.selectdirorder.itemsex[0].caption
+msgid "Mix directories and files"
+msgstr ""
+
+#: tprojectconfigurationframe.selectdirorder.itemsex[1].caption
+msgid "Directories first"
+msgstr ""
+
+#: tprojectconfigurationframe.selectdirorder.itemsex[2].caption
+msgid "Directories last"
 msgstr ""
 
 #: tprojectconfigurationframe.titlefilesndirs.caption

@@ -146,10 +146,6 @@ msgstr "Cursiva"
 msgid "Underlined"
 msgstr "Subrayado"
 
-#: tcolorshcemaeditor.editschemalist.text
-msgid "editSchemaList"
-msgstr ""
-
 #: tcolorshcemaeditor.lblbackgroundcolor.caption
 msgid "Background:"
 msgstr "Color de fondo:"
@@ -333,6 +329,18 @@ msgstr "Profundidad"
 #: tprojectconfigurationframe.lbldirectoryorder.caption
 msgid "Directory order"
 msgstr "Orden de los directorios"
+
+#: tprojectconfigurationframe.selectdirorder.itemsex[0].caption
+msgid "Mix directories and files"
+msgstr "Mezclar archivos y directorios"
+
+#: tprojectconfigurationframe.selectdirorder.itemsex[1].caption
+msgid "Directories first"
+msgstr "Directorios primero"
+
+#: tprojectconfigurationframe.selectdirorder.itemsex[2].caption
+msgid "Directories last"
+msgstr "Archivos primero"
 
 #: tprojectconfigurationframe.titlefilesndirs.caption
 msgid "Files and directories"
