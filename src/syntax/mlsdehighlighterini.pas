@@ -28,13 +28,6 @@ interface
     MLSDEHighlighter,
     Classes;
 
-  const
-  (* Sample code. *)
-    SampleCodeINI = '# INI file example'#10 +
-                  'Variable=Value'#10 +
-                  '[section]'#10+
-                  '  Other=123';
-
   type
   (* The INI highlighter.
 
@@ -43,7 +36,12 @@ interface
     private
       fTokenIndex: Integer; { In the current line. }
       fIsSectionLine, fInErrorState: Boolean;
+    protected
+    (* Returns a code snippet that can be used as code example. *)
+      function GetSampleSource: String; override;
     public
+    (* Returns the language name. *)
+      class function GetLanguageName: string; override;
     (* Constructor. *)
       constructor Create (aOwner: TComponent); override;
     (* Sets the line to parse. *)
@@ -59,6 +57,30 @@ implementation
  * TMLSDEINISyn
  ***************************************************************************)
 
+   const
+     ININame = 'INI file';
+
+(* Returns a code snippet that can be used as code example. *)
+  function TMLSDEINISyn.GetSampleSource: String;
+  const
+    SampleCodeINI = '# INI file example'#10 +
+                  'Variable=Value'#10 +
+                  '[section]'#10+
+                  '  Other=123';
+  begin
+    Result := SampleCodeINI
+  end;
+
+
+
+(* Returns language name. *)
+  class function TMLSDEINISyn.GetLanguageName: string;
+  begin
+    Result := ININame
+  end;
+
+
+
 (* Constructor. *)
   constructor TMLSDEINISyn.Create (aOwner: TComponent);
   const
@@ -67,7 +89,7 @@ implementation
     lToken: String;
   begin
     inherited Create (aOwner);
-    Self.SampleSource := SampleCodeINI;
+    Self.Language := ININame;
     Self.IdentifierChars := Concat (Self.IdentifierChars, '-_');
     for lToken in ReservedWords do Self.LibraryObjects.Append (lToken);
     Self.Operators.Append ('=')

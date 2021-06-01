@@ -296,13 +296,20 @@ interface
      in a disk file and to load such files. *)
     TMLSDECustomHighlighter = class (TMLSDEHighlighter)
     private
-      fSampleSource: String;
+      fSampleSource: TStringList;
     protected
     (* Returns a code snippet that can be used as code example. *)
       function GetSampleSource: String; override;
     (* Assigns the sample source snippet. *)
       procedure SetSampleSource (aValue: String); override;
+
+    (* Stores a code snippet that can be used as code example. *)
+      property SampleSource: TStringList read fSampleSource;
     public
+    (* Constructor. *)
+      constructor Create (aOwner: TComponent); override;
+    (* Destructor. *)
+      destructor Destroy; override;
     (* Loads language description from the given disk file. *)
       procedure LoadFromFile (const aFileName: String);
     (* Saves language description in to the given disk file. *)
@@ -724,7 +731,7 @@ implementation
 (* Returns sample code. *)
   function TMLSDECustomHighlighter.GetSampleSource: String;
   begin
-    Result := fSampleSource
+    Result := fSampleSource.Text
   end;
 
 
@@ -732,7 +739,25 @@ implementation
 (* Assigns sample code. *)
   procedure TMLSDECustomHighlighter.SetSampleSource (aValue: String);
   begin
-    fSampleSource := aValue
+    fSampleSource.Text := aValue
+  end;
+
+
+
+(* Constructor. *)
+  constructor TMLSDECustomHighlighter.Create (aOwner: TComponent);
+  begin
+    inherited Create(aOwner);
+    fSampleSource := TStringList.Create
+  end;
+
+
+
+(* Destructor. *)
+  destructor TMLSDECustomHighlighter.Destroy;
+  begin
+    fSampleSource.Free;
+    inherited Destroy
   end;
 
 

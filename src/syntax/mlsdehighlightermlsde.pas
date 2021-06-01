@@ -38,6 +38,8 @@ interface
     private
       fTokenIndex: Integer; { In the current line. }
     public
+    (* Returns the language name. *)
+      class function GetLanguageName: string; override;
     (* Constructor. *)
       constructor Create (aOwner: TComponent); override;
     (* Sets the line to parse. *)
@@ -56,6 +58,18 @@ implementation
  * TMLSDESyntaxDefinitionSyn
  ***************************************************************************)
 
+  const
+    MLSDEDescriptionName = 'MLSDE description language file';
+
+(* Language name. *)
+  class function TMLSDESyntaxDefinitionSyn.GetLanguageName: string;
+  begin
+    Result := MLSDEDescriptionName
+  end;
+
+
+
+(* Constructor. *)
   constructor TMLSDESyntaxDefinitionSyn.Create (aOwner: TComponent);
   const
     ReservedWords: array [0..12] of String = (
@@ -72,7 +86,7 @@ implementation
     lToken: String;
   begin
     inherited Create (aOwner);
-    Self.SampleSource := '';
+    Self.Language := MLSDEDescriptionName;
     for lToken in ReservedWords do Self.Keywords.Append (lToken);
     for lToken in Identifiers do Self.LibraryObjects.Append (lToken)
   end;
@@ -168,7 +182,6 @@ implementation
       end
     end
   end;
-
 
 end.
 
