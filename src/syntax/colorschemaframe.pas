@@ -252,7 +252,8 @@ implementation
 (* User accepted the configuration. *)
   procedure TColorShcemaEditor.AcceptConfiguration;
   begin
-    MLSDEApplication.SynManager.Style.Assign (fStyleCopy)
+    MLSDEApplication.SynManager.Style.Assign (fStyleCopy);
+    MLSDEApplication.SynManager.Style.SaveUserStyle
   end;
 
 end.

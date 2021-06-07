@@ -85,17 +85,20 @@ interface
 
       function GetAttributes (aToken: TToken): TSynHighlighterAttributes;
          inline;
+      function GetCustomFileName: String;
     public
     (* Constructor. *)
       constructor Create;
     (* Destructor. *)
       destructor Destroy; override;
-    (* Sets default to the attributes. *)
+    (* Sets default to the attributes.  This may load user style. *)
       procedure Clear;
     (* Loads style from given file. *)
       procedure LoadFromFile (const aFileName: String);
     (* Saves style to the given file. *)
       procedure SaveToFile (const aFileName: String);
+    (* Saves as user style. *)
+      procedure SaveUserStyle;
     (* Copies the style from the given one. *)
       procedure Assign (aStyle: TMLSDEHighlightStyle);
 
@@ -322,6 +325,7 @@ interface
 implementation
 
   uses
+    Main,
     IniFiles, sysutils;
 
   const
@@ -337,6 +341,17 @@ implementation
     : TSynHighlighterAttributes;
   begin
     Result := fAttributes[aToken]
+  end;
+
+
+
+(* User style file. *)
+  function TMLSDEHighlightStyle.GetCustomFileName: String;
+  begin
+    Result := Concat (
+      MLSDEApplication.Configuration.ConfigurationDir,
+      'custom.csd'
+    )
   end;
 
 
@@ -359,8 +374,7 @@ implementation
     fAttributes[tkType]      := TSynHighlighterAttributes.Create ('types');
     fAttributes[tkOperator]  := TSynHighlighterAttributes.Create ('operators');
     fAttributes[tkLabel]     := TSynHighlighterAttributes.Create ('labels');
-    fAttributes[tkError]     := TSynHighlighterAttributes.Create ('errors');
-    Self.Clear
+    fAttributes[tkError]     := TSynHighlighterAttributes.Create ('errors')
   end;
 
 
@@ -390,7 +404,10 @@ implementation
       fAttributes[aId].Style := aFontStyle
     end;
 
+  var
+    lFileName: TFileName;
   begin
+  { Set defaults. }
     fFgColor := clBlack;
     fBgColor := clWhite;
     SetAttributes (tkComment,    fBgColor, clGreen,  [fsItalic]);
@@ -400,13 +417,16 @@ implementation
     // SetAttributes (tkUnknown,    fBgColor, fFgColor, []);
     SetAttributes (tkSymbol,     fBgColor, clNavy,   [fsBold]);
     SetAttributes (tkNumber,     fBgColor, clBlue,   []);
-    SetAttributes (tkDirective,  fBgColor, clTeal,   [fsItalic]);
+    SetAttributes (tkDirective,  fBgColor, clTeal,   [fsItalic, fsBold]);
     SetAttributes (tkAssembler,  fBgColor, clBlack,  []);
     SetAttributes (tkVariable,   fBgColor, fFgColor, [fsBold]);
     SetAttributes (tkType,       fBgColor, clNavy,   [fsBold]);
     SetAttributes (tkOperator,   fBgColor, clNavy,   [fsBold]);
     SetAttributes (tkLabel,      fBgColor, fFgColor, [fsbold]);
-    SetAttributes (tkError,      clRed,    clWhite,  [])
+    SetAttributes (tkError,      clRed,    clWhite,  [fsUnderline]);
+  { If there are a user style defined, load it. }
+    lFileName := Self.GetCustomFileName;
+    if FileExists (lFileName) then Self.LoadFromFile (lFileName)
   end;
 
 
@@ -419,9 +439,11 @@ implementation
   begin
     lFile := TIniFile.Create (aFileName);
     try
-      lFile.ReadInteger ('', 'Foreground', fFgColor);
-      lFile.ReadInteger ('', 'background', fBgColor);
-      for lAttributes in fAttributes do lAttributes.LoadFromFile (lFile)
+      lFile.ReadInteger ('default', 'Foreground', fFgColor);
+      lFile.ReadInteger ('default', 'background', fBgColor);
+      for lAttributes in fAttributes do
+        if Assigned (lAttributes) then
+          lAttributes.LoadFromFile (lFile)
     finally
       lFile.Free
     end
@@ -437,12 +459,22 @@ implementation
   begin
     lFile := TIniFile.Create (aFileName);
     try
-      lFile.WriteInteger ('', 'Foreground', fFgColor);
-      lFile.WriteInteger ('', 'background', fBgColor);
-      for lAttributes in fAttributes do lAttributes.SaveToFile (lFile)
+      lFile.WriteInteger ('default', 'Foreground', fFgColor);
+      lFile.WriteInteger ('default', 'background', fBgColor);
+      for lAttributes in fAttributes do
+        if Assigned (lAttributes) then
+          lAttributes.SaveToFile (lFile)
     finally
       lFile.Free
     end
+  end;
+
+
+
+(* Saves user style. *)
+  procedure TMLSDEHighlightStyle.SaveUserStyle;
+  begin
+    Self.SaveToFile (Self.GetCustomFileName)
   end;
 
 

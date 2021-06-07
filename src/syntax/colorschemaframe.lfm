@@ -17,7 +17,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
     TabOrder = 0
     object titleSchema: TDividerBevel
       Left = 0
-      Height = 13
+      Height = 15
       Top = 0
       Width = 482
       Caption = 'Color schema'
@@ -27,10 +27,10 @@ inherited ColorShcemaEditor: TColorShcemaEditor
     end
     object editSchemaList: TComboBox
       Left = 8
-      Height = 21
+      Height = 23
       Top = 16
       Width = 100
-      ItemHeight = 13
+      ItemHeight = 15
       TabOrder = 0
     end
     object btnSaveSchema: TBitBtn
@@ -85,7 +85,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
         'Assembler'
         'Errors'
       )
-      ItemHeight = 13
+      ItemHeight = 15
       OnClick = listTokenTypesClick
       TabOrder = 0
     end
@@ -607,7 +607,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
     TabOrder = 2
     object titleAttributeEdition: TDividerBevel
       Left = 0
-      Height = 13
+      Height = 15
       Top = 8
       Width = 482
       Caption = 'Attributes'
@@ -657,27 +657,27 @@ inherited ColorShcemaEditor: TColorShcemaEditor
     end
     object chkBold: TCheckBox
       Left = 200
-      Height = 17
+      Height = 19
       Top = 28
-      Width = 40
+      Width = 44
       Caption = 'Bold'
       OnChange = CheckboxesChange
       TabOrder = 0
     end
     object chkItalic: TCheckBox
       Left = 200
-      Height = 17
+      Height = 19
       Top = 54
-      Width = 43
+      Width = 45
       Caption = 'Italic'
       OnChange = CheckboxesChange
       TabOrder = 1
     end
     object chkUnderlined: TCheckBox
       Left = 200
-      Height = 17
+      Height = 19
       Top = 80
-      Width = 71
+      Width = 78
       Caption = 'Underlined'
       OnChange = CheckboxesChange
       TabOrder = 2

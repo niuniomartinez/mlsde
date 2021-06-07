@@ -337,7 +337,9 @@ implementation
           True
         );
   { Order by name. }
-    OrderList
+    OrderList;
+  { The style. }
+    fHighlightStyle.Clear
   end;
 
 
