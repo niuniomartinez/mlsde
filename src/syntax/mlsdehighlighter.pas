@@ -96,6 +96,8 @@ interface
       procedure LoadFromFile (const aFileName: String);
     (* Saves style to the given file. *)
       procedure SaveToFile (const aFileName: String);
+    (* Copies the style from the given one. *)
+      procedure Assign (aStyle: TMLSDEHighlightStyle);
 
     (* Default text color. *)
       property Foreground: TColor read fFgColor write fFgColor;
@@ -397,7 +399,7 @@ implementation
     // SetAttributes (tkUnknown,    fBgColor, fFgColor, []);
     SetAttributes (tkSymbol,     fBgColor, clNavy,   [fsBold]);
     SetAttributes (tkNumber,     fBgColor, clBlue,   []);
-    SetAttributes (tkDirective,  fBgColor, clTeal,   []);
+    SetAttributes (tkDirective,  fBgColor, clTeal,   [fsItalic]);
     SetAttributes (tkAssembler,  fBgColor, clBlack,  []);
     SetAttributes (tkVariable,   fBgColor, fFgColor, [fsBold]);
     SetAttributes (tkType,       fBgColor, clNavy,   [fsBold]);
@@ -440,6 +442,20 @@ implementation
     finally
       lFile.Free
     end
+  end;
+
+
+
+(* Copies style. *)
+  procedure TMLSDEHighlightStyle.Assign (aStyle: TMLSDEHighlightStyle);
+  var
+    Ndx: TToken;
+  begin
+    fBgColor := aStyle.fBgColor;
+    fFgColor := aStyle.fFgColor;
+    for Ndx := Low (fAttributes) to High (fAttributes) do
+      if Assigned (fAttributes[Ndx]) then
+        fAttributes[Ndx].Assign (aStyle.fAttributes[Ndx])
   end;
 
 

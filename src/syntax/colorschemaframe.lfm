@@ -86,6 +86,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
         'Errors'
       )
       ItemHeight = 13
+      OnClick = listTokenTypesClick
       TabOrder = 0
     end
     object spliterShowSchema: TSplitter
@@ -113,6 +114,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       Gutter.MouseActions = <>
       RightGutter.Width = 0
       RightGutter.MouseActions = <>
+      Highlighter = JavaSyntax
       Keystrokes = <      
         item
           Command = ecUp
@@ -537,9 +539,6 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       MouseActions = <>
       MouseTextActions = <>
       MouseSelActions = <>
-      Lines.Strings = (
-        'editSourceSample'
-      )
       VisibleSpecialChars = [vscSpace, vscTabAtLast]
       SelectedColor.BackPriority = 50
       SelectedColor.ForePriority = 50
@@ -624,6 +623,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       BorderWidth = 2
       ButtonColorSize = 16
       ButtonColor = clBlack
+      OnColorChanged = btnTextColorColorChanged
     end
     object lblColorTexto: TLabel
       Left = 8
@@ -653,6 +653,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       BorderWidth = 2
       ButtonColorSize = 16
       ButtonColor = clBlack
+      OnColorChanged = btnBackgroundtColorColorChanged
     end
     object chkBold: TCheckBox
       Left = 200
@@ -660,6 +661,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       Top = 28
       Width = 40
       Caption = 'Bold'
+      OnChange = CheckboxesChange
       TabOrder = 0
     end
     object chkItalic: TCheckBox
@@ -668,6 +670,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       Top = 54
       Width = 43
       Caption = 'Italic'
+      OnChange = CheckboxesChange
       TabOrder = 1
     end
     object chkUnderlined: TCheckBox
@@ -676,7 +679,14 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       Top = 80
       Width = 71
       Caption = 'Underlined'
+      OnChange = CheckboxesChange
       TabOrder = 2
     end
+  end
+  object JavaSyntax: TSynJavaSyn[3]
+    DefaultFilter = 'Ficheros Java (*.java)|*.java'
+    Enabled = False
+    Left = 416
+    Top = 48
   end
 end

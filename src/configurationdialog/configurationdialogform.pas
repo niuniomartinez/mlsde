@@ -218,9 +218,9 @@ implementation
     aParentNode: TTreeNode
   );
   var
-    Ignore: TTreeNode;
+    lIgnore: TTreeNode;
   begin
-    Ignore := Self.AddTab (aTab, aName, aParentNode)
+    lIgnore := Self.AddTab (aTab, aName, aParentNode)
   end;
 
 end.
