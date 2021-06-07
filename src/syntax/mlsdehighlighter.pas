@@ -178,17 +178,17 @@ interface
        This parses standard floating-point constant.  Raises an exeption if
        there's a problem with parsing (i.e. it isn't a number or is bad
        formatted). *)
-      function ParseNumber: Real;
+      procedure ParseNumber;
     (* Parses an integer.
 
        This is a simple number.  Raises an exeption if there's a problem with
        parsing (i.e. it isn't a number or is bad formatted). *)
-      function ParseInteger: LongInt;
+      procedure ParseInteger;
     (* Parses an hex number.
 
        Raises an exeption if there's a problem with parsing (i.e. it isn't a
        number or is bad formatted).*)
-      function ParseHex: LongInt;
+      procedure ParseHex;
     (* Parses a simple string.
 
        Raises an exeption if there's a problem with parsing (i.e. can't  find
@@ -196,7 +196,9 @@ interface
        @param(aChar The string delimiter.) *)
       procedure ParseStringConstant (const aChar: Char);
     (* Parses identifiers. @seealso(IdentifierChars) *)
-      function ParseIdentifier: String;
+      procedure ParseIdentifier;
+    (* Returns current token as string. *)
+      function GetCurrentToken: String;
     (* Returns a reference to the style. *)
       function GetDefaultAttribute (aIndex: LongInt): TSynHighlighterAttributes;
         override;
@@ -240,7 +242,6 @@ interface
       function getTokenPos: Integer; override;
     (* @exclude *)
       function GetTokenKind: Integer; override;
-
 
     (* Returns token information.
        @param(aTokenStart Pointer to the start of token.)
@@ -485,65 +486,50 @@ implementation
 
 
 (* Parses numbers. *)
-  function TMLSDEHighlighter.ParseNumber: Real;
+  procedure TMLSDEHighlighter.ParseNumber;
   const
     lCharNums = ['0'..'9', '.'];
   var
-    lNumber: String;
     lFractPart: Integer;
   begin
     lFractPart := 0;
-    lNumber := '';
     while fLine[Self.TokenStart + Self.TokenLength] in lCharNums do
     begin
-      lNumber := Concat (lNumber, fLine[Self.TokenStart + Self.TokenLength]);
       if fLine[Self.TokenStart + Self.TokenLength] = '.' then Inc (lFractPart);
       Inc (Self.TokenLength)
     end;
     if lFractPart > 1 then
-      raise EConvertError.Create ('Error parsing number.');
-    Result := StrToFloat (lNumber)
+      raise EConvertError.Create ('Error parsing number.')
   end;
 
 
 
 (* Parses numbers. *)
-  function TMLSDEHighlighter.ParseInteger: LongInt;
+  procedure TMLSDEHighlighter.ParseInteger;
   const
     lCharNums = ['0'..'9', '.'];
   var
-    lNumber: String;
     lFractPart: Integer;
   begin
     lFractPart := 0;
-    lNumber := '';
     while fLine[Self.TokenStart + Self.TokenLength] in lCharNums do
     begin
-      lNumber := Concat (lNumber, fLine[Self.TokenStart + Self.TokenLength]);
       if fLine[Self.TokenStart + Self.TokenLength] = '.' then Inc (lFractPart);
       Inc (Self.TokenLength)
     end;
     if lFractPart > 0 then
-      raise EConvertError.Create ('Error parsing number.');
-    Result := StrToInt (lNumber)
+      raise EConvertError.Create ('Error parsing number.')
   end;
 
 
 
 (* Parses numbers. *)
-  function TMLSDEHighlighter.ParseHex: LongInt;
+  procedure TMLSDEHighlighter.ParseHex;
   const
     lCharNums = ['0'..'9', 'A'..'F', 'a'..'f'];
-  var
-    lNumber: String;
   begin
-    lNumber := '';
     while fLine[Self.TokenStart + Self.TokenLength] in lCharNums do
-    begin
-      lNumber := Concat (lNumber, fLine[Self.TokenStart + Self.TokenLength]);
       Inc (Self.TokenLength)
-    end;
-    Result := StrToInt (Concat ('$', lNumber))
   end;
 
 
@@ -563,14 +549,27 @@ implementation
 
 
 (* Parses an identifier. *)
-  function TMLSDEHighlighter.ParseIdentifier: String;
+  procedure TMLSDEHighlighter.ParseIdentifier;
   begin
-    Result := '';
   { First character is alwais identifier. }
     repeat
-      Result := Concat (Result, fLine[Self.TokenStart + Self.TokenLength]);
       Inc (Self.TokenLength)
     until Pos (fLine[Self.TokenStart + Self.TokenLength], fIdentifierChars) = 0
+  end;
+
+
+
+(* Returns current token. *)
+  function TMLSDEHighlighter.GetCurrentToken: String;
+  var
+    Cnt: Integer;
+  begin
+    Result := ''; Cnt := 0;
+    while Cnt < Self.TokenLength do
+    begin
+      Result := Concat (Result, Self.Line[Cnt]);
+      Inc (Cnt)
+    end
   end;
 
 

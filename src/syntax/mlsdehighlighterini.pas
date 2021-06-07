@@ -135,10 +135,9 @@ implementation
 
     procedure ParseIdentifier; inline;
     var
-      lIdentifier: String;
       lNdx: Integer;
     begin
-      lIdentifier := LowerCase (Self.ParseIdentifier);
+      Self.ParseIdentifier;
       Inc (fTokenIndex);
       case fTokenIndex of
         1:
@@ -146,7 +145,8 @@ implementation
         2:
           fInErrorState := True;
         otherwise
-          if TStringList (Self.LibraryObjects).Find (lIdentifier, lNdx) then
+          if TStringList (Self.LibraryObjects).Find (Self.GetCurrentToken, lNdx)
+          then
             Self.TokenType := tkIdentifier
           else
             Self.TokenType := tkString;
@@ -192,11 +192,9 @@ implementation
     end;
 
     procedure ParseValue; inline;
-    var
-      lIgnoref: Real;
     begin
       try
-        lIgnoref := Self.ParseNumber;
+        Self.ParseNumber;
         Self.TokenType := tkNumber
       except
         fInErrorState := True
