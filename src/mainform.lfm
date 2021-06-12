@@ -1,10 +1,10 @@
 object MainWindow: TMainWindow
-  Left = 387
+  Left = 366
   Height = 376
-  Top = 136
+  Top = 135
   Width = 643
   Caption = 'MLSDE'
-  ClientHeight = 357
+  ClientHeight = 356
   ClientWidth = 643
   Menu = MainMenu
   OnActivate = FormActivate
@@ -13,27 +13,27 @@ object MainWindow: TMainWindow
   Position = poDefault
   LCLVersion = '2.0.12.0'
   inline ProjectViewer: TProjectView
-    Height = 305
+    Height = 301
     Top = 32
     Width = 187
     Align = alLeft
-    ClientHeight = 305
+    ClientHeight = 301
     ClientWidth = 187
     TabOrder = 1
     inherited ProjectTree: TTreeView
-      Height = 305
+      Height = 301
       Width = 187
     end
   end
   object ResizeBar: TSplitter
     Left = 187
-    Height = 305
+    Height = 301
     Top = 32
     Width = 8
   end
   object EditorList: TPageControl
     Left = 195
-    Height = 305
+    Height = 301
     Top = 32
     Width = 448
     Align = alClient
@@ -54,6 +54,7 @@ object MainWindow: TMainWindow
     object tbtnOpenPrj: TToolButton
       Left = 9
       Top = 0
+      Action = ProjectView.ActionOpenProject
     end
     object tbtnSeparator1: TToolButton
       Left = 1
@@ -77,11 +78,16 @@ object MainWindow: TMainWindow
       Top = 0
       Style = tbsDivider
     end
+    object tbtnCloseCurrentTab: TToolButton
+      Left = 89
+      Top = 0
+      Action = ActionCloseCurrentTab
+    end
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 20
-    Top = 337
+    Height = 23
+    Top = 333
     Width = 643
     Panels = <    
       item
@@ -116,6 +122,7 @@ object MainWindow: TMainWindow
     object MenuItemProject: TMenuItem
       Caption = '&Project'
       object MenuItemOpenPrj: TMenuItem
+        Action = ProjectView.ActionOpenProject
       end
       object MenuItemCloseAllTabs: TMenuItem
         Action = ActionCloseAllTabs
@@ -128,6 +135,12 @@ object MainWindow: TMainWindow
       end
       object MenuItemSaveAll: TMenuItem
         Action = ActionSaveAll
+      end
+      object mnuItemSeparator1: TMenuItem
+        Caption = '-'
+      end
+      object mnuItemCloseTab: TMenuItem
+        Action = ActionCloseCurrentTab
       end
     end
   end
@@ -174,6 +187,12 @@ object MainWindow: TMainWindow
       Caption = '&Close all tabs'
       Hint = 'Closes all tabs.  It doesn''t save them!'
       ImageIndex = 7
+      OnExecute = ActionEnvironmentExecute
+    end
+    object ActionCloseCurrentTab: TAction
+      Tag = 4
+      Caption = 'Close current &tab'
+      ImageIndex = 6
       OnExecute = ActionEnvironmentExecute
     end
   end

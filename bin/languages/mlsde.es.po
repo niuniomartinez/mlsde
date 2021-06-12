@@ -189,7 +189,7 @@ msgstr "Tamaño de letra"
 
 #: teditorconfigurationframe.lblnthlinenumber.caption
 msgid "Each nth line number"
-msgstr "Cada n-ésimo número de línea"
+msgstr "Cada n-ésima línea"
 
 #: teditorconfigurationframe.titlegutter.caption
 msgid "Gutter"
@@ -257,6 +257,10 @@ msgid "Closes all tabs.  It doesn't save them!"
 msgstr ""
 "Cierra todas las lengüetas abiertas.\n"
 "¡No guarda cambios!\n"
+
+#: tmainwindow.actionclosecurrenttab.caption
+msgid "Close current &tab"
+msgstr "Cerrar &lengüeta actual"
 
 #: tmainwindow.actionconfigure.caption
 msgid "&Configuration..."

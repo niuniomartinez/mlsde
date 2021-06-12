@@ -248,6 +248,10 @@ msgstr ""
 msgid "Closes all tabs.  It doesn't save them!"
 msgstr ""
 
+#: tmainwindow.actionclosecurrenttab.caption
+msgid "Close current &tab"
+msgstr ""
+
 #: tmainwindow.actionconfigure.caption
 msgid "&Configuration..."
 msgstr ""

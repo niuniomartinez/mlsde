@@ -5,25 +5,28 @@ inherited EditorConfigurationFrame: TEditorConfigurationFrame
     Left = 8
     Height = 17
     Top = 24
-    Width = 79
+    Width = 77
     Caption = 'Show gutter'
     OnChange = chkShowGutterChange
     TabOrder = 0
   end
   object editNthLineNumber: TSpinEdit[1]
-    Left = 152
+    Left = 136
     Height = 21
     Top = 20
     Width = 50
+    Anchors = [akTop, akRight]
     MinValue = 1
     TabOrder = 1
     Value = 1
   end
   object lblNthLineNumber: TLabel[2]
-    Left = 213
+    Left = 192
     Height = 13
     Top = 24
-    Width = 100
+    Width = 121
+    Anchors = [akTop, akRight]
+    AutoSize = False
     Caption = 'Each nth line number'
     ParentColor = False
   end
@@ -89,10 +92,12 @@ inherited EditorConfigurationFrame: TEditorConfigurationFrame
     ParentFont = False
   end
   object chkShowChangeMarks: TCheckBox[9]
-    Left = 152
+    Left = 136
     Height = 17
     Top = 52
-    Width = 115
+    Width = 172
+    Anchors = [akTop, akRight]
+    AutoSize = False
     Caption = 'Show change marks'
     OnChange = chkShowGutterChange
     TabOrder = 2

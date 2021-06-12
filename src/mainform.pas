@@ -51,25 +51,29 @@ interface
        ActionAbout: TAction;
        ActionQuit: TFileExit;
        ActionCloseAllTabs: TAction;
+       ActionCloseCurrentTab: TAction;
        ActionSaveFile: TAction;
        ActionSaveAll: TAction;
       MainMenu: TMainMenu;
-      MenuItemSaveFile: TMenuItem;
-      MenuItemSaveAll: TMenuItem;
-      MenuItemFile: TMenuItem;
-      MenuItemCloseAllTabs: TMenuItem;
        MenuItemMLSDE: TMenuItem;
         MenuItemAbout: TMenuItem;
         MenuItemConfiguration: TMenuItem;
         MenuItemQuit: TMenuItem;
        MenuItemOpenPrj: TMenuItem;
         MenuItemProject: TMenuItem;
+        MenuItemCloseAllTabs: TMenuItem;
+       MenuItemFile: TMenuItem;
+        mnuItemSeparator1: TMenuItem;
+        MenuItemSaveFile: TMenuItem;
+        MenuItemSaveAll: TMenuItem;
+        mnuItemCloseTab: TMenuItem;
       ToolBar: TToolBar;
        tbtnSeparator1: TToolButton;
        tbtnOpenPrj: TToolButton;
        tbtnSeparator2: TToolButton;
        tbtnSaveFile: TToolButton;
        tbtnSaveAll: TToolButton;
+       tbtnCloseCurrentTab: TToolButton;
       ProjectViewer: TProjectView;
       ResizeBar: TSplitter;
       EditorList: TPageControl;
@@ -126,6 +130,8 @@ interface
       procedure ProjectChanged (Sender: TObject);
     (* Closes all tabs. *)
       procedure CloseAllTabs;
+    (* Closes current tab. *)
+      procedure CloseCurrentTab;
     end;
 
   var
@@ -146,6 +152,7 @@ implementation
     tagConfigure = 1;
     tagAboutDlg = 2;
     tagCloseAllTabs = 3;
+    tabCloseCurrentTab = 4;
 
     tagSaveFile = 1;
     tagSaveAllFiles = 2;
@@ -169,7 +176,9 @@ implementation
       GUIUtils.RunModalDialog (TAboutDialog.Create (Self));
     tagCloseAllTabs:
       Self.CloseAllTabs;
-    else
+    tabCloseCurrentTab:
+      Self.CloseCurrentTab;
+    otherwise
     { This should never be rendered, so no translation required. }
       ShowError ('Action environment tag: %d', [(Sender as TComponent).Tag]);
     end
@@ -392,6 +401,7 @@ implementation
 
   begin
     Self.ActionCloseAllTabs.Enabled := Self.EditorList.PageCount > 0;
+    Self.ActionCloseCurrentTab.Enabled := Self.EditorList.PageCount > 0;
   { Initially, all save options are disabled. }
     Self.ActionSaveFile.Enabled := False;
     Self.ActionSaveAll.Enabled := False;
@@ -502,6 +512,19 @@ implementation
     for Ndx := Self.EditorList.PageCount - 1 downto 0 do
       Self.EditorList.Pages[Ndx].Free;
     Self.UpdateFileComponentStates
+  end;
+
+
+
+(* Closes current tab. *)
+  procedure TMainWindow.CloseCurrentTab;
+  begin
+  { Be sure there's a tab open. }
+    if Assigned (Self.EditorList.ActivePage) then
+    begin
+      Self.EditorList.ActivePage.Free;
+      Self.UpdateFileComponentStates
+    end
   end;
 
 end.
