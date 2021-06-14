@@ -192,6 +192,7 @@ object MainWindow: TMainWindow
     object ActionCloseCurrentTab: TAction
       Tag = 4
       Caption = 'Close current &tab'
+      Hint = 'Closes current tab keeping the other ones opened.'
       ImageIndex = 6
       OnExecute = ActionEnvironmentExecute
     end

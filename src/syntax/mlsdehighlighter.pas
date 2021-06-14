@@ -410,20 +410,20 @@ implementation
   { Set defaults. }
     fFgColor := clBlack;
     fBgColor := clWhite;
-    SetAttributes (tkComment,    fBgColor, clGreen,  [fsItalic]);
-    SetAttributes (tkIdentifier, fBgColor, fFgColor, []);
-    SetAttributes (tkKeyword,    fBgColor, clNavy,   [fsBold]);
-    SetAttributes (tkString,     fBgColor, clBlue,   []);
-    // SetAttributes (tkUnknown,    fBgColor, fFgColor, []);
-    SetAttributes (tkSymbol,     fBgColor, clNavy,   [fsBold]);
-    SetAttributes (tkNumber,     fBgColor, clBlue,   []);
-    SetAttributes (tkDirective,  fBgColor, clTeal,   [fsItalic, fsBold]);
-    SetAttributes (tkAssembler,  fBgColor, clBlack,  []);
-    SetAttributes (tkVariable,   fBgColor, fFgColor, [fsBold]);
-    SetAttributes (tkType,       fBgColor, clNavy,   [fsBold]);
-    SetAttributes (tkOperator,   fBgColor, clNavy,   [fsBold]);
-    SetAttributes (tkLabel,      fBgColor, fFgColor, [fsbold]);
-    SetAttributes (tkError,      clRed,    clWhite,  [fsUnderline]);
+    SetAttributes (tkComment,    clNone, clGreen, [fsItalic]);
+    SetAttributes (tkIdentifier, clNone, clNone,  []);
+    SetAttributes (tkKeyword,    clNone, clNavy,  [fsBold]);
+    SetAttributes (tkString,     clNone, clBlue,  []);
+    // SetAttributes (tkUnknown,    clNone, clNone, []);
+    SetAttributes (tkSymbol,     clNone, clNavy,  [fsBold]);
+    SetAttributes (tkNumber,     clNone, clBlue,  []);
+    SetAttributes (tkDirective,  clNone, clTeal,  [fsItalic, fsBold]);
+    SetAttributes (tkAssembler,  clNone, clBlack, []);
+    SetAttributes (tkVariable,   clNone, clNone,  [fsBold]);
+    SetAttributes (tkType,       clNone, clNavy,  [fsBold]);
+    SetAttributes (tkOperator,   clNone, clNavy,  [fsBold]);
+    SetAttributes (tkLabel,      clNone, clNone,  [fsbold]);
+    SetAttributes (tkError,      clRed,  clWhite, [fsUnderline]);
   { If there are a user style defined, load it. }
     lFileName := Self.GetCustomFileName;
     if FileExists (lFileName) then Self.LoadFromFile (lFileName)

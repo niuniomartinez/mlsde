@@ -1,4 +1,5 @@
 Units for syntax highlighting.
 
 Defines custom syntax highlighters with more attributes, an object to manage
-the highlighting style, and another one to manage the highlighters.
+the highlighting style, and another one to manage the highlighters and color
+schemas.  Also defines related configuration frames.

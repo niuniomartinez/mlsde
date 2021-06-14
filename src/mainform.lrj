@@ -14,5 +14,6 @@
 {"hash":59924574,"name":"tmainwindow.actionsaveall.hint","sourcebytes":[83,97,118,101,115,32,97,108,108,32,109,111,100,105,102,105,101,100,32,102,105,108,101,115,46],"value":"Saves all modified files."},
 {"hash":26147699,"name":"tmainwindow.actionclosealltabs.caption","sourcebytes":[38,67,108,111,115,101,32,97,108,108,32,116,97,98,115],"value":"&Close all tabs"},
 {"hash":234008721,"name":"tmainwindow.actionclosealltabs.hint","sourcebytes":[67,108,111,115,101,115,32,97,108,108,32,116,97,98,115,46,32,32,73,116,32,100,111,101,115,110,39,116,32,115,97,118,101,32,116,104,101,109,33],"value":"Closes all tabs.  It doesn't save them!"},
-{"hash":124595106,"name":"tmainwindow.actionclosecurrenttab.caption","sourcebytes":[67,108,111,115,101,32,99,117,114,114,101,110,116,32,38,116,97,98],"value":"Close current &tab"}
+{"hash":124595106,"name":"tmainwindow.actionclosecurrenttab.caption","sourcebytes":[67,108,111,115,101,32,99,117,114,114,101,110,116,32,38,116,97,98],"value":"Close current &tab"},
+{"hash":3518222,"name":"tmainwindow.actionclosecurrenttab.hint","sourcebytes":[67,108,111,115,101,115,32,99,117,114,114,101,110,116,32,116,97,98,32,107,101,101,112,105,110,103,32,116,104,101,32,111,116,104,101,114,32,111,110,101,115,32,111,112,101,110,101,100,46],"value":"Closes current tab keeping the other ones opened."}
 ]}

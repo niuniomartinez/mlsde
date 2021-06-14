@@ -262,6 +262,10 @@ msgstr ""
 msgid "Close current &tab"
 msgstr "Cerrar &lengüeta actual"
 
+#: tmainwindow.actionclosecurrenttab.hint
+msgid "Closes current tab keeping the other ones opened."
+msgstr "Cierra la lengüeta actual dejando el resto abiertas."
+
 #: tmainwindow.actionconfigure.caption
 msgid "&Configuration..."
 msgstr "&Configuración..."

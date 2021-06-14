@@ -27,7 +27,7 @@ interface
 
   uses
     ConfigurationDialogFrame, DividerBevel, SynEdit, SynHighlighterPas,
-    SynHighlighterJava, StdCtrls, Buttons, ExtCtrls, Dialogs, Classes,
+    SynHighlighterJava, StdCtrls, Buttons, ExtCtrls, Dialogs, ColorBox, Classes,
     MLSDEHighlighter;
 
   type
@@ -46,9 +46,9 @@ interface
       panelAttributeEdition: TPanel;
        titleAttributeEdition: TDividerBevel;
        lblColorTexto: TLabel;
-       btnTextColor: TColorButton;
+       selectTextColor: TColorBox;
        lblBackgroundColor: TLabel;
-       btnBackgroundColor: TColorButton;
+       selectBackgroundColor: TColorBox;
        chkBold: TCheckBox;
        chkItalic: TCheckBox;
        chkUnderlined: TCheckBox;
@@ -56,9 +56,9 @@ interface
     (* User selected a token to edit. *)
       procedure listTokenTypesClick (Sender: TObject);
     (* Foreground color changed. *)
-      procedure btnTextColorColorChanged (Sender: TObject);
+      procedure selectTextColorColorChanged (Sender: TObject);
     (* Background color changed. *)
-      procedure btnBackgroundtColorColorChanged (Sender: TObject);
+      procedure selectBackgroundtColorColorChanged (Sender: TObject);
     (* Checboxes chnged. *)
       procedure CheckboxesChange (Sender: TObject);
     private
@@ -111,7 +111,7 @@ implementation
   var
     lToken: TToken;
   begin
-  { Tohange checkboxes values triggers the onChange event; so deactivate to
+  { To change checkboxes values triggers the onChange event; so deactivate to
     prevent it. }
     chkBold.OnChange := Nil;
     chkItalic.OnChange := Nil;
@@ -119,16 +119,21 @@ implementation
   { Select the token and show current values. }
     if Self.listTokenTypes.ItemIndex = 0 then
     begin
-      btnTextColor.ButtonColor := fStyleCopy.Foreground;
-      btnBackgroundColor.ButtonColor := fStyleCopy.Background;
+    { Default attributes are a bit special. }
+      selectTextColor.Style := selectTextColor.Style - [cbIncludeNone];
+      selectTextColor.Selected := fStyleCopy.Foreground;
+      selectBackgroundColor.Style := selectBackgroundColor.Style - [cbIncludeNone];
+      selectBackgroundColor.Selected := fStyleCopy.Background;
       chkBold.Enabled := False; chkBold.Checked := False;
       chkItalic.Enabled := False; chkItalic.Checked := False;
       chkUnderlined.Enabled := False; chkUnderlined.Checked := False;
     end
     else begin
       lToken := Self.GetItemTokenValue;
-      btnTextColor.ButtonColor := fStyleCopy.Attributes[lToken].Foreground;
-      btnBackgroundColor.ButtonColor := fStyleCopy.Attributes[lToken].Background;
+      selectTextColor.Style := selectTextColor.Style + [cbIncludeNone];
+      selectTextColor.Selected := fStyleCopy.Attributes[lToken].Foreground;
+      selectBackgroundColor.Style := selectBackgroundColor.Style + [cbIncludeNone];
+      selectBackgroundColor.Selected := fStyleCopy.Attributes[lToken].Background;
       chkBold.Enabled := True;
       chkBold.Checked := fsBold in fStyleCopy.Attributes[lToken].Style;
       chkItalic.Enabled := True;
@@ -145,23 +150,23 @@ implementation
 
 
 (* Style changed. *)
-  procedure TColorShcemaEditor.btnTextColorColorChanged (Sender: TObject);
+  procedure TColorShcemaEditor.selectTextColorColorChanged (Sender: TObject);
   begin
     if Self.listTokenTypes.ItemIndex = 0 then
-      fStyleCopy.Foreground := Self.btnTextColor.ButtonColor
+      fStyleCopy.Foreground := Self.selectTextColor.Selected
     else
       fStyleCopy.Attributes[Self.GetItemTokenValue].Foreground :=
-        Self.btnTextColor.ButtonColor;
+        Self.selectTextColor.Selected;
     Self.ApplyStyle
   end;
 
-  procedure TColorShcemaEditor.btnBackgroundtColorColorChanged (Sender: TObject);
+  procedure TColorShcemaEditor.selectBackgroundtColorColorChanged (Sender: TObject);
   begin
     if Self.listTokenTypes.ItemIndex = 0 then
-      fStyleCopy.Background := Self.btnBackgroundColor.ButtonColor
+      fStyleCopy.Background := Self.selectBackgroundColor.Selected
     else
       fStyleCopy.Attributes[Self.GetItemTokenValue].Background :=
-        Self.btnBackgroundColor.ButtonColor;
+        Self.selectBackgroundColor.Selected;
     Self.ApplyStyle
   end;
 

@@ -252,6 +252,10 @@ msgstr ""
 msgid "Close current &tab"
 msgstr ""
 
+#: tmainwindow.actionclosecurrenttab.hint
+msgid "Closes current tab keeping the other ones opened."
+msgstr ""
+
 #: tmainwindow.actionconfigure.caption
 msgid "&Configuration..."
 msgstr ""
