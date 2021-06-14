@@ -329,6 +329,10 @@ implementation
     IniFiles, sysutils;
 
   const
+  { Identifiers for default color attributes in color description files. }
+    SectionDefault = 'default';
+    ForegroundVar = 'Foreground';
+    BackgroundVar = 'Background';
   { Default identifier characters. }
     DefaultIdentifierChars =
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -439,8 +443,8 @@ implementation
   begin
     lFile := TIniFile.Create (aFileName);
     try
-      lFile.ReadInteger ('default', 'Foreground', fFgColor);
-      lFile.ReadInteger ('default', 'background', fBgColor);
+      fBgColor := lFile.ReadInteger (SectionDefault, BackgroundVar, fBgColor);
+      fFgColor := lFile.ReadInteger (SectionDefault, ForegroundVar, fFgColor);
       for lAttributes in fAttributes do
         if Assigned (lAttributes) then
           lAttributes.LoadFromFile (lFile)
@@ -459,8 +463,8 @@ implementation
   begin
     lFile := TIniFile.Create (aFileName);
     try
-      lFile.WriteInteger ('default', 'Foreground', fFgColor);
-      lFile.WriteInteger ('default', 'background', fBgColor);
+      lFile.WriteInteger (SectionDefault, BackgroundVar, fBgColor);
+      lFile.WriteInteger (SectionDefault, ForegroundVar, fFgColor);
       for lAttributes in fAttributes do
         if Assigned (lAttributes) then
           lAttributes.SaveToFile (lFile)
