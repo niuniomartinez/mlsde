@@ -53,6 +53,8 @@ interface
        chkItalic: TCheckBox;
        chkUnderlined: TCheckBox;
 
+    (* User selected a schreme. *)
+      procedure editSchemaListChange (Sender: TObject);
     (* User selected a token to edit. *)
       procedure listTokenTypesClick (Sender: TObject);
     (* Foreground color changed. *)
@@ -63,6 +65,7 @@ interface
       procedure CheckboxesChange (Sender: TObject);
     private
       fStyleCopy: TMLSDEHighlightStyle;
+      fSchemeList: TStringList;
 
     (* Returns the token value for the list token item. *)
       function GetItemTokenValue: TToken; inline;
@@ -83,7 +86,7 @@ implementation
 
   uses
     EditorFrame, Main,
-    Graphics, SynEditHighlighter;
+    Graphics, SynEditHighlighter, SysUtils;
 
 {$R *.lfm}
 
@@ -102,6 +105,18 @@ implementation
   function TColorShcemaEditor.GetItemTokenValue: TToken;
   begin
     Result := DictItemtoken[Self.listTokenTypes.ItemIndex]
+  end;
+
+
+
+(* /ser selected scheme. *)
+  procedure TColorShcemaEditor.editSchemaListChange (Sender: TObject);
+  begin
+    if editSchemaList.ItemIndex >= 0 then
+    begin
+      fStyleCopy.LoadFromFile (fSchemeList[editSchemaList.ItemIndex]);
+      Self.listTokenTypesClick (Self.listTokenTypes)
+    end
   end;
 
 
@@ -228,7 +243,8 @@ implementation
   constructor TColorShcemaEditor.Create(aOwner: TComponent);
   begin
     inherited Create(aOwner);
-    fStyleCopy := TMLSDEHighlightStyle.Create
+    fStyleCopy := TMLSDEHighlightStyle.Create;
+    fSchemeList := TStringList.Create
   end;
 
 
@@ -236,6 +252,7 @@ implementation
 (* Destructor. *)
   destructor TColorShcemaEditor.Destroy;
   begin
+    fSchemeList.Free;
     fStyleCopy.Free;
     inherited Destroy
   end;
@@ -244,7 +261,25 @@ implementation
 
 (* Initializes frame. *)
   procedure TColorShcemaEditor.Initialize;
+  var
+    lItem, lFileName: String;
   begin
+  { Find schemes. }
+    fSchemeList.Clear;
+    MLSDEApplication.FindFileList (
+      Concat (IncludeTrailingPathDelimiter ('schemes'), '*.csd'),
+      fSchemeList
+    );
+    Self.editSchemaList.Items.Clear;
+    for lItem in fSchemeList do
+    begin
+      lFileName := ExtractFileName (lItem);
+      Self.editSchemaList.Items.Append (LeftStr (
+        lFileName,
+        Length (lFileName) - 4
+      ))
+    end;
+  { Set scheme. }
     fStyleCopy.Assign (MLSDEApplication.SynManager.Style);
     Self.editSourceSample.Lines.Text := Self.JavaSyntax.SampleSource;
     Self.ApplyStyle;

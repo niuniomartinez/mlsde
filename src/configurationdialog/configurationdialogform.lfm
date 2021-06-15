@@ -35,7 +35,8 @@ object ConfigurationDlg: TConfigurationDlg
     Top = 0
     Width = 466
     Align = alClient
-    TabOrder = 2
+    Constraints.MinWidth = 400
+    TabOrder = 1
   end
   object TabList: TTreeView
     Left = 0
@@ -43,11 +44,13 @@ object ConfigurationDlg: TConfigurationDlg
     Top = 0
     Width = 169
     Align = alLeft
+    AutoExpand = True
+    Constraints.MinWidth = 150
     ReadOnly = True
     ScrollBars = ssAutoBoth
     TabOrder = 0
     OnClick = TabListClick
-    Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+    Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
   end
   object ResizeBar: TSplitter
     Left = 169

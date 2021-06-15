@@ -31,6 +31,8 @@ inherited ColorShcemaEditor: TColorShcemaEditor
       Top = 16
       Width = 100
       ItemHeight = 13
+      OnChange = editSchemaListChange
+      Style = csDropDownList
       TabOrder = 0
     end
     object btnSaveSchema: TBitBtn
@@ -664,7 +666,7 @@ inherited ColorShcemaEditor: TColorShcemaEditor
     end
     object selectTextColor: TColorBox
       Left = 96
-      Height = 24
+      Height = 22
       Top = 28
       Width = 128
       NoneColorColor = clWhite

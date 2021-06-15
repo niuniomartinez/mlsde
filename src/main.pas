@@ -26,7 +26,7 @@ interface
 
   uses
     Configuration, Project, SyntaxHighlighting,
-    Classes;
+    Classes, SysUtils;
 
   const
   (* Name for the environment configuration section. *)
@@ -104,6 +104,12 @@ interface
 
     (* Sets up the language translation. *)
       procedure SetUpLanguage;
+    (* Returns application directory. *)
+      function GetApplicationDir (const aDir: TFileName): TFileName; inline;
+    (* Returns executable directory. *)
+      function GetExecutableDir (const aDir: TFileName): TFileName; inline;
+    (* Returns user directory. *)
+      function GetUserDir (const aDir: TFileName): TFileName; inline;
     public
     (* Constructor. *)
       constructor Create;
@@ -131,6 +137,12 @@ interface
        @seealso(FindFile)
      *)
       function FindDirectory (const aDir: String): String;
+    (* Looks for files that match the name (possibly with wildcards) in both
+       application and user directories.  It then fills the name list with all
+       found files with full path.
+       @param(aFileName The file name (with or without wildcards) to look for.)
+       @param(aFileList The list where the found files will be stored.) *)
+      procedure FindFileList (const aFileName: TFileName; aFileList: TStrings);
 
     (* Application configuration. *)
       property Configuration: TConfiguration read fConfiguration;
@@ -149,7 +161,7 @@ implementation
   uses
     GUIUtils, EditorFrame,
     LCLTranslator, { No need to put this in any other place. }
-    Forms, sysutils;
+    Forms;
 
   const
   (* Directory where .po/.mo files are. *)
@@ -310,6 +322,43 @@ implementation
 
 
 
+(* Returns application directory. *)
+  function TMLSDEApplication.GetApplicationDir (const aDir: TFileName)
+    : TFileName;
+  begin
+    Result :=
+{$IFDEF WINDOWS}
+      '' { Windows doesn't has this directory. }
+{$ELSE}
+      Concat ('/usr/share/mlsde/', aDir)
+{$ENDIF}
+  end;
+
+
+
+(* Returns executable directory. *)
+  function TMLSDEApplication.GetExecutableDir (const aDir: TFileName)
+    : TFileName;
+  begin
+    Result := Concat (
+      IncludeTrailingPathDelimiter (ExtractFileDir (ParamStr (0))),
+      aDir
+    )
+  end;
+
+
+
+(* Returns user directory. *)
+  function TMLSDEApplication.GetUserDir (const aDir: TFileName): TFileName;
+  begin
+    Result := Concat (
+      IncludeTrailingPathDelimiter (GetAppConfigDir (False)),
+      aDir
+    )
+  end;
+
+
+
 (* Constructor. *)
   constructor TMLSDEApplication.Create;
   begin
@@ -367,38 +416,14 @@ implementation
 
 (* Looks for file. *)
   function TMLSDEApplication.FindFile (const aFile: String): String;
-
-    function FindFileInApplicationDir: String; inline;
-    begin
-      Result :=
-{$IFDEF WINDOWS}
-      '' { Windows doesn't has this directory. }
-{$ELSE}
-      concat ('/usr/share/mlsde/', aFile)
-{$ENDIF}
-    end;
-
-    function FindFileInExecutableDir: String; inline;
-    begin
-      Result := Concat (
-        IncludeTrailingPathDelimiter (ExtractFileDir (ParamStr (0))),
-        aFile
-      )
-    end;
-
-    function FindFileInUserDir: String; inline;
-    begin
-      Result := Concat (GetAppConfigDir (False), aFile)
-    end;
-
   begin
-    Result := FindFileInUserDir;
+    Result := Self.GetUserDir (aFile);
     if not FileExists (Result) then
     begin
-      Result := FindFileInExecutableDir;
+      Result := Self.GetExecutableDir (aFile);
       if not FileExists (Result) then
       begin
-        Result := FindFileInApplicationDir;
+        Result := Self.GetApplicationDir (aFile);
         if not FileExists (Result) then
         begin
         { Not found, so... }
@@ -411,46 +436,55 @@ implementation
 
 
   function TMLSDEApplication.FindDirectory (const aDir: String): String;
-
-    function GetInApplicationDir: String; inline;
+  begin
+    Result := Self.GetUserDir (aDir);
+    if not DirectoryExists (Result) then
     begin
-      Result :=
-  {$IFDEF WINDOWS}
-      '' { Windows doesn't has this directory. }
-  {$ELSE}
-      concat ('/usr/share/mlsde/', aDir)
-  {$ENDIF}
-    end;
-
-    function GetInExecutableDir: String; inline;
-    begin
-      Result := Concat (
-        IncludeTrailingPathDelimiter (ExtractFileDir (ParamStr (0))),
-        aDir
-      )
-    end;
-
-    function GetInUserDir: String; inline;
-    begin
-      Result := Concat (GetAppConfigDir (False), aDir)
-    end;
-
-    begin
-      Result := GetInUserDir;
+      Result := Self.GetExecutableDir (aDir);
       if not DirectoryExists (Result) then
       begin
-        Result := GetInExecutableDir;
-        if not DirectoryExists (Result+ '/') then
+        Result := Self.GetApplicationDir (aDir);
+        if not DirectoryExists (Result) then
         begin
-          Result := GetInApplicationDir;
-          if not DirectoryExists (Result) then
-          begin
-          { Not found, so... }
-            Result := aDir;
-          end
+        { Not found, so... }
+          Result := aDir;
         end
       end
     end;
+    Result := IncludeTrailingPathDelimiter (Result)
+  end;
+
+
+
+(* Looks for files. *)
+  procedure TMLSDEApplication.FindFileList (
+    const aFileName: TFileName;
+    aFileList: TStrings
+  );
+
+    procedure FillList (const aPath: TFileName);
+    var
+      lDir: TFileName;
+      lFileInfo: TSearchRec;
+    begin
+      if FindFirst (aPath, 0, lFileInfo) = 0 then
+      begin
+        lDir := IncludeTrailingBackslash (ExtractFileDir (aPath));
+        repeat
+          aFileList.Append (Concat (lDir, lFileInfo.Name))
+        until FindNext (lFileInfo) <> 0;
+        FindClose (lFileInfo)
+      end
+    end;
+
+  begin
+  { Search in user directory. }
+    FillList (Self.GetUserDir (aFileName));
+  { Search in executable directory. }
+    FillList (Self.GetExecutableDir (aFileName));
+  { Search in application directory. }
+    FillList (Self.GetApplicationDir (aFileName))
+  end;
 
 end.
 
