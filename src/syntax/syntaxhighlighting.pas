@@ -1,10 +1,9 @@
 unit SyntaxHighlighting;
 (*<Manages syntax highlighting.
 
-   This unit includes built-in highlighters (courtesy of SynEdit).  This way
-   the IDE will highlight some common languages even if no definition files are
-   arailable.  Note that these highlighters will be overriden by custom
-   definitions. *)
+   This unit includes built-in highlighters.  This way the IDE will highlight
+   some common languages even if no definition files are arailable.  Note that
+   these highlighters would be overriden by custom definitions. *)
 (*
   Copyright (c) 2018-2021 Guillermo Martínez J.
 
@@ -98,11 +97,14 @@ interface
 implementation
 
   uses
-    Utils,
-    StrUtils, sysutils,
+    GUIUtils, Main, Utils,
+    Classes, StrUtils, sysutils,
   { Built-in syntax highlighters. }
     MLSDEHighlighterINI, MLSDEHighlighterMLSDE;
 
+  resourcestring
+    errCantLoadLanguageDefinition =
+      'Error loading description language %s:'#10'%s';
 
 
 (*
@@ -310,8 +312,8 @@ implementation
     begin
       if fNumHighlighters < 3 then Exit; { TODO: Remove in production. }
     { Let's do it the wrong way (bubble sort). }
-      lOrdered := True;
       repeat
+        lOrdered := True;
         for Ndx := Low (fDefinitionList) to fNumHighlighters - 2 do
           if LowerCase (fDefinitionList[Ndx].Name) > LowerCase (fDefinitionList[Ndx + 1].Name)
           then begin
@@ -325,9 +327,37 @@ implementation
 
   var
     Ndx: Integer;
+    lFileList: TStringList;
+    lCustomHighlighter: TMLSDECustomHighlighter;
+    lLangFile: TFileName;
   begin
   { Removes old list (if any). }
     Self.Clear;
+  { Adds external and custom highlighters. }
+    lFileList := TStringList.Create;
+    lCustomHighlighter := TMLSDECustomHighlighter.Create (Nil);
+    try
+      MLSDEApplication.FindFileList ('syntaxis/*.sld', lFileList);
+      if lFileList.Count > 0 then
+        for lLangFile in lFileList do
+        try
+          lCustomHighlighter.LoadFromFile (lLangFile);
+          AddHighlighter (
+            lCustomHighlighter.Language,
+            lCustomHighlighter.Extensions,
+            False
+          )
+        except
+          on Error: Exception do
+            GUIUtils.ShowError (
+              errCantLoadLanguageDefinition,
+              [lLangFile, Error.Message]
+            )
+        end
+    finally
+      lCustomHighlighter.Free;
+      lFileList.Free
+    end;
   { Adds built-in highlighters if not overriden. }
     for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
       if not HighlighterExists (BuiltInHighlighters[Ndx].Name) then

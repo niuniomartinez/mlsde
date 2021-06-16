@@ -72,8 +72,8 @@ implementation
 (* Constructor. *)
   constructor TMLSDESyntaxDefinitionSyn.Create (aOwner: TComponent);
   const
-    ReservedWords: array [0..12] of String = (
-      'language', 'case',
+    ReservedWords: array [0..13] of String = (
+      'language', 'extensions', 'case',
       'end',
       'comment', 'directive',
       'string', 'hex', 'symbols', 'identifier',
@@ -108,6 +108,12 @@ implementation
 
 (* Parse line. *)
   procedure TMLSDESyntaxDefinitionSyn.Next;
+
+    procedure ParseComment; inline;
+    begin
+      Self.TokenType := tkComment;
+      Self.JumpToEOL
+    end;
 
     procedure ParseString; inline;
     begin
@@ -145,6 +151,8 @@ implementation
     { identify token. }
       if Self.Line[Self.TokenStart] <= ' ' then
         Self.ParseSpaces
+      else if Self.Line[Self.TokenStart] = '#' then
+        ParseComment
       else if Self.Line[Self.TokenStart] = '"' then
         ParseString
       else begin

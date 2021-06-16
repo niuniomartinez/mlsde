@@ -129,6 +129,9 @@ implementation
 
 {$R *.lfm}
 
+  resourcestring
+    TextSyntax = 'Text';
+
 (*
  * TEditorConfiguration
  ************************************************************************)
@@ -383,7 +386,7 @@ implementation
         MainWindow.StatusBar.Panels[LanguageStatusPanel].Text :=
           TMLSDEHighlighter (Self.SynEdit.Highlighter).Language
       else
-        MainWindow.StatusBar.Panels[LanguageStatusPanel].Text := ''
+        MainWindow.StatusBar.Panels[LanguageStatusPanel].Text := TextSyntax
     end
   end;
 

@@ -140,6 +140,7 @@ interface
     private
       fStyle: TMLSDEHighlightStyle;
       fLanguageName: String;
+      fExtensions: String;
       fKeywords, fTypes, fLibrary, fOperators: TStrings;
       fIdentifierChars: String;
       fRange: TCodeRange;
@@ -261,6 +262,8 @@ interface
 
        @bold(Note:) Use this instead of @code(LanguageName). *)
       property Language: String read fLanguageName write fLanguageName;
+    (* Extensions separated by ";". *)
+      property Extensions: String read fExtensions write fExtensions;
     (* Keyword list. @seealso(IsKeyword) *)
       property Keywords: TStrings read fKeywords;
     (* Operators. @seealso(IsOperator) *)
@@ -303,6 +306,9 @@ interface
     TMLSDECustomHighlighter = class (TMLSDEHighlighter)
     private
       fSampleSource: TStringList;
+      fCaseSensitive: Boolean;
+
+      procedure Clear;
     protected
     (* Returns a code snippet that can be used as code example. *)
       function GetSampleSource: String; override;
@@ -316,10 +322,17 @@ interface
       constructor Create (aOwner: TComponent); override;
     (* Destructor. *)
       destructor Destroy; override;
-    (* Loads language description from the given disk file. *)
+    (* Loads language description from the given disk file.
+
+       @bold(On error) raises an exception. *)
       procedure LoadFromFile (const aFileName: String);
-    (* Saves language description in to the given disk file. *)
+    (* Saves language description in to the given disk file.
+
+       @bold(On error) raises an exception. *)
       procedure SaveToFile (const aFileName: String);
+
+    (* Tells if language is case sensitive. *)
+      property CaseSensitive: Boolean read fCaseSensitive write fCaseSensitive;
     end;
 
 implementation
@@ -336,6 +349,16 @@ implementation
   { Default identifier characters. }
     DefaultIdentifierChars =
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+  resourcestring
+    errUnknownToken = 'Unknown token.';
+    errDuplicatedName = 'Duplicated language name.';
+    errDuplicatedExtensions = 'Duplicated extensions.';
+    errUnknownParameter = 'Unknown parameter.';
+    errNoEndKeywords = 'END KEYWORDS not found.';
+    errNoEndTypes = 'END TYPES not found.';
+    errNoEndOperators = 'END OPERATORS not found.';
+    errNoEndIdentifiers = 'END IDENTIFIERS not found.';
 
 (*
  * TMLSDEHighlightStyle
@@ -779,6 +802,20 @@ implementation
  * TMLSDECustomHighlighter
  ***************************************************************************)
 
+  procedure TMLSDECustomHighlighter.Clear;
+  begin
+    fLanguageName := '';
+    fExtensions := '';
+    fKeywords.Clear;
+    fTypes.Clear;
+    fLibrary.Clear;
+    fOperators.Clear;
+    fIdentifierChars := '';
+    fCaseSensitive := False
+  end;
+
+
+
 (* Returns sample code. *)
   function TMLSDECustomHighlighter.GetSampleSource: String;
   begin
@@ -815,8 +852,186 @@ implementation
 
 (* Loads language description. *)
   procedure TMLSDECustomHighlighter.LoadFromFile (const aFileName: String);
+  const
+    errTxtTmpl = '%s [%d, %d] ';
+  var
+    lDefinitionFile: TStringList;
+    Ndx, lPos: Integer;
+
+    procedure RaiseException (const aMessage: String); inline;
+    begin
+      raise Exception.CreateFmt (
+        Concat (errTxtTmpl, aMessage),
+        [ExtractFileName (aFileName), lPos, Ndx + 1]
+      )
+    end;
+
+    procedure SkipSpaces;
+    begin
+      while (lPos <= Length (lDefinitionFile[Ndx]))
+        and (lDefinitionFile[Ndx][lPos] <= #32)
+      do
+        Inc (lPos)
+    end;
+
+    function GetToken: String;
+    begin
+      SkipSpaces;
+      Result := '';
+      while (lPos <= Length (lDefinitionFile[Ndx]))
+        and (lDefinitionFile[Ndx][lPos] > #32)
+      do begin
+        Result := Concat (Result, lDefinitionFile[Ndx][lPos]);
+        Inc (lPos)
+      end
+    end;
+
+    procedure SetLanguageName; inline;
+    begin
+      if fLanguageName = EmptyStr then
+        fLanguageName := GetToken
+      else
+        RaiseException (errDuplicatedName)
+    end;
+
+    procedure SetExtensions; inline;
+    begin
+      if fExtensions = EmptyStr then
+        fExtensions := LowerCase (Trim (
+          RightStr (
+            lDefinitionFile[Ndx],
+            Length (lDefinitionFile[Ndx]) - lPos
+          )
+        ))
+      else
+        RaiseException (errDuplicatedExtensions)
+    end;
+
+    procedure SetCaseSense; inline;
+    var
+      lSense: String;
+    begin
+      lSense := LowerCase (GetToken);
+      if lSense = 'sensitive' then
+        fCaseSensitive := true
+      else if lSense = 'insensitive' then
+        fCaseSensitive := false
+      else
+        RaiseException (errUnknownParameter)
+    end;
+
+    procedure AddCommentDelimiters;
+    begin
+    end;
+
+    procedure ParseDirective;
+    begin
+    end;
+
+    procedure AddStringDelimiters;
+    begin
+    end;
+
+    procedure ParseHexPrefix;
+    begin
+    end;
+
+    procedure SetSymbolChars;
+    begin
+    end;
+
+    procedure SetIdentifierChars;
+    begin
+    end;
+
+    procedure ParseKeywordsSection;
+    begin
+      repeat
+        Inc (Ndx)
+      until (Ndx > lDefinitionFile.Count)
+      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end keywords');
+      if Ndx > lDefinitionFile.Count then
+        RaiseException (errNoEndKeywords)
+    end;
+
+    procedure ParseTypesSection;
+    begin
+      repeat
+        Inc (Ndx)
+      until (Ndx > lDefinitionFile.Count)
+      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end types');
+      if Ndx > lDefinitionFile.Count then
+        RaiseException (errNoEndTypes)
+    end;
+
+    procedure ParseOperatorsSection;
+    begin
+      repeat
+        Inc (Ndx)
+      until (Ndx > lDefinitionFile.Count)
+      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end operators');
+      if Ndx > lDefinitionFile.Count then
+        RaiseException (errNoEndOperators)
+    end;
+
+    procedure ParseIdentifierSection;
+    begin
+      repeat
+        Inc (Ndx)
+      until (Ndx > lDefinitionFile.Count)
+      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end identifiers');
+      if Ndx > lDefinitionFile.Count then
+        RaiseException (errNoEndIdentifiers)
+    end;
+
+  var
+    lToken: String;
   begin
-    raise Exception.Create ('TMLSDECustomHighlighter.LoadToFile no implementado')
+    Self.Clear;
+    lDefinitionFile := TStringList.Create;
+    try
+      lDefinitionFile.LoadFromFile (aFileName);
+      Ndx := 0;
+      repeat
+        lPos := 1;
+        lToken := LowerCase (GetToken);
+      { Ignore empty lines and comments. }
+        if (lToken <> EmptyStr) and (lToken[1] <> '#') then
+        begin
+          if lToken = 'language' then
+            SetLanguageName
+          else if lToken = 'extensions' then
+            SetExtensions
+          else if lToken = 'case' then
+            SetCaseSense
+          else if lToken = 'comment' then
+            AddCommentDelimiters
+          else if lToken = 'directive' then
+            ParseDirective
+          else if lToken = 'string' then
+            AddStringDelimiters
+          else if lToken = 'hex' then
+            ParseHexPrefix
+          else if lToken = 'symbols' then
+            SetSymbolChars
+          else if lToken = 'identifier' then
+            SetIdentifierChars
+          else if lToken = 'keywords' then
+            ParseKeywordsSection
+          else if lToken = 'types' then
+            ParseTypesSection
+          else if lToken = 'operators' then
+            ParseOperatorsSection
+          else if lToken = 'identifiers' then
+            ParseIdentifierSection
+          else
+            RaiseException (errUnknownToken)
+        end;
+        Inc (Ndx)
+      until ndx >= lDefinitionFile.Count
+    finally
+      lDefinitionFile.Free
+    end;
   end;
 
 

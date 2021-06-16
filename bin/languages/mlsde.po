@@ -55,6 +55,11 @@ msgid ""
 "until you reinitialize the application.\n"
 msgstr ""
 
+#: editorframe.textsyntax
+msgctxt "editorframe.textsyntax"
+msgid "Text"
+msgstr ""
+
 #: guiutils.error_str
 msgid "Error"
 msgstr ""
@@ -64,6 +69,7 @@ msgid "Warning"
 msgstr ""
 
 #: languageselectordialogform.nilhighlighterstring
+msgctxt "languageselectordialogform.nilhighlighterstring"
 msgid "Text"
 msgstr ""
 
@@ -79,9 +85,47 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr ""
 
+#: mlsdehighlighter.errduplicatedextensions
+msgid "Duplicated extensions."
+msgstr ""
+
+#: mlsdehighlighter.errduplicatedname
+msgid "Duplicated language name."
+msgstr ""
+
+#: mlsdehighlighter.errnoendidentifiers
+msgid "END IDENTIFIERS not found."
+msgstr ""
+
+#: mlsdehighlighter.errnoendkeywords
+msgid "END KEYWORDS not found."
+msgstr ""
+
+#: mlsdehighlighter.errnoendoperators
+msgid "END OPERATORS not found."
+msgstr ""
+
+#: mlsdehighlighter.errnoendtypes
+msgid "END TYPES not found."
+msgstr ""
+
+#: mlsdehighlighter.errunknownparameter
+msgid "Unknown parameter."
+msgstr ""
+
+#: mlsdehighlighter.errunknowntoken
+msgid "Unknown token."
+msgstr ""
+
 #: projectviewframe.txtsortingfiles
 msgctxt "projectviewframe.txtsortingfiles"
 msgid "Sorting files..."
+msgstr ""
+
+#: syntaxhighlighting.errcantloadlanguagedefinition
+msgid ""
+"Error loading description language %s:\n"
+"%s\n"
 msgstr ""
 
 #: taboutdialog.caption

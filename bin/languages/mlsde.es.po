@@ -57,6 +57,11 @@ msgstr ""
 "Puede que los cambios en la configuración no se\n"
 "apliquen hasta la próxima ejecución del programa.\n"
 
+#: editorframe.textsyntax
+msgctxt "editorframe.textsyntax"
+msgid "Text"
+msgstr "Texto"
+
 #: guiutils.error_str
 msgid "Error"
 msgstr "Error"
@@ -66,6 +71,7 @@ msgid "Warning"
 msgstr "¡Atención!"
 
 #: languageselectordialogform.nilhighlighterstring
+msgctxt "languageselectordialogform.nilhighlighterstring"
 msgid "Text"
 msgstr "Texto"
 
@@ -83,10 +89,50 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr "Selecciona el idioma de la aplicación."
 
+#: mlsdehighlighter.errduplicatedextensions
+msgid "Duplicated extensions."
+msgstr "EXTENSIONS duplicado."
+
+#: mlsdehighlighter.errduplicatedname
+msgid "Duplicated language name."
+msgstr "Nombre de lenguaje duplicado."
+
+#: mlsdehighlighter.errnoendidentifiers
+msgid "END IDENTIFIERS not found."
+msgstr "No se encontró END IDENTIFIERS."
+
+#: mlsdehighlighter.errnoendkeywords
+msgid "END KEYWORDS not found."
+msgstr "No se encontró END KEYWORDS."
+
+#: mlsdehighlighter.errnoendoperators
+msgid "END OPERATORS not found."
+msgstr "No se encontró END OPERATORS."
+
+#: mlsdehighlighter.errnoendtypes
+msgid "END TYPES not found."
+msgstr "No se encontró END TYPES."
+
+#: mlsdehighlighter.errunknownparameter
+msgid "Unknown parameter."
+msgstr "Parámetro desconocido."
+
+#: mlsdehighlighter.errunknowntoken
+msgid "Unknown token."
+msgstr "Directiva desconocida."
+
 #: projectviewframe.txtsortingfiles
 msgctxt "projectviewframe.txtsortingfiles"
 msgid "Sorting files..."
 msgstr "Ordenando archivos..."
+
+#: syntaxhighlighting.errcantloadlanguagedefinition
+msgid ""
+"Error loading description language %s:\n"
+"%s\n"
+msgstr ""
+"Error leyendo archivo de descripción %s:\n"
+"%s\n"
 
 #: taboutdialog.caption
 msgid "About MLSDE"

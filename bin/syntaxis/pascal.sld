@@ -1,8 +1,11 @@
+# Describe Pascal syntax.
 LANGUAGE Pascal
+EXTENSIONS pas pp lpr dpr
+
 CASE INSENSITIVE
 COMMENT STARTS "{" ENDS "}"
 COMMENT STARTS "(*" ENDS "*)"
-COMMENT STARS "//"
+COMMENT STARTS "//"
 DIRECTIVE STARTS "{$" ENDS "}"
 
 STRING SIMPLE "'"
