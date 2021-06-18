@@ -1,18 +1,18 @@
 object SourceEditorFrame: TSourceEditorFrame
   Left = 0
-  Height = 240
+  Height = 238
   Top = 0
-  Width = 320
-  ClientHeight = 240
-  ClientWidth = 320
+  Width = 318
+  ClientHeight = 238
+  ClientWidth = 318
   TabOrder = 0
-  DesignLeft = 408
-  DesignTop = 125
+  DesignLeft = 409
+  DesignTop = 126
   inline SynEdit: TSynEdit
     Left = 0
-    Height = 240
+    Height = 238
     Top = 0
-    Width = 320
+    Width = 318
     Align = alClient
     Font.Height = 13
     Font.Name = 'Monospace'
@@ -484,7 +484,7 @@ object SourceEditorFrame: TSourceEditorFrame
         Width = 13
         MouseActions = <>
         MarkupInfo.Background = clBtnFace
-        MarkupInfo.Foreground = clNone
+        MarkupInfo.Foreground = clBtnText
         DigitCount = 2
         ShowOnlyLineNumbersMultiplesOf = 10
         ZeroStart = False

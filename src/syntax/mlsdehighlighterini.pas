@@ -28,6 +28,12 @@ interface
     MLSDEHighlighter,
     Classes;
 
+  const
+  (* Language name. *)
+    INIDescriptionName = 'INI file';
+  (* File extensions. *)
+    INIFileExtensions = 'cfg;ini';
+
   type
   (* The INI highlighter.
 
@@ -57,9 +63,6 @@ implementation
  * TMLSDEINISyn
  ***************************************************************************)
 
-   const
-     ININame = 'INI file';
-
 (* Returns a code snippet that can be used as code example. *)
   function TMLSDEINISyn.GetSampleSource: String;
   const
@@ -76,7 +79,7 @@ implementation
 (* Returns language name. *)
   class function TMLSDEINISyn.GetLanguageName: string;
   begin
-    Result := ININame
+    Result := INIDescriptionName
   end;
 
 
@@ -89,7 +92,8 @@ implementation
     lToken: String;
   begin
     inherited Create (aOwner);
-    Self.Language := ININame;
+    Self.Language := INIDescriptionName;
+    Self.Extensions := INIFileExtensions;
     Self.IdentifierChars := Concat (Self.IdentifierChars, '-_');
     for lToken in ReservedWords do Self.LibraryObjects.Append (lToken);
     Self.Operators.Append ('=')

@@ -122,11 +122,12 @@ implementation
 
      This is populated at the initialization section. *)
     BuiltInHighlighters: array [0..1] of TBuiltInHighlighter = (
-      (Name: 'INI'; Extensions: 'ini'; HighlighterClass: TMLSDEINISyn),
-      (Name: 'Syntax definition file';
-       Extensions: 'sld';
-       HighlighterClass: TMLSDESyntaxDefinitionSyn
-      )
+      (Name: INIDescriptionName;
+       Extensions: INIFileExtensions;
+       HighlighterClass: TMLSDEINISyn),
+      (Name: MLSDEDescriptionName;
+       Extensions: MLSDEFileExtensions;
+       HighlighterClass: TMLSDESyntaxDefinitionSyn)
     );
 
 
@@ -218,7 +219,7 @@ implementation
     aExtension := LowerCase (aExtension);
     for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
     begin
-      lExtensions := SplitString (fDefinitionList[Ndx].Extensions, ',');
+      lExtensions := SplitString (fDefinitionList[Ndx].Extensions, ';');
       lExt := FindString (aExtension, lExtensions);
       if lExt >= 0 then Exit (Ndx)
     end;

@@ -29,11 +29,14 @@ interface
     MLSDEHighlighter,
     Classes;
 
+  const
+  (* Language name. *)
+    MLSDEDescriptionName = 'MLSDE description language file';
+  (* File extensions. *)
+    MLSDEFileExtensions = 'sld';
+
   type
   (* Defines a highlighters to the syntax definition files. *)
-
-    { TMLSDESyntaxDefinitionSyn }
-
     TMLSDESyntaxDefinitionSyn = class (TMLSDEHighlighter)
     private
       fTokenIndex: Integer; { In the current line. }
@@ -57,9 +60,6 @@ implementation
 (*
  * TMLSDESyntaxDefinitionSyn
  ***************************************************************************)
-
-  const
-    MLSDEDescriptionName = 'MLSDE description language file';
 
 (* Language name. *)
   class function TMLSDESyntaxDefinitionSyn.GetLanguageName: string;
@@ -87,6 +87,7 @@ implementation
   begin
     inherited Create (aOwner);
     Self.Language := MLSDEDescriptionName;
+    Self.Extensions := MLSDEFileExtensions;
     for lToken in ReservedWords do Self.Keywords.Append (lToken);
     for lToken in Identifiers do Self.LibraryObjects.Append (lToken)
   end;
