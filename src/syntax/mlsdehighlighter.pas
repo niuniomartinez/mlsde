@@ -665,12 +665,16 @@ implementation
   begin
     inherited Create(aOwner);
     fKeywords := TStringList.Create;
+    TStringList (fKeywords).Duplicates := dupIgnore;
     TStringList (fKeywords).Sorted := True;
     fTypes := TStringList.Create;
+    TStringList (fTypes).Duplicates := dupIgnore;
     TStringList (fTypes).Sorted := True;
     fLibrary := TStringList.Create;
+    TStringList (fLibrary).Duplicates := dupIgnore;
     TStringList (fLibrary).Sorted := True;
     fOperators := TStringList.Create;
+    TStringList (fOperators).Duplicates := dupIgnore;
     TStringList (fOperators).Sorted := True;
     fIdentifierChars := DefaultIdentifierChars
   end;
@@ -888,21 +892,23 @@ implementation
       )
     end;
 
+  { Checks End Of Line. }
+    function EOL: Boolean; inline;
+    begin
+      Result := lPos > Length (lDefinitionFile[Ndx])
+    end;
+
     procedure SkipSpaces;
     begin
-      while (lPos <= Length (lDefinitionFile[Ndx]))
-        and (lDefinitionFile[Ndx][lPos] <= #32)
-      do
-        Inc (lPos)
+      while not EOL and (lDefinitionFile[Ndx][lPos] <= #32) do Inc (lPos)
     end;
 
     function GetToken: String;
     begin
       SkipSpaces;
       Result := '';
-      while (lPos <= Length (lDefinitionFile[Ndx]))
-        and (lDefinitionFile[Ndx][lPos] > #32)
-      do begin
+      while not EOL and (lDefinitionFile[Ndx][lPos] > #32) do
+      begin
         Result := Concat (Result, lDefinitionFile[Ndx][lPos]);
         Inc (lPos)
       end
@@ -913,23 +919,20 @@ implementation
       lDelimiter: Char;
     begin
       SkipSpaces;
-      if lPos >= Length (lDefinitionFile[Ndx]) then
-        RaiseException (errStringExpected);
+      if EOL then RaiseException (errStringExpected);
       lDelimiter := lDefinitionFile[Ndx][lPos];
       if not (lDelimiter in ['''', '"']) then
         RaiseException (errStringExpected);
       Inc (lPos); { Skips string delimiter. }
       Result := '';
-      while (lPos <= Length (lDefinitionFile[Ndx]))
+      while not EOL
         and (lDefinitionFile[Ndx][lPos] > #32)
         and (lDefinitionFile[Ndx][lPos] <> lDelimiter)
       do begin
         Result := Concat (Result, lDefinitionFile[Ndx][lPos]);
         Inc (lPos)
       end;
-      if (lPos > Length (lDefinitionFile[Ndx]))
-      or (lDefinitionFile[Ndx][lPos] <> lDelimiter)
-      then
+      if EOL or (lDefinitionFile[Ndx][lPos] <> lDelimiter) then
         RaiseException (errUndefinedString);
       Inc (lPos) { Skips string delimiter. }
     end;
@@ -1000,7 +1003,7 @@ implementation
       end
       else
         RaiseException (Format (errExpecting, ['starts']));
-    { If code ends here, then it is ok. }
+    { Here it is ok. }
       lNdx := Length (fComments);
       SetLength (fComments, lNdx + 1);
       fComments[lNdx].Starting := lStarts;
@@ -1031,7 +1034,7 @@ implementation
       end
       else
         RaiseException (Format (errExpecting, ['starts']));
-    { If code ends here, then it is ok. }
+    { Here it is ok. }
       lNdx := Length (fDirectives);
       SetLength (fDirectives, lNdx + 1);
       fDirectives[lNdx].Starting := lStarts;
@@ -1064,8 +1067,7 @@ implementation
 
     procedure SetSymbolChars;
     begin
-      if fSymbolChars <> EmptyStr then
-        RaiseException (errDuplicatedSymbols);
+      if fSymbolChars <> EmptyStr then RaiseException (errDuplicatedSymbols);
       fSymbolChars := GetString
     end;
 
@@ -1082,44 +1084,61 @@ implementation
       Self.IdentifierChars := GetString
     end;
 
-    procedure ParseKeywordsSection;
-    begin
-      repeat
-        Inc (Ndx)
-      until (Ndx > lDefinitionFile.Count)
-      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end keywords');
-      if Ndx > lDefinitionFile.Count then
-        RaiseException (Format (errTokenNotFound, ['end keywords']))
-    end;
+    procedure ParseSection (aList: TStrings; const aEnd: String);
+    var
+      lIsFirstToken: Boolean;
 
-    procedure ParseTypesSection;
-    begin
-      repeat
-        Inc (Ndx)
-      until (Ndx > lDefinitionFile.Count)
-      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end types');
-      if Ndx > lDefinitionFile.Count then
-      RaiseException (Format (errTokenNotFound, ['end types']))
-    end;
+      procedure NextLine;
+      begin
+        Inc (Ndx); lPos := 1;
+        lIsFirstToken := True
+      end;
 
-    procedure ParseOperatorsSection;
-    begin
-      repeat
-        Inc (Ndx)
-      until (Ndx > lDefinitionFile.Count)
-      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end operators');
-      if Ndx > lDefinitionFile.Count then
-      RaiseException (Format (errTokenNotFound, ['end operators']))
-    end;
+      function IsEndOfSection (const lToken: String): Boolean;
+      var
+        lOldPos: Integer;
+        lSecondToken: String;
+      begin
+        if lIsFirstToken then
+        begin
+          lIsFirstToken := False;
+          if LowerCase (lToken) = 'end' then
+          begin
+            lOldPos := lPos;
+            lSecondToken := LowerCase (GetToken);
+            lPos := lOldPos; { Roll back. }
+            Exit (lSecondToken = aEnd)
+          end
+        end;
+        Result := False
+      end;
 
-    procedure ParseIdentifierSection;
+    var
+      lToken: String;
     begin
-      repeat
-        Inc (Ndx)
-      until (Ndx > lDefinitionFile.Count)
-      or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end identifiers');
-      if Ndx > lDefinitionFile.Count then
-      RaiseException (Format (errTokenNotFound, ['end identifiers']))
+      NextLine;
+      while True do
+      begin
+      { Check end of file. }
+        if Ndx >= lDefinitionFile.Count then
+          RaiseException (Format (errExpecting, [Concat ('end ', aEnd)]));
+      { Get token. }
+        lToken := GetToken;
+        if lToken <> EmptyStr then
+        begin
+        { Check end of section. }
+          if IsEndOfSection (lToken) then
+          begin
+            Inc (Ndx);
+            Exit
+          end;
+        { Add new token. }
+          if not Self.CaseSensitive then lToken := LowerCase (lToken);
+          aList.Append (lToken)
+        end;
+      { Check end of line. }
+        if EOL then NextLine
+      end
     end;
 
   var
@@ -1155,13 +1174,13 @@ implementation
           else if lToken = 'identifier' then
             SetIdentifierChars
           else if lToken = 'keywords' then
-            ParseKeywordsSection
+            ParseSection (fKeywords, 'keywords')
           else if lToken = 'types' then
-            ParseTypesSection
+            ParseSection (fTypes, 'types')
           else if lToken = 'operators' then
-            ParseOperatorsSection
+            ParseSection (fOperators, 'operators')
           else if lToken = 'identifiers' then
-            ParseIdentifierSection
+            ParseSection (fLibrary, 'identifiers')
           else
             RaiseException (Format (errUnknownToken, [lToken]))
         end;
@@ -1169,7 +1188,7 @@ implementation
       until ndx >= lDefinitionFile.Count
     finally
       lDefinitionFile.Free
-    end;
+    end
   end;
 
 
