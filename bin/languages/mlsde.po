@@ -89,32 +89,52 @@ msgstr ""
 msgid "Duplicated extensions."
 msgstr ""
 
+#: mlsdehighlighter.errduplicatedhex
+msgid "Duplicated hexagesimal definition."
+msgstr ""
+
+#: mlsdehighlighter.errduplicatedidentifier
+msgid "Duplicated identifier characters definition."
+msgstr ""
+
 #: mlsdehighlighter.errduplicatedname
 msgid "Duplicated language name."
 msgstr ""
 
-#: mlsdehighlighter.errnoendidentifiers
-msgid "END IDENTIFIERS not found."
+#: mlsdehighlighter.errduplicatedstring
+msgid "Duplicated string definition."
 msgstr ""
 
-#: mlsdehighlighter.errnoendkeywords
-msgid "END KEYWORDS not found."
+#: mlsdehighlighter.errduplicatedsymbols
+msgid "Duplicated symbol definition."
 msgstr ""
 
-#: mlsdehighlighter.errnoendoperators
-msgid "END OPERATORS not found."
+#: mlsdehighlighter.errexpecting
+msgid "Expecting \"%s\""
 msgstr ""
 
-#: mlsdehighlighter.errnoendtypes
-msgid "END TYPES not found."
+#: mlsdehighlighter.errstringexpected
+msgid "String expected."
+msgstr ""
+
+#: mlsdehighlighter.errtokennotfound
+msgid "\"%s\" not found."
+msgstr ""
+
+#: mlsdehighlighter.errundefinedstring
+msgid "Undefined string."
 msgstr ""
 
 #: mlsdehighlighter.errunknownparameter
-msgid "Unknown parameter."
+msgid "Unknown parameter \"%s\"."
+msgstr ""
+
+#: mlsdehighlighter.errunknownstringtype
+msgid "Unknown string type \"%s\"."
 msgstr ""
 
 #: mlsdehighlighter.errunknowntoken
-msgid "Unknown token."
+msgid "Unknown token \"%s\"."
 msgstr ""
 
 #: projectviewframe.txtsortingfiles

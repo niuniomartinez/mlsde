@@ -93,33 +93,53 @@ msgstr "Selecciona el idioma de la aplicación."
 msgid "Duplicated extensions."
 msgstr "EXTENSIONS duplicado."
 
+#: mlsdehighlighter.errduplicatedhex
+msgid "Duplicated hexagesimal definition."
+msgstr "Definiciión HEX duplicada."
+
+#: mlsdehighlighter.errduplicatedidentifier
+msgid "Duplicated identifier characters definition."
+msgstr "Definición de identificadores duplicada."
+
 #: mlsdehighlighter.errduplicatedname
 msgid "Duplicated language name."
 msgstr "Nombre de lenguaje duplicado."
 
-#: mlsdehighlighter.errnoendidentifiers
-msgid "END IDENTIFIERS not found."
-msgstr "No se encontró END IDENTIFIERS."
+#: mlsdehighlighter.errduplicatedstring
+msgid "Duplicated string definition."
+msgstr "Definición de cadenas de caracteres duplicada."
 
-#: mlsdehighlighter.errnoendkeywords
-msgid "END KEYWORDS not found."
-msgstr "No se encontró END KEYWORDS."
+#: mlsdehighlighter.errduplicatedsymbols
+msgid "Duplicated symbol definition."
+msgstr "Definición de símbolos duplicada."
 
-#: mlsdehighlighter.errnoendoperators
-msgid "END OPERATORS not found."
-msgstr "No se encontró END OPERATORS."
+#: mlsdehighlighter.errexpecting
+msgid "Expecting \"%s\""
+msgstr "Se esperaba \"%s\"."
 
-#: mlsdehighlighter.errnoendtypes
-msgid "END TYPES not found."
-msgstr "No se encontró END TYPES."
+#: mlsdehighlighter.errstringexpected
+msgid "String expected."
+msgstr "Se esperaba cadena de caracteres."
+
+#: mlsdehighlighter.errtokennotfound
+msgid "\"%s\" not found."
+msgstr "No se encontró \"%s\"."
+
+#: mlsdehighlighter.errundefinedstring
+msgid "Undefined string."
+msgstr "Cadena indefinida."
 
 #: mlsdehighlighter.errunknownparameter
-msgid "Unknown parameter."
-msgstr "Parámetro desconocido."
+msgid "Unknown parameter \"%s\"."
+msgstr "Parámetro \"%s\" desconocido."
+
+#: mlsdehighlighter.errunknownstringtype
+msgid "Unknown string type \"%s\"."
+msgstr "Tipo de cadena \"%s\" desconocido."
 
 #: mlsdehighlighter.errunknowntoken
-msgid "Unknown token."
-msgstr "Directiva desconocida."
+msgid "Unknown token \"%s\"."
+msgstr "\"%s\" no identiifcado."
 
 #: projectviewframe.txtsortingfiles
 msgctxt "projectviewframe.txtsortingfiles"

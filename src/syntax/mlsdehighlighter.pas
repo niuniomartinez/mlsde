@@ -299,6 +299,13 @@ interface
 
 
 
+  (* Stores delimiters for blocks. *)
+    TBlock = record
+      Starting, Ending: String
+    end;
+
+
+
   (* Customizable hightlighter.
 
      This class allows to easily define new languages, to save the description
@@ -307,6 +314,9 @@ interface
     private
       fSampleSource: TStringList;
       fCaseSensitive: Boolean;
+      fComments, fDirectives: array of TBlock;
+      fSimpleStringDelimiter: String;
+      fHexPrefix, fSymbolChars: String;
 
       procedure Clear;
     protected
@@ -338,8 +348,8 @@ interface
 implementation
 
   uses
-    Main,
-    IniFiles, sysutils;
+    Main, Utils,
+    IniFiles, StrUtils, sysutils, Types;
 
   const
   { Identifiers for default color attributes in color description files. }
@@ -351,14 +361,19 @@ implementation
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
   resourcestring
-    errUnknownToken = 'Unknown token.';
+    errUnknownToken = 'Unknown token "%s".';
     errDuplicatedName = 'Duplicated language name.';
     errDuplicatedExtensions = 'Duplicated extensions.';
-    errUnknownParameter = 'Unknown parameter.';
-    errNoEndKeywords = 'END KEYWORDS not found.';
-    errNoEndTypes = 'END TYPES not found.';
-    errNoEndOperators = 'END OPERATORS not found.';
-    errNoEndIdentifiers = 'END IDENTIFIERS not found.';
+    errDuplicatedString = 'Duplicated string definition.';
+    errDuplicatedHex = 'Duplicated hexagesimal definition.';
+    errDuplicatedSymbols = 'Duplicated symbol definition.';
+    errDuplicatedIdentifier = 'Duplicated identifier characters definition.';
+    errUnknownParameter = 'Unknown parameter "%s".';
+    errStringExpected = 'String expected.';
+    errUndefinedString = 'Undefined string.';
+    errExpecting = 'Expecting "%s"';
+    errUnknownStringType = 'Unknown string type "%s".';
+    errTokenNotFound = '"%s" not found.';
 
 (*
  * TMLSDEHighlightStyle
@@ -806,6 +821,12 @@ implementation
   begin
     fLanguageName := '';
     fExtensions := '';
+    SetLength (fComments, 0);
+    SetLength (fDirectives, 0);
+    fSimpleStringDelimiter := '';
+    fHexPrefix := '';
+    fSymbolChars := '';
+    Self.IdentifierChars := DefaultIdentifierChars;
     fKeywords.Clear;
     fTypes.Clear;
     fLibrary.Clear;
@@ -836,6 +857,7 @@ implementation
   constructor TMLSDECustomHighlighter.Create (aOwner: TComponent);
   begin
     inherited Create(aOwner);
+    Self.IdentifierChars := DefaultIdentifierChars;
     fSampleSource := TStringList.Create
   end;
 
@@ -886,6 +908,32 @@ implementation
       end
     end;
 
+    function GetString: String;
+    var
+      lDelimiter: Char;
+    begin
+      SkipSpaces;
+      if lPos >= Length (lDefinitionFile[Ndx]) then
+        RaiseException (errStringExpected);
+      lDelimiter := lDefinitionFile[Ndx][lPos];
+      if not (lDelimiter in ['''', '"']) then
+        RaiseException (errStringExpected);
+      Inc (lPos); { Skips string delimiter. }
+      Result := '';
+      while (lPos <= Length (lDefinitionFile[Ndx]))
+        and (lDefinitionFile[Ndx][lPos] > #32)
+        and (lDefinitionFile[Ndx][lPos] <> lDelimiter)
+      do begin
+        Result := Concat (Result, lDefinitionFile[Ndx][lPos]);
+        Inc (lPos)
+      end;
+      if (lPos > Length (lDefinitionFile[Ndx]))
+      or (lDefinitionFile[Ndx][lPos] <> lDelimiter)
+      then
+        RaiseException (errUndefinedString);
+      Inc (lPos) { Skips string delimiter. }
+    end;
+
     procedure SetLanguageName; inline;
     begin
       if fLanguageName = EmptyStr then
@@ -894,15 +942,23 @@ implementation
         RaiseException (errDuplicatedName)
     end;
 
-    procedure SetExtensions; inline;
+    procedure SetExtensions;
+    var
+      lExtensions: TStringDynArray;
     begin
       if fExtensions = EmptyStr then
-        fExtensions := LowerCase (Trim (
-          RightStr (
-            lDefinitionFile[Ndx],
-            Length (lDefinitionFile[Ndx]) - lPos
-          )
-        ))
+      begin
+        lExtensions  := SplitString (
+          LowerCase (Trim (
+            RightStr (
+              lDefinitionFile[Ndx],
+              Length (lDefinitionFile[Ndx]) - lPos
+            )
+          )),
+          ' '
+        );
+        fExtensions := JoinStrings (lExtensions, ';')
+      end
       else
         RaiseException (errDuplicatedExtensions)
     end;
@@ -917,31 +973,113 @@ implementation
       else if lSense = 'insensitive' then
         fCaseSensitive := false
       else
-        RaiseException (errUnknownParameter)
+        RaiseException (Format (errUnknownParameter, [lSense]))
     end;
 
     procedure AddCommentDelimiters;
+    var
+      lStarts, lEnds: String;
+      lNdx: Integer;
     begin
+    { Get comment delimiters. }
+      if LowerCase (GetToken) = 'starts' then
+      begin
+        lStarts := GetString;
+        if not Self.CaseSensitive then lStarts := LowerCase (lStarts);
+        lEnds := LowerCase (GetToken);
+        if lEnds <> EmptyStr then
+        begin
+          if lEnds = 'ends' then
+          begin
+            lEnds := GetString;
+            if not Self.CaseSensitive then lEnds := LowerCase (lEnds)
+          end
+          else
+            RaiseException (Format (errUnknownParameter, [lEnds]))
+        end
+      end
+      else
+        RaiseException (Format (errExpecting, ['starts']));
+    { If code ends here, then it is ok. }
+      lNdx := Length (fComments);
+      SetLength (fComments, lNdx + 1);
+      fComments[lNdx].Starting := lStarts;
+      fComments[lNdx].Ending := lEnds
     end;
 
-    procedure ParseDirective;
+    procedure AddDirectiveDelimiters;
+    var
+      lStarts, lEnds: String;
+      lNdx: Integer;
     begin
+    { Get comment delimiters. }
+      if LowerCase (GetToken) = 'starts' then
+      begin
+        lStarts := GetString;
+        if not Self.CaseSensitive then lStarts := LowerCase (lStarts);
+        lEnds := LowerCase (GetToken);
+        if lEnds <> EmptyStr then
+        begin
+          if lEnds = 'ends' then
+          begin
+            lEnds := GetString;
+            if not Self.CaseSensitive then lEnds := LowerCase (lEnds)
+          end
+          else
+            RaiseException (Format (errUnknownParameter, [lEnds]))
+        end
+      end
+      else
+        RaiseException (Format (errExpecting, ['starts']));
+    { If code ends here, then it is ok. }
+      lNdx := Length (fDirectives);
+      SetLength (fDirectives, lNdx + 1);
+      fDirectives[lNdx].Starting := lStarts;
+      fDirectives[lNdx].Ending := lEnds
     end;
 
     procedure AddStringDelimiters;
+    var
+      lToken: String;
     begin
+      lToken := LowerCase (GetToken);
+      if lToken <> 'simple' then
+        RaiseException (Format (errUnknownStringType, [lToken]));
+      lToken := GetString;
+      if Length (lToken) <> 1 then
+        RaiseException (Format (errUnknownToken, [lToken]));
+      if Pos (lToken, fSimpleStringDelimiter) > 0 then
+        RaiseException (errDuplicatedString);
+      fSimpleStringDelimiter := Concat (fSimpleStringDelimiter, lToken)
     end;
 
     procedure ParseHexPrefix;
     begin
+      if fHexPrefix <> EmptyStr then RaiseException (errDuplicatedHex);
+      if LowerCase (GetToken) <> 'prefix' then
+        RaiseException (Format (errExpecting, ['hex prefix']));
+      fHexPrefix := GetString;
+      if not Self.CaseSensitive then fHexPrefix := LowerCase (fHexPrefix)
     end;
 
     procedure SetSymbolChars;
     begin
+      if fSymbolChars <> EmptyStr then
+        RaiseException (errDuplicatedSymbols);
+      fSymbolChars := GetString
     end;
 
     procedure SetIdentifierChars;
     begin
+    { That should work but for some reason the first time this code runs
+      IdentifierChars is empty.  I'm lazy now to fix it, but shouldn't be too
+      hard.
+      if fIdentifierChars <> DefaultIdentifierChars then
+        RaiseException (errDuplicatedIdentifier);
+    }
+      if LowerCase (GetToken) <> 'chars' then
+        RaiseException (Format (errExpecting, ['chars']));
+      Self.IdentifierChars := GetString
     end;
 
     procedure ParseKeywordsSection;
@@ -951,7 +1089,7 @@ implementation
       until (Ndx > lDefinitionFile.Count)
       or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end keywords');
       if Ndx > lDefinitionFile.Count then
-        RaiseException (errNoEndKeywords)
+        RaiseException (Format (errTokenNotFound, ['end keywords']))
     end;
 
     procedure ParseTypesSection;
@@ -961,7 +1099,7 @@ implementation
       until (Ndx > lDefinitionFile.Count)
       or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end types');
       if Ndx > lDefinitionFile.Count then
-        RaiseException (errNoEndTypes)
+      RaiseException (Format (errTokenNotFound, ['end types']))
     end;
 
     procedure ParseOperatorsSection;
@@ -971,7 +1109,7 @@ implementation
       until (Ndx > lDefinitionFile.Count)
       or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end operators');
       if Ndx > lDefinitionFile.Count then
-        RaiseException (errNoEndOperators)
+      RaiseException (Format (errTokenNotFound, ['end operators']))
     end;
 
     procedure ParseIdentifierSection;
@@ -981,7 +1119,7 @@ implementation
       until (Ndx > lDefinitionFile.Count)
       or (LowerCase (Trim (lDefinitionFile[Ndx])) = 'end identifiers');
       if Ndx > lDefinitionFile.Count then
-        RaiseException (errNoEndIdentifiers)
+      RaiseException (Format (errTokenNotFound, ['end identifiers']))
     end;
 
   var
@@ -1007,7 +1145,7 @@ implementation
           else if lToken = 'comment' then
             AddCommentDelimiters
           else if lToken = 'directive' then
-            ParseDirective
+            AddDirectiveDelimiters
           else if lToken = 'string' then
             AddStringDelimiters
           else if lToken = 'hex' then
@@ -1025,7 +1163,7 @@ implementation
           else if lToken = 'identifiers' then
             ParseIdentifierSection
           else
-            RaiseException (errUnknownToken)
+            RaiseException (Format (errUnknownToken, [lToken]))
         end;
         Inc (Ndx)
       until ndx >= lDefinitionFile.Count

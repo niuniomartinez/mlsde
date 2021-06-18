@@ -57,6 +57,9 @@ interface
 (* Finds the string in the list or returns -1 if not found. *)
   function FindString (const aNeedle: String; aHaystack: TStringDynArray)
     : Integer;
+(* Joins the string array in a single string. *)
+  function JoinStrings (aStrings: TStringDynArray; const Delimiter: String):
+    String;
 (* Extracts file extension @bold(without dot and @italic(lowercased)). *)
   function GetFileExtension (const aFileName: String): String;
 
@@ -91,6 +94,20 @@ implementation
     for Ndx := Low (aHaystack) to High (aHaystack) do
       if aNeedle = aHaystack[Ndx] then Exit (Ndx);
     Result := -1
+  end;
+
+
+
+(* Join string. *)
+  function JoinStrings(aStrings: TStringDynArray; const Delimiter: String
+    ): String;
+  var
+    lNdx: Integer;
+  begin
+    Result := aStrings[0];
+    if Length (aStrings) > 1 then
+      for lNdx := 1 to Length (aStrings) - 1 do
+        Result := Concat (Result, Delimiter, aStrings[lNdx])
   end;
 
 
