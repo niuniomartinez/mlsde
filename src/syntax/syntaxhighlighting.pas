@@ -69,7 +69,7 @@ interface
     (* Returns the highlighter for the given index.
 
        May return Nil. *)
-      function GetHighlighter (const aNdx: Integer): TMLSDEHighlighter; inline;
+      function GetHighlighter (const aNdx: Integer): TMLSDEHighlighter;
     public
     (* Constructor. *)
       constructor Create;
@@ -231,6 +231,8 @@ implementation
 
 (* Returns highlighter. *)
   function TSynManager.GetHighlighter (const aNdx: Integer): TMLSDEHighlighter;
+  var
+    lCustomHighlighter: TMLSDECustomHighlighter;
   begin
     if (-1 < aNdx) and (aNdx < fNumHighlighters) then
     begin
@@ -240,7 +242,20 @@ implementation
       { Create the highlighter. }
         if fDefinitionList[aNdx].BuiltIn then
           fDefinitionList[aNdx].Highlighter :=
-            GetBuiltInHighlighter (fDefinitionList[aNdx].Name);
+            GetBuiltInHighlighter (fDefinitionList[aNdx].Name)
+        else begin
+          lCustomHighlighter := TMLSDECustomHighlighter.Create (Nil);
+          lCustomHighlighter.LoadDefinitionFile (
+            MLSDEApplication.FindFile (
+              Concat (
+                IncludeTrailingPathDelimiter ('syntaxis'),
+                fDefinitionList[aNdx].Name,
+                '.sld'
+              )
+            )
+          );
+          fDefinitionList[aNdx].Highlighter := lCustomHighlighter
+        end;
       { TODO: Create from external definition. }
         if Assigned (fDefinitionList[aNdx].Highlighter) then
           fDefinitionList[aNdx].Highlighter.Style := fHighlightStyle
@@ -326,47 +341,58 @@ implementation
       until lOrdered
     end;
 
-  var
-    Ndx: Integer;
-    lFileList: TStringList;
-    lCustomHighlighter: TMLSDECustomHighlighter;
-    lLangFile: TFileName;
+    procedure AddCustomHighlighters;
+    var
+      lFileList: TStringList;
+      lCustomHighlighter: TMLSDECustomHighlighter;
+      lLangFile: TFileName;
+    begin
+      lFileList := TStringList.Create;
+      lCustomHighlighter := TMLSDECustomHighlighter.Create (Nil);
+      try
+        MLSDEApplication.FindFileList ('syntaxis/*.sld', lFileList);
+        if lFileList.Count > 0 then
+          for lLangFile in lFileList do
+          try
+            lCustomHighlighter.LoadDefinitionFile (lLangFile);
+            AddHighlighter (
+              lCustomHighlighter.Language,
+              lCustomHighlighter.Extensions,
+              False
+            )
+          except
+            on Error: Exception do
+              GUIUtils.ShowError (
+                errCantLoadLanguageDefinition,
+                [lLangFile, Error.Message]
+              )
+          end
+      finally
+        lCustomHighlighter.Free;
+        lFileList.Free
+      end
+    end;
+
+    procedure AddBuiltInHighlighters;
+    var
+      Ndx: Integer;
+    begin
+      for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
+        if not HighlighterExists (BuiltInHighlighters[Ndx].Name) then
+          AddHighlighter (
+            BuiltInHighlighters[Ndx].Name,
+            BuiltInHighlighters[Ndx].Extensions,
+            True
+          )
+    end;
+
   begin
   { Removes old list (if any). }
     Self.Clear;
-  { Adds external and custom highlighters. }
-    lFileList := TStringList.Create;
-    lCustomHighlighter := TMLSDECustomHighlighter.Create (Nil);
-    try
-      MLSDEApplication.FindFileList ('syntaxis/*.sld', lFileList);
-      if lFileList.Count > 0 then
-        for lLangFile in lFileList do
-        try
-          lCustomHighlighter.LoadFromFile (lLangFile);
-          AddHighlighter (
-            lCustomHighlighter.Language,
-            lCustomHighlighter.Extensions,
-            False
-          )
-        except
-          on Error: Exception do
-            GUIUtils.ShowError (
-              errCantLoadLanguageDefinition,
-              [lLangFile, Error.Message]
-            )
-        end
-    finally
-      lCustomHighlighter.Free;
-      lFileList.Free
-    end;
-  { Adds built-in highlighters if not overriden. }
-    for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
-      if not HighlighterExists (BuiltInHighlighters[Ndx].Name) then
-        AddHighlighter (
-          BuiltInHighlighters[Ndx].Name,
-          BuiltInHighlighters[Ndx].Extensions,
-          True
-        );
+  { Add external and custom highlighters. }
+    AddCustomHighlighters;
+  { Add built-in highlighters if not overriden. }
+    AddBuiltInHighlighters;
   { Order by name. }
     OrderList;
   { The style. }
@@ -386,7 +412,9 @@ implementation
 (* Returns the highlighter for the given extension. *)
   function TSynManager.GetHighlighterForExt (aExt: String): TMLSDEHighlighter;
   begin
-    Result := Self.GetHighlighter (Self.GetExtensionIndex (aExt))
+    Result := Self.GetHighlighter (
+      Self.GetExtensionIndex (aExt)
+    )
   end;
 
 end.

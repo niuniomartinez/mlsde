@@ -315,8 +315,8 @@ interface
       fSampleSource: TStringList;
       fCaseSensitive: Boolean;
       fComments, fDirectives: array of TBlock;
-      fSimpleStringDelimiter: String;
-      fHexPrefix, fSymbolChars: String;
+      fSimpleStringDelimiter, fHexPrefix, fSymbolChars,
+      fDirectiveStartChars, fCommentStartChars: String;
 
       procedure Clear;
     protected
@@ -335,11 +335,13 @@ interface
     (* Loads language description from the given disk file.
 
        @bold(On error) raises an exception. *)
-      procedure LoadFromFile (const aFileName: String);
+      procedure LoadDefinitionFile (const aFileName: String);
     (* Saves language description in to the given disk file.
 
        @bold(On error) raises an exception. *)
-      procedure SaveToFile (const aFileName: String);
+      procedure SaveDefinitionFile (const aFileName: String);
+    (* Parses the line. *)
+      procedure Next; override;
 
     (* Tells if language is case sensitive. *)
       property CaseSensitive: Boolean read fCaseSensitive write fCaseSensitive;
@@ -877,7 +879,7 @@ implementation
 
 
 (* Loads language description. *)
-  procedure TMLSDECustomHighlighter.LoadFromFile (const aFileName: String);
+  procedure TMLSDECustomHighlighter.LoadDefinitionFile (const aFileName: String);
   const
     errTxtTmpl = '%s [%d, %d] ';
   var
@@ -1141,10 +1143,20 @@ implementation
       end
     end;
 
+    function ExtractInitialChars (aBlocks: array of TBlock): String;
+    var
+      lNdx: Integer;
+    begin
+      Result := '';
+      for lNdx := Low (aBlocks) to High (aBlocks) do
+        Result := Concat (Result, aBlocks[lNdx].Starting[1])
+    end;
+
   var
     lToken: String;
   begin
     Self.Clear;
+  { Load the file. }
     lDefinitionFile := TStringList.Create;
     try
       lDefinitionFile.LoadFromFile (aFileName);
@@ -1188,15 +1200,56 @@ implementation
       until ndx >= lDefinitionFile.Count
     finally
       lDefinitionFile.Free
-    end
+    end;
+  { Get starters. }
+    fCommentStartChars := ExtractInitialChars (fComments);
+    fDirectiveStartChars := ExtractInitialChars (fDirectives)
   end;
 
 
 
 (* Saves language description. *)
-  procedure TMLSDECustomHighlighter.SaveToFile (const aFileName: String);
+  procedure TMLSDECustomHighlighter.SaveDefinitionFile (const aFileName: String);
   begin
     raise Exception.Create ('TMLSDECustomHighlighter.SaveToFile no implementado')
+  end;
+
+
+
+(* Parses line. *)
+  procedure TMLSDECustomHighlighter.Next;
+
+    function ExtractToken: String;
+    begin
+      Result := '';
+      repeat
+        Result := Concat (Result, Self.Line[Self.TokenStart+Self.TokenLength]);
+        Inc (Self.TokenLength)
+      until Self.Line[Self.TokenStart + Self.TokenLength] <= ' '
+    end;
+
+  begin
+    Self.TokenType := tkUnknown;
+  { Check end of line. }
+    if Self.Line[Self.TokenStart] <> #0 then
+    begin
+    { Get token start. }
+      Inc (Self.TokenStart, Self.TokenLength);
+      Self.TokenLength := 0;
+    { Identify token. }
+      if Self.Line[Self.TokenStart] <= ' ' then
+      begin
+        Self.ParseSpaces;
+        Exit
+      end
+      else if Pos (Self.Line[Self.TokenStart], fSimpleStringDelimiter) > 0 then
+      begin
+        Self.ParseStringConstant (Self.Line[Self.TokenStart]);
+        Self.TokenType := tkString;
+        Exit
+      end;
+      ExtractToken
+    end
   end;
 
 end.
