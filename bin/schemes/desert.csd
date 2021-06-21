@@ -5,12 +5,12 @@ Foreground=16777215
 [comments]
 Background=536870911
 Foreground=15453831
-Style=2
+Style=0
 StyleMask=0
 
 [identifiers]
 Background=536870911
-Foreground=15453831
+Foreground=10025880
 Style=0
 StyleMask=0
 
@@ -40,8 +40,8 @@ StyleMask=0
 
 [directives]
 Background=536870911
-Foreground=15453831
-Style=3
+Foreground=6053069
+Style=0
 StyleMask=0
 
 [assembler]

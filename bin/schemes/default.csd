@@ -5,7 +5,7 @@ Foreground=0
 [comments]
 Background=536870911
 Foreground=32768
-Style=2
+Style=0
 StyleMask=0
 
 [identifiers]
@@ -41,7 +41,7 @@ StyleMask=0
 [directives]
 Background=536870911
 Foreground=8421376
-Style=3
+Style=0
 StyleMask=0
 
 [assembler]

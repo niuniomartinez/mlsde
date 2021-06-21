@@ -552,9 +552,32 @@ implementation
       if not fCaseSensitive then Result := LowerCase (Result)
     end;
 
+    procedure ParseRangeBlock (const aBlock: array of TBlock);
+    var
+      lLengthToken: Integer;
+      lToken: String;
+    begin
+      repeat
+      { Looks for the closing. }
+        Self.FindChar (aBlock[fRangeIndex].Ending[1]);
+        if Self.CurrentChar = aBlock[fRangeIndex].Ending[1] then
+        begin
+          lLengthToken := Length (aBlock[fRangeIndex].Ending);
+          lToken := ExtractSizedToken (lLengthToken);
+          if lToken = aBlock[fRangeIndex].Ending then
+          begin
+            Inc (Self.TokenLength, lLengthToken);
+            Self.ResetRange;
+            Exit
+          end;
+          Inc (Self.TokenLength)
+        end;
+      until Self.CurrentChar = #0
+    end;
+
     procedure ParseNormalCode;
 
-      function GetBlockIndex (aBlock: array of TBlock): Integer;
+      function GetBlockIndex (const aBlock: array of TBlock): Integer;
       var
         lNdx: Integer;
         lToken: String;
@@ -583,7 +606,8 @@ implementation
           else begin
           { Enters a range. }
             Self.Range := crgDirective;
-            fRangeIndex := lNdx
+            fRangeIndex := lNdx;
+            ParseRangeBlock (fDirectives)
           end;
           Exit (True)
         end;
@@ -605,7 +629,8 @@ implementation
           else begin
           { Enters a range. }
             Self.Range := crgComment;
-            fRangeIndex := lNdx
+            fRangeIndex := lNdx;
+            ParseRangeBlock (fComments)
           end;
           Exit (True)
         end;
@@ -653,29 +678,6 @@ implementation
         Self.TokenType := tkIdentifier
       else if Self.IsType (lToken) then
         Self.TokenType := tkType;
-    end;
-
-    procedure ParseRangeBlock (aBlock: array of TBlock);
-    var
-      lLengthToken: Integer;
-      lToken: String;
-    begin
-      repeat
-      { Looks for the closing. }
-        Self.FindChar (aBlock[fRangeIndex].Ending[1]);
-        if Self.CurrentChar = aBlock[fRangeIndex].Ending[1] then
-        begin
-          lLengthToken := Length (aBlock[fRangeIndex].Ending);
-          lToken := ExtractSizedToken (lLengthToken);
-          if lToken = aBlock[fRangeIndex].Ending then
-          begin
-            Inc (Self.TokenLength, lLengthToken);
-            Self.ResetRange;
-            Exit
-          end;
-          Inc (Self.TokenLength)
-        end;
-      until Self.CurrentChar = #0
     end;
 
   begin

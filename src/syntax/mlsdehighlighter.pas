@@ -394,14 +394,14 @@ implementation
   { Set defaults. }
     fFgColor := clBlack;
     fBgColor := clWhite;
-    SetAttributes (tkComment,    clNone, clGreen, [fsItalic]);
+    SetAttributes (tkComment,    clNone, clGreen, []);
     SetAttributes (tkIdentifier, clNone, clNone,  []);
     SetAttributes (tkKeyword,    clNone, clNavy,  [fsBold]);
     SetAttributes (tkString,     clNone, clBlue,  []);
     // SetAttributes (tkUnknown,    clNone, clNone, []);
     SetAttributes (tkSymbol,     clNone, clNavy,  [fsBold]);
     SetAttributes (tkNumber,     clNone, clBlue,  []);
-    SetAttributes (tkDirective,  clNone, clTeal,  [fsItalic, fsBold]);
+    SetAttributes (tkDirective,  clNone, clTeal,  []);
     SetAttributes (tkAssembler,  clNone, clBlack, []);
     SetAttributes (tkVariable,   clNone, clNone,  [fsBold]);
     SetAttributes (tkType,       clNone, clNavy,  [fsBold]);

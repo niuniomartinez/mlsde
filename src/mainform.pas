@@ -483,6 +483,7 @@ implementation
       lEditor := TSourceEditorFrame.Create (lTab);
       lEditor.Align := alClient;
       lEditor.Parent := lTab;
+      lEditor.ApplyEditorConfiguration;
       lEditor.Load (aFileName);
       lEditor.OnChange := @Self.EditorChanged
     end;

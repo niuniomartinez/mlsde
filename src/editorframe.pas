@@ -302,9 +302,7 @@ implementation
     inherited Create (aOwer);
   { Remove name to avoid error "Duplicated component name". }
     Self.Name := '';
-    fOnChange := Nil;
-  { Load configuration. }
-    Self.ApplyEditorConfiguration
+    fOnChange := Nil
   end;
 
 
