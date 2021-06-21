@@ -47,7 +47,12 @@ interface
       fCaseSensitive: Boolean;
       fComments, fDirectives: array of TBlock;
       fSimpleStringDelimiter, fHexPrefix, fSymbolChars,
-      fDirectiveStartChars, fCommentStartChars: String;
+    { Next are list of starting-characters of some tokens. }
+      fDirectiveStartChars, fCommentStartChars,
+    { Separators. }
+      fSeparatorChars: String;
+    { Value used by some range states to know the closing range token. }
+      fRangeIndex: Integer;
 
       procedure Clear;
     protected
@@ -434,7 +439,8 @@ implementation
     begin
       Result := '';
       for lNdx := Low (aBlocks) to High (aBlocks) do
-        Result := Concat (Result, aBlocks[lNdx].Starting[1])
+        Result := Concat (Result, aBlocks[lNdx].Starting[1]);
+      Result := OrderStringChars (Result)
     end;
 
   var
@@ -486,9 +492,14 @@ implementation
     finally
       lDefinitionFile.Free
     end;
-  { Get starters. }
+  { Get starters and separators. }
     fCommentStartChars := ExtractInitialChars (fComments);
-    fDirectiveStartChars := ExtractInitialChars (fDirectives)
+    fDirectiveStartChars := ExtractInitialChars (fDirectives);
+    fSeparatorChars := OrderStringChars (Concat (
+      fSymbolChars,
+      fCommentStartChars,
+      fDirectiveStartChars
+    ))
   end;
 
 
@@ -503,14 +514,168 @@ implementation
 
 (* Parses line. *)
   procedure TMLSDECustomHighlighter.Next;
+  { Implementation note:
+      You'll see this method uses mostly brute-force.  Actually I didn't planned
+      at all this part.  Anyway it is (mostly) self-contained so changes here
+      should affect (almost) nothing out there.
+  }
+
+    function CurrentCharIsSeparator: Boolean;
+    begin
+      Result :=  (Self.CurrentChar <= ' ')
+              or CharInStr (Self.CurrentChar, fSeparatorChars)
+    end;
+
+    function ExtractSizedToken (const aLength: Integer): String;
+    var
+      lLength: Integer;
+    begin
+      Result := ''; lLength := 0;
+      while lLength < aLength do
+      begin
+        Result := Concat (
+          Result,
+          Self.Line[Self.TokenStart + Self.TokenLength + lLength]
+        );
+        Inc (lLength)
+      end;
+      if not fCaseSensitive then Result := LowerCase (Result)
+    end;
 
     function ExtractToken: String;
     begin
       Result := '';
       repeat
-        Result := Concat (Result, Self.Line[Self.TokenStart+Self.TokenLength]);
+        Result := Concat (Result, Self.CurrentChar);
         Inc (Self.TokenLength)
-      until Self.Line[Self.TokenStart + Self.TokenLength] <= ' '
+      until CurrentCharIsSeparator;
+      if not fCaseSensitive then Result := LowerCase (Result)
+    end;
+
+    procedure ParseNormalCode;
+
+      function GetBlockIndex (aBlock: array of TBlock): Integer;
+      var
+        lNdx: Integer;
+        lToken: String;
+      begin
+        for lNdx := Low (aBlock) to High (aBlock) do
+        begin
+          lToken := ExtractSizedToken (Length (aBlock[lNdx].Starting));
+          if not Self.CaseSensitive then lToken := LowerCase (lToken);
+          if lToken = aBlock[lNdx].Starting then Exit (lNdx)
+        end;
+        Result := -1
+      end;
+
+      function ParseDirectives: Boolean;
+      var
+        lNdx: Integer;
+      begin
+        lNdx := GetBlockIndex (fDirectives);
+        if lNdx >= 0 then
+        begin
+          Self.TokenLength := Length (fDirectives[lNdx].Starting);
+          Self.TokenType := tkDirective;
+        { Single or block. }
+          if fDirectives[lNdx].Ending = EmptyStr then
+            Self.JumpToEOL
+          else begin
+          { Enters a range. }
+            Self.Range := crgDirective;
+            fRangeIndex := lNdx
+          end;
+          Exit (True)
+        end;
+        Result := False
+      end;
+
+      function ParseComments: Boolean;
+      var
+        lNdx: Integer;
+      begin
+        lNdx := GetBlockIndex (fComments);
+        if lNdx >= 0 then
+        begin
+          Self.TokenLength := Length (fComments[lNdx].Starting);
+          Self.TokenType := tkComment;
+        { Single or block. }
+          if fComments[lNdx].Ending = EmptyStr then
+            Self.JumpToEOL
+          else begin
+          { Enters a range. }
+            Self.Range := crgComment;
+            fRangeIndex := lNdx
+          end;
+          Exit (True)
+        end;
+        Result := False
+      end;
+
+    var
+      lToken: String;
+    begin
+    { Spaces. }
+      if Self.Line[Self.TokenStart] <= ' ' then
+      begin
+        Self.ParseSpaces;
+        Exit
+      end;
+    { Directives and comments. }
+      if ParseDirectives then Exit;
+      if ParseComments then Exit;
+    { Number constants. }
+      if Self.Line[Self.TokenStart] in ['0'..'9'] then
+      begin
+        Self.ParseNumber;
+        Self.TokenType := tkNumber;
+        Exit
+      end;
+    { String constants. }
+      if CharInStr (Self.Line[Self.TokenStart], fSimpleStringDelimiter) then
+      begin
+        Self.ParseStringConstant (Self.Line[Self.TokenStart]);
+        Self.TokenType := tkString;
+        Exit
+      end;
+    { Symbols. }
+      if Pos (Self.Line[Self.TokenStart], fSymbolChars) > 0 then
+      begin
+        Self.TokenLength := 1;
+        Self.TokenType := tkSymbol;
+        Exit
+      end;
+    { Other. }
+      lToken := ExtractToken;
+      if Self.IsKeyword (lToken) then
+        Self.TokenType := tkKeyword
+      else if Self.IsLibraryObject (lToken) then
+        Self.TokenType := tkIdentifier
+      else if Self.IsType (lToken) then
+        Self.TokenType := tkType;
+    end;
+
+    procedure ParseRangeBlock (aBlock: array of TBlock);
+    var
+      lLengthToken: Integer;
+      lToken: String;
+    begin
+      repeat
+      { Looks for the closing. }
+        Self.FindChar (aBlock[fRangeIndex].Ending[1]);
+        if Self.CurrentChar = aBlock[fRangeIndex].Ending[1] then
+        begin
+          lLengthToken := Length (aBlock[fRangeIndex].Ending);
+          lToken := ExtractSizedToken (lLengthToken);
+          if lToken = aBlock[fRangeIndex].Ending then
+          begin
+            Inc (Self.TokenLength, lLengthToken);
+            Self.ResetRange;
+            Exit
+          end;
+          Inc (Self.TokenLength)
+        end;
+      until Self.CurrentChar = #0
     end;
 
   begin
@@ -521,19 +686,35 @@ implementation
     { Get token start. }
       Inc (Self.TokenStart, Self.TokenLength);
       Self.TokenLength := 0;
-    { Identify token. }
-      if Self.Line[Self.TokenStart] <= ' ' then
-      begin
-        Self.ParseSpaces;
-        Exit
+      try
+      { Check if in range. }
+        case Self.Range of
+        crgComment:
+          begin
+            Self.TokenType := tkComment;
+            ParseRangeBlock (fComments)
+          end;
+        crgDirective:
+          begin
+            Self.TokenType := tkDirective;
+            ParseRangeBlock (fDirectives)
+          end;
+        crgTextConst:
+          ParseNormalCode;
+        crgBlock:
+          ParseNormalCode;
+        otherwise
+          ParseNormalCode;
+        end
+      except
+        on Error: Exception do
+        begin
+          if Self.TokenLength > 0 then
+            Self.TokenType := tkError
+          else
+            raise Error
+        end;
       end
-      else if Pos (Self.Line[Self.TokenStart], fSimpleStringDelimiter) > 0 then
-      begin
-        Self.ParseStringConstant (Self.Line[Self.TokenStart]);
-        Self.TokenType := tkString;
-        Exit
-      end;
-      ExtractToken
     end
   end;
 

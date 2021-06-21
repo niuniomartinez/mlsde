@@ -55,7 +55,7 @@ interface
  *)
   function NormalizeIdentifier (const aName: String): String;
 (* Orders the characters of the given string. *)
-  procedure OrderString (var aString: String);
+  function OrderStringChars (aString: String): String;
 (* Tells if character is in the string.  String should be ordered. *)
   function CharInStr (const aChar: Char; const aString: String): Boolean;
 (* Finds the string in the list or returns -1 if not found. *)
@@ -90,7 +90,7 @@ implementation
 
 
 (* Orders string. *)
-  procedure OrderString (var aString: String);
+  function OrderStringChars (aString: String): String;
   var
     lNdx: Integer;
     lOrdered: Boolean;
@@ -106,7 +106,8 @@ implementation
           aString[lNdx] := aString[lNdx + 1];
           aString[lNdx + 1] := lTmp
         end;
-    until lOrdered
+    until lOrdered;
+    Result := aString
   end;
 
 

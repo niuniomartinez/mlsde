@@ -117,6 +117,8 @@ interface
     TCodeRange = (
     (* Outside any range. *)
       crgNone,
+    (* Inside directives. *)
+      crgDirective,
     (* Inside comments. *)
       crgComment,
     (* Inside text constant (i.e. heredoc, etc.). *)
@@ -482,8 +484,7 @@ implementation
   procedure TMLSDEHighlighter.SetIdentifierChars (aValue: String);
   begin
     if fIdentifierChars = aValue then Exit;
-    fIdentifierChars := aValue;
-    OrderString (fIdentifierChars)
+    fIdentifierChars := OrderStringChars (aValue)
   end;
 
 
@@ -533,7 +534,12 @@ implementation
     lFractPart := 0;
     while Self.CurrentChar in lCharNums do
     begin
-      if Self.CurrentChar = '.' then Inc (lFractPart);
+      if Self.CurrentChar = '.' then
+      begin
+      { Avoid parsing double dot. }
+        if fLine[Self.TokenStart + Self.TokenLength + 1] = '.' then Break;
+        Inc (lFractPart)
+      end;
       Inc (Self.TokenLength)
     end;
     if lFractPart > 1 then
@@ -552,7 +558,12 @@ implementation
     lFractPart := 0;
     while Self.CurrentChar in lCharNums do
     begin
-      if Self.CurrentChar = '.' then Inc (lFractPart);
+      if Self.CurrentChar = '.' then
+      begin
+      { Avoid parsing double dot. }
+        if fLine[Self.TokenStart + Self.TokenLength + 1] = '.' then Break;
+        Inc (lFractPart)
+      end;
       Inc (Self.TokenLength)
     end;
     if lFractPart > 0 then

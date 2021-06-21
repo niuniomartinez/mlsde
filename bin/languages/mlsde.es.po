@@ -89,55 +89,146 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr "Selecciona el idioma de la aplicación."
 
+#: mlsdecustomhighlighter.errduplicatedextensions
+msgctxt "mlsdecustomhighlighter.errduplicatedextensions"
+msgid "Duplicated extensions."
+msgstr "EXTENSIONS duplicado."
+
+#: mlsdecustomhighlighter.errduplicatedhex
+msgctxt "mlsdecustomhighlighter.errduplicatedhex"
+msgid "Duplicated hexagesimal definition."
+msgstr "Definiciión HEX duplicada."
+
+#: mlsdecustomhighlighter.errduplicatedidentifier
+msgctxt "mlsdecustomhighlighter.errduplicatedidentifier"
+msgid "Duplicated identifier characters definition."
+msgstr "Definición de identificadores duplicada."
+
+#: mlsdecustomhighlighter.errduplicatedname
+msgctxt "mlsdecustomhighlighter.errduplicatedname"
+msgid "Duplicated language name."
+msgstr "Nombre de lenguaje duplicado."
+
+#: mlsdecustomhighlighter.errduplicatedstring
+msgctxt "mlsdecustomhighlighter.errduplicatedstring"
+msgid "Duplicated string definition."
+msgstr "Definición de cadenas de caracteres duplicada."
+
+#: mlsdecustomhighlighter.errduplicatedsymbols
+msgctxt "mlsdecustomhighlighter.errduplicatedsymbols"
+msgid "Duplicated symbol definition."
+msgstr "Definición de símbolos duplicada."
+
+#: mlsdecustomhighlighter.errexpecting
+msgctxt "mlsdecustomhighlighter.errexpecting"
+msgid "Expecting \"%s\""
+msgstr "Se esperaba \"%s\"."
+
+#: mlsdecustomhighlighter.errstringexpected
+msgctxt "mlsdecustomhighlighter.errstringexpected"
+msgid "String expected."
+msgstr "Se esperaba cadena de caracteres."
+
+#: mlsdecustomhighlighter.errtokennotfound
+msgctxt "mlsdecustomhighlighter.errtokennotfound"
+msgid "\"%s\" not found."
+msgstr "No se encontró \"%s\"."
+
+#: mlsdecustomhighlighter.errundefinedstring
+msgctxt "mlsdecustomhighlighter.errundefinedstring"
+msgid "Undefined string."
+msgstr "Cadena indefinida."
+
+#: mlsdecustomhighlighter.errunknownparameter
+msgctxt "mlsdecustomhighlighter.errunknownparameter"
+msgid "Unknown parameter \"%s\"."
+msgstr "Parámetro \"%s\" desconocido."
+
+#: mlsdecustomhighlighter.errunknownstringtype
+msgctxt "mlsdecustomhighlighter.errunknownstringtype"
+msgid "Unknown string type \"%s\"."
+msgstr "Tipo de cadena \"%s\" desconocido."
+
+#: mlsdecustomhighlighter.errunknowntoken
+msgctxt "mlsdecustomhighlighter.errunknowntoken"
+msgid "Unknown token \"%s\"."
+msgstr "\"%s\" no identiifcado."
+
 #: mlsdehighlighter.errduplicatedextensions
+#, fuzzy
+msgctxt "mlsdehighlighter.errduplicatedextensions"
 msgid "Duplicated extensions."
 msgstr "EXTENSIONS duplicado."
 
 #: mlsdehighlighter.errduplicatedhex
+#, fuzzy
+msgctxt "mlsdehighlighter.errduplicatedhex"
 msgid "Duplicated hexagesimal definition."
 msgstr "Definiciión HEX duplicada."
 
 #: mlsdehighlighter.errduplicatedidentifier
+#, fuzzy
+msgctxt "mlsdehighlighter.errduplicatedidentifier"
 msgid "Duplicated identifier characters definition."
 msgstr "Definición de identificadores duplicada."
 
 #: mlsdehighlighter.errduplicatedname
+#, fuzzy
+msgctxt "mlsdehighlighter.errduplicatedname"
 msgid "Duplicated language name."
 msgstr "Nombre de lenguaje duplicado."
 
 #: mlsdehighlighter.errduplicatedstring
+#, fuzzy
+msgctxt "mlsdehighlighter.errduplicatedstring"
 msgid "Duplicated string definition."
 msgstr "Definición de cadenas de caracteres duplicada."
 
 #: mlsdehighlighter.errduplicatedsymbols
+#, fuzzy
+msgctxt "mlsdehighlighter.errduplicatedsymbols"
 msgid "Duplicated symbol definition."
 msgstr "Definición de símbolos duplicada."
 
 #: mlsdehighlighter.errexpecting
+#, fuzzy
+msgctxt "mlsdehighlighter.errexpecting"
 msgid "Expecting \"%s\""
 msgstr "Se esperaba \"%s\"."
 
 #: mlsdehighlighter.errstringexpected
+#, fuzzy
+msgctxt "mlsdehighlighter.errstringexpected"
 msgid "String expected."
 msgstr "Se esperaba cadena de caracteres."
 
 #: mlsdehighlighter.errtokennotfound
+#, fuzzy
+msgctxt "mlsdehighlighter.errtokennotfound"
 msgid "\"%s\" not found."
 msgstr "No se encontró \"%s\"."
 
 #: mlsdehighlighter.errundefinedstring
+#, fuzzy
+msgctxt "mlsdehighlighter.errundefinedstring"
 msgid "Undefined string."
 msgstr "Cadena indefinida."
 
 #: mlsdehighlighter.errunknownparameter
+#, fuzzy
+msgctxt "mlsdehighlighter.errunknownparameter"
 msgid "Unknown parameter \"%s\"."
 msgstr "Parámetro \"%s\" desconocido."
 
 #: mlsdehighlighter.errunknownstringtype
+#, fuzzy
+msgctxt "mlsdehighlighter.errunknownstringtype"
 msgid "Unknown string type \"%s\"."
 msgstr "Tipo de cadena \"%s\" desconocido."
 
 #: mlsdehighlighter.errunknowntoken
+#, fuzzy
+msgctxt "mlsdehighlighter.errunknowntoken"
 msgid "Unknown token \"%s\"."
 msgstr "\"%s\" no identiifcado."
 
