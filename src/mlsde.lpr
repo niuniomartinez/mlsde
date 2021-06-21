@@ -1,8 +1,8 @@
-PROGRAM mlsde;
+program mlsde;
 (* The MultiLanguage Scriptable Development Environment.
  *)
 (*
-  Copyright (c) 2018-2019 Guillermo Martínez J.
+  Copyright (c) 2018-2021 Guillermo Martínez J.
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -23,7 +23,7 @@ PROGRAM mlsde;
     3. This notice may not be removed or altered from any source
     distribution.
  *)
-USES
+uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   Cthreads,
   {$ENDIF}{$ENDIF}
@@ -32,7 +32,7 @@ USES
 
 {$R *.res}
 
-BEGIN
+begin
   MLSDEApplication := TMLSDEApplication.Create;
   RequireDerivedFormResource := True;
 { Initialization. }
@@ -41,8 +41,8 @@ BEGIN
   Application.CreateForm (TMainWindow, MainWindow);
   Application.CreateForm (TGlobalData, GlobalData);
 { Execution. }
-  IF NOT Application.Terminated THEN Application.Run;
+  if not Application.Terminated then Application.Run;
 { Free the MLSDE object, so everything is freed before the finalization
   sections. }
   MLSDEApplication.Free
-END.
+end.

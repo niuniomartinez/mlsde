@@ -99,8 +99,8 @@ implementation
   uses
     GUIUtils, Main, Utils,
     Classes, StrUtils, sysutils,
-  { Built-in syntax highlighters. }
-    MLSDEHighlighterINI, MLSDEHighlighterMLSDE;
+  { Syntax highlighters. }
+    MLSDECustomHighlighter, MLSDEHighlighterINI, MLSDEHighlighterMLSDE;
 
   resourcestring
     errCantLoadLanguageDefinition =

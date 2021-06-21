@@ -162,9 +162,8 @@ implementation
     const
       EndToken = [#0, #10, #13, ']'];
     begin
-      while not (Self.Line[Self.TokenStart + Self.TokenLength] in EndToken) do
-        Inc (Self.TokenLength);
-      if Self.Line[Self.TokenStart + Self.TokenLength] = ']' then
+      Self.FindChar (']');
+      if Self.CurrentChar = ']' then
       begin
         Inc (Self.TokenLength);
       { Section label should be the only one in the line. }

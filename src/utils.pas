@@ -54,6 +54,10 @@ interface
 (* Encodes a name (i.e. file path) so all characters are valid for identifiers.
  *)
   function NormalizeIdentifier (const aName: String): String;
+(* Orders the characters of the given string. *)
+  procedure OrderString (var aString: String);
+(* Tells if character is in the string.  String should be ordered. *)
+  function CharInStr (const aChar: Char; const aString: String): Boolean;
 (* Finds the string in the list or returns -1 if not found. *)
   function FindString (const aNeedle: String; aHaystack: TStringDynArray)
     : Integer;
@@ -81,6 +85,50 @@ implementation
         Result := Concat (Result + aName[Cnt])
       else
         Result := Result + '__'
+  end;
+
+
+
+(* Orders string. *)
+  procedure OrderString (var aString: String);
+  var
+    lNdx: Integer;
+    lOrdered: Boolean;
+    lTmp: Char;
+  begin
+    repeat
+      lOrdered := True;
+      for lNdx := 1 to Length (aString) - 1 do
+        if aString[lNdx] > aString[lNdx + 1] then
+        begin
+          lOrdered := False;
+          lTmp := aString[lNdx];
+          aString[lNdx] := aString[lNdx + 1];
+          aString[lNdx + 1] := lTmp
+        end;
+    until lOrdered
+  end;
+
+
+
+(* Search for char. *)
+  function CharInStr (const aChar: Char; const aString: String): Boolean;
+  var
+    lLeft, lRight, lMiddle: Integer;
+  begin
+    lLeft := 1;
+    lRight := Length (aString);
+    while lLeft <= lRight do
+    begin
+      lMiddle := (lLeft + lRight) div 2;
+      if aString[lMiddle] > aChar then
+        lRight := lMiddle - 1
+      else if aString[lMiddle] < aChar then
+        lLeft := lMiddle + 1
+      else
+        Exit (True)
+    end;
+    Result := False
   end;
 
 

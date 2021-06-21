@@ -131,9 +131,9 @@ implementation
     begin
       Result := '';
       repeat
-        Result := Concat (Result, Self.Line[Self.TokenStart+Self.TokenLength]);
+        Result := Concat (Result, Self.CurrentChar);
         Inc (Self.TokenLength)
-      until Self.Line[Self.TokenStart + Self.TokenLength] <= ' '
+      until Self.CurrentChar <= ' '
     end;
 
   const
