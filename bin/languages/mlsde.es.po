@@ -57,6 +57,10 @@ msgstr ""
 "Puede que los cambios en la configuración no se\n"
 "apliquen hasta la próxima ejecución del programa.\n"
 
+#: editorframe.errfilenotfound
+msgid "File \"%s\" not found."
+msgstr "Archivo º\"%s\" no encontrado."
+
 #: editorframe.textsyntax
 msgctxt "editorframe.textsyntax"
 msgid "Text"

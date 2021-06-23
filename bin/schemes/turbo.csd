@@ -5,13 +5,13 @@ Foreground=65535
 [comments]
 Background=536870911
 Foreground=12632256
-Style=0
+Style=1
 StyleMask=0
 
 [identifiers]
 Background=536870911
 Foreground=12632256
-Style=1
+Style=0
 StyleMask=0
 
 [keywords]

@@ -131,6 +131,7 @@ implementation
 
   resourcestring
     TextSyntax = 'Text';
+    errFileNotFound = 'File "%s" not found.';
 
 (*
  * TEditorConfiguration
@@ -311,6 +312,11 @@ implementation
   procedure TSourceEditorFrame.Load (aSourceFileName: String);
   begin
     aSourceFileName := ExpandFileName (aSourceFileName);
+    if not FileExists (aSourceFileName) then
+      raise EFileNotFoundException.CreateFmt (
+        errFileNotFound,
+        [aSourceFileName]
+      );
     Self.SynEdit.Lines.LoadFromFile (aSourceFileName);
     fPath := IncludeTrailingPathDelimiter (ExtractFileDir (aSourceFileName));
     fFileName := ExtractFileName (aSourceFileName);

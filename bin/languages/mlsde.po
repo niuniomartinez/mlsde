@@ -55,6 +55,10 @@ msgid ""
 "until you reinitialize the application.\n"
 msgstr ""
 
+#: editorframe.errfilenotfound
+msgid "File \"%s\" not found."
+msgstr ""
+
 #: editorframe.textsyntax
 msgctxt "editorframe.textsyntax"
 msgid "Text"

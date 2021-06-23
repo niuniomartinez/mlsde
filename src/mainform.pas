@@ -231,19 +231,49 @@ implementation
     ).Subject.AddObserver (@Self.EnvironmentConfigurationChanged);
     MLSDEApplication.Configuration.FindConfig (
       idEditorConfig
-    ).Subject.AddObserver (@Self.EditorConfigurationChanged);
+    ).Subject.AddObserver (@Self.EditorConfigurationChanged)
   end;
 
 
 
 (* Activates window. *)
   procedure TMainWindow.FormActivate(Sender: TObject);
+  var
+    Ndx: Integer;
+    lDir: String;
   begin
     if fInitializing then
     begin
     { Components state. }
       Self.UpdateFileComponentStates;
       Self.EnvironmentConfigurationChanged (Nil);
+    { Check if parameters a file or directory was passed as command line
+      parameter. }
+      if ParamCount > 0 then
+      begin
+      { If only one parameter, opens file and the projec. }
+        if ParamCount = 1 then
+        begin
+        { Order is important as in POSIX directories are files too. }
+          if DirectoryExists (ParamStr (1)) then
+            MLSDEApplication.Project.Open (ParamStr (1))
+          else begin
+            Self.ProjectViewer.Project.Open (ExtractFileDir (ParamStr (1)));
+            Self.OpenFile (ParamStr (1))
+          end
+        end
+        else begin
+          lDir := '';
+          for Ndx := 1 to ParamCount do
+            if DirectoryExists (ParamStr (Ndx)) then
+              lDir := ParamStr (Ndx)
+            else
+              Self.OpenFile (ParamStr (Ndx));
+          if lDir <> EmptyStr then
+            Self.ProjectViewer.Project.Open (lDir)
+        end
+      end;
+    { Initialization finished. }
       fInitializing := false
     end
   end;
@@ -477,7 +507,7 @@ implementation
         end;
   { If not found, then load. }
     if lTab = nil then
-    begin
+    try
       lTab := Self.EditorList.AddTabSheet;
       Self.EditorList.ActivePage := lTab;
       lEditor := TSourceEditorFrame.Create (lTab);
@@ -486,8 +516,11 @@ implementation
       lEditor.ApplyEditorConfiguration;
       lEditor.Load (aFileName);
       lEditor.OnChange := @Self.EditorChanged
+    except
+      on Error: Exception do
+        GUIUtils.ShowError (Error.Message)
     end;
-    Self.EditorList.ActivePage := lTab;
+    if Assigned (lTab) then Self.EditorList.ActivePage := lTab;
     lEditor.SynEdit.SetFocus
   end;
 
