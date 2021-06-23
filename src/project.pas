@@ -526,7 +526,9 @@ implementation
       fRoot.fProject := Self
     end
     else begin
-      fBasePath := IncludeTrailingPathDelimiter (ExtractFileDir (aPath));
+      fBasePath := IncludeTrailingPathDelimiter (
+        ExtractFileDir (ExcludeTrailingPathDelimiter (aPath))
+      );
       fRoot := TDirectory.Create (
         ExtractFileName (ExcludeTrailingPathDelimiter (aPath))
       );

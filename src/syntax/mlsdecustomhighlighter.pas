@@ -48,7 +48,7 @@ interface
       fComments, fDirectives: array of TBlock;
       fSimpleStringDelimiter, fHexPrefix, fSymbolChars,
     { Next are list of starting-characters of some tokens. }
-      fDirectiveStartChars, fCommentStartChars,
+      fDirectiveStartChars, fCommentStartChars, fOperatorStartChars,
     { Separators. }
       fSeparatorChars: String;
     { Value used by some range states to know the closing range token. }
@@ -226,7 +226,8 @@ implementation
       end;
       if EOL or (lDefinitionFile[Ndx][lPos] <> lDelimiter) then
         RaiseException (errUndefinedString);
-      Inc (lPos) { Skips string delimiter. }
+      Inc (lPos); { Skips string delimiter. }
+      if Result <> EmptyStr then Result := OrderStringChars (Result)
     end;
 
     procedure SetLanguageName; inline;
@@ -433,14 +434,56 @@ implementation
       end
     end;
 
-    function ExtractInitialChars (aBlocks: array of TBlock): String;
+    function ExtractInitialChars (aBlocks: array of TBlock): String; overload;
     var
       lNdx: Integer;
+      lChar: Char;
     begin
       Result := '';
       for lNdx := Low (aBlocks) to High (aBlocks) do
-        Result := Concat (Result, aBlocks[lNdx].Starting[1]);
+      begin
+        lChar := aBlocks[lNdx].Starting[1];
+        if not fCaseSensitive then lChar := LowerCase (lChar);
+        if not CharInStr (lChar, Result) then Result := Concat (Result, lChar);
+      end;
       Result := OrderStringChars (Result)
+    end;
+
+    function ExtractInitialChars (aStrings: TStrings): String; overload;
+    var
+      lLine: String;
+      lChar: Char;
+    begin
+      Result := '';
+      for lLine in aStrings do
+      begin
+        lChar := lLine[1];
+        if not fCaseSensitive then lChar := LowerCase (lChar);
+        if not CharInStr (lChar, Result) then Result := Concat (Result, lChar);
+      end;
+      Result := OrderStringChars (Result)
+    end;
+
+    procedure GetSeparatorChars;
+
+      procedure AddInitialChars (const lChars: String);
+      var
+        lNdx: Integer;
+      begin
+        for lNdx := 1 to Length (lChars) do
+        begin
+          if not (LowerCase (lChars[lNdx]) in ['0'..'9', 'a'..'z'])
+             and (Pos (lChars[lNdx], fSeparatorChars) = 0) then
+            fSeparatorChars := Concat (fSeparatorChars, lChars[lNdx])
+        end
+      end;
+
+    begin
+      fSeparatorChars := fSymbolChars;
+      AddInitialChars (fCommentStartChars);
+      AddInitialChars (fDirectiveStartChars);
+      AddInitialChars (fOperatorStartChars);
+      fSeparatorChars := OrderStringChars (fSeparatorChars)
     end;
 
   var
@@ -495,11 +538,8 @@ implementation
   { Get starters and separators. }
     fCommentStartChars := ExtractInitialChars (fComments);
     fDirectiveStartChars := ExtractInitialChars (fDirectives);
-    fSeparatorChars := OrderStringChars (Concat (
-      fSymbolChars,
-      fCommentStartChars,
-      fDirectiveStartChars
-    ))
+    fOperatorStartChars := ExtractInitialChars (Self.Operators);
+    GetSeparatorChars
   end;
 
 

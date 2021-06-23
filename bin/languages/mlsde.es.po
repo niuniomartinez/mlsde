@@ -59,7 +59,7 @@ msgstr ""
 
 #: editorframe.errfilenotfound
 msgid "File \"%s\" not found."
-msgstr "Archivo º\"%s\" no encontrado."
+msgstr "Archivo \"%s\" no encontrado."
 
 #: editorframe.textsyntax
 msgctxt "editorframe.textsyntax"
