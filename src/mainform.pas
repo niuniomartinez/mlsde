@@ -41,8 +41,8 @@ interface
   type
   (* Main window of the application.
 
-     Note that some stuff is defined in the @link(Initialize) method.  That's
-     why some buttons and menu options look empty. *)
+     Note that some stuff is defined in the @link(FormCreate) and
+     @link(FormActivate) methods. *)
     TMainWindow = class (TForm)
     (* Action list.  Only contains application actions.  Other actions are in
        the respective @code(TFrame). *)

@@ -70,7 +70,7 @@ implementation
   { Adds languages. }
     for Ndx := 0 to MLSDEApplication.SynManager.Count - 1 do
       Self.LanguageList.AddItem (
-        MLSDEApplication.SynManager.Highlighters[Ndx].Name,
+        MLSDEApplication.SynManager.Highlighters[Ndx].LanguageName,
         Nil
       )
   end;

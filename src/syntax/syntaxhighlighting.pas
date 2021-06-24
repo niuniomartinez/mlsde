@@ -36,8 +36,10 @@ interface
   type
   (* Contains the description of the syntax highlighters. *)
     THighlighterInfo = record
+    (* File name. *)
+      FileName,
     (* Highlighter's name. *)
-      Name,
+      LanguageName,
     (* Extensions (comma separated). *)
       Extensions: String;
     (* Used internally to know if it is a built-in one or not. *)
@@ -202,7 +204,8 @@ implementation
     aLanguage := LowerCase (aLanguage);
     for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
     begin
-      if LowerCase (fDefinitionList[Ndx].Name) = aLanguage then Exit (Ndx)
+      if LowerCase (fDefinitionList[Ndx].LanguageName) = aLanguage then
+        Exit (Ndx)
     end;
   { Not found, so... }
     Result := -1
@@ -242,15 +245,14 @@ implementation
       { Create the highlighter. }
         if fDefinitionList[aNdx].BuiltIn then
           fDefinitionList[aNdx].Highlighter :=
-            GetBuiltInHighlighter (fDefinitionList[aNdx].Name)
+            GetBuiltInHighlighter (fDefinitionList[aNdx].LanguageName)
         else begin
           lCustomHighlighter := TMLSDECustomHighlighter.Create (Nil);
           lCustomHighlighter.LoadDefinitionFile (
             MLSDEApplication.FindFile (
               Concat (
                 IncludeTrailingPathDelimiter ('syntaxis'),
-                fDefinitionList[aNdx].Name,
-                '.sld'
+                fDefinitionList[aNdx].FileName
               )
             )
           );
@@ -302,18 +304,22 @@ implementation
     begin
       aName := LowerCase (aName);
       for Ndx := Low (fDefinitionList) to fNumHighlighters - 1 do
-        if LowerCase (fDefinitionList[Ndx].Name) = aName then
+        if LowerCase (fDefinitionList[Ndx].LanguageName) = aName then
           Exit (True);
       Result := False
     end;
 
-    procedure AddHighlighter (aName, aExtensions: String; aBuiltIn: Boolean);
+    procedure AddHighlighter (
+      aFile, aName, aExtensions: String;
+      aBuiltIn: Boolean
+    );
     begin
     { Does the list need to grow? }
       if fNumHighlighters >= Length (fDefinitionList) then
         SetLength (fDefinitionList, Length (fDefinitionList) + ListGrow);
     { Adds information. }
-      fDefinitionList[fNumHighlighters].Name := aName;
+      fDefinitionList[fNumHighlighters].FileName := aFile;
+      fDefinitionList[fNumHighlighters].LanguageName := aName;
       fDefinitionList[fNumHighlighters].Extensions := aExtensions;
       fDefinitionList[fNumHighlighters].BuiltIn := aBuiltIn;
       fDefinitionList[fNumHighlighters].Highlighter := Nil;
@@ -331,7 +337,8 @@ implementation
       repeat
         lOrdered := True;
         for Ndx := Low (fDefinitionList) to fNumHighlighters - 2 do
-          if LowerCase (fDefinitionList[Ndx].Name) > LowerCase (fDefinitionList[Ndx + 1].Name)
+          if LowerCase (fDefinitionList[Ndx].LanguageName)
+           > LowerCase (fDefinitionList[Ndx + 1].LanguageName)
           then begin
             lTmp := fDefinitionList[Ndx];
             fDefinitionList[Ndx] := fDefinitionList[Ndx + 1];
@@ -356,6 +363,7 @@ implementation
           try
             lCustomHighlighter.LoadDefinitionFile (lLangFile);
             AddHighlighter (
+              ExtractFileName (lLangFile),
               lCustomHighlighter.Language,
               lCustomHighlighter.Extensions,
               False
@@ -380,6 +388,7 @@ implementation
       for Ndx := Low (BuiltInHighlighters) to High (BuiltInHighlighters) do
         if not HighlighterExists (BuiltInHighlighters[Ndx].Name) then
           AddHighlighter (
+            '',
             BuiltInHighlighters[Ndx].Name,
             BuiltInHighlighters[Ndx].Extensions,
             True
