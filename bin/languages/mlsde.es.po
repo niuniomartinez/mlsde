@@ -21,7 +21,8 @@ msgid "Where options are:"
 msgstr "Donde 'opciones' son:"
 
 #: configurationdialogform.captioncolorschema
-msgid "Color shcema"
+msgctxt "configurationdialogform.captioncolorschema"
+msgid "Color schema"
 msgstr "Esquemas de Color"
 
 #: configurationdialogform.captionconfiguration
@@ -242,8 +243,9 @@ msgid "Attributes"
 msgstr "Atributos"
 
 #: tcolorshcemaeditor.titleschema.caption
+msgctxt "tcolorshcemaeditor.titleschema.caption"
 msgid "Color schema"
-msgstr "esquema de color"
+msgstr "Esquema de color"
 
 #: tconfigurationdlg.caption
 msgctxt "tconfigurationdlg.caption"

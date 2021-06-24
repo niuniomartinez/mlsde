@@ -96,7 +96,7 @@ implementation
     captionEnvironment = 'Environment';
     captionProject = 'Project';
     captionEditor = 'Editor';
-    captionColorSchema = 'Color shcema';
+    captionColorSchema = 'Color schema';
 
 
 

@@ -75,3 +75,12 @@ the `Save file` button.  You can also save all modified files by selecting
 
 ![Saving file](images/save-file-menu.png)
 ![Saving file](images/save-file-button.png)
+
+## Closing Files ##
+
+You can close the files by selecting `File > Close current tab` menu option
+(see above).  You can also selecting the `Close tab` button in the tool bar
+or the `Project > Close all tabs` menu option.
+
+![Saving file](images/close-tab-menu.png)
+![Saving file](images/close-tab-button.png)
