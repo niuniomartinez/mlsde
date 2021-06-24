@@ -227,7 +227,6 @@ implementation
       if EOL or (lDefinitionFile[Ndx][lPos] <> lDelimiter) then
         RaiseException (errUndefinedString);
       Inc (lPos); { Skips string delimiter. }
-      if Result <> EmptyStr then Result := OrderStringChars (Result)
     end;
 
     procedure SetLanguageName; inline;
@@ -361,7 +360,7 @@ implementation
     procedure SetSymbolChars;
     begin
       if fSymbolChars <> EmptyStr then RaiseException (errDuplicatedSymbols);
-      fSymbolChars := GetString
+      fSymbolChars := OrderStringChars (GetString)
     end;
 
     procedure SetIdentifierChars;
@@ -374,7 +373,7 @@ implementation
     }
       if LowerCase (GetToken) <> 'chars' then
         RaiseException (Format (errExpecting, ['chars']));
-      Self.IdentifierChars := GetString
+      Self.IdentifierChars := OrderStringChars (GetString)
     end;
 
     procedure ParseSection (aList: TStrings; const aEnd: String);
@@ -560,10 +559,10 @@ implementation
       should affect (almost) nothing out there.
   }
 
-    function CurrentCharIsSeparator: Boolean;
+    procedure SetToken (aTokenType: TToken; aTokenLenght: Integer); inline;
     begin
-      Result :=  (Self.CurrentChar <= ' ')
-              or CharInStr (Self.CurrentChar, fSeparatorChars)
+      Self.TokenType := aTokenType;
+      Self.TokenLength := aTokenLenght
     end;
 
     function ExtractSizedToken (const aLength: Integer): String;
@@ -583,6 +582,13 @@ implementation
     end;
 
     function ExtractToken: String;
+
+      function CurrentCharIsSeparator: Boolean;
+      begin
+        Result :=  (Self.CurrentChar <= ' ')
+                or CharInStr (Self.CurrentChar, fSeparatorChars)
+      end;
+
     begin
       Result := '';
       repeat
@@ -638,8 +644,7 @@ implementation
         lNdx := GetBlockIndex (fDirectives);
         if lNdx >= 0 then
         begin
-          Self.TokenLength := Length (fDirectives[lNdx].Starting);
-          Self.TokenType := tkDirective;
+          SetToken (tkDirective, Length (fDirectives[lNdx].Starting));
         { Single or block. }
           if fDirectives[lNdx].Ending = EmptyStr then
             Self.JumpToEOL
@@ -661,8 +666,7 @@ implementation
         lNdx := GetBlockIndex (fComments);
         if lNdx >= 0 then
         begin
-          Self.TokenLength := Length (fComments[lNdx].Starting);
-          Self.TokenType := tkComment;
+          SetToken (tkComment, Length (fComments[lNdx].Starting));
         { Single or block. }
           if fComments[lNdx].Ending = EmptyStr then
             Self.JumpToEOL
@@ -706,8 +710,7 @@ implementation
     { Symbols. }
       if Pos (Self.Line[Self.TokenStart], fSymbolChars) > 0 then
       begin
-        Self.TokenLength := 1;
-        Self.TokenType := tkSymbol;
+        SetToken (tkSymbol, 1);
         Exit
       end;
     { Other. }
