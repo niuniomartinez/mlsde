@@ -463,6 +463,23 @@ implementation
       Result := OrderStringChars (Result)
     end;
 
+    function ExtractInitialOperatorChars: String;
+    var
+      lOperator: String;
+      lChar: Char;
+    begin
+      Result := '';
+      for lOperator in Self.Operators do
+      begin
+        lChar := lOperator[1];
+        if not (lChar in ['0'..'9', 'a'..'z', 'A'..'Z'])
+        and not CharInStr (lChar, Result)
+        then
+          Result := Concat (Result, lChar);
+      end;
+      Result := OrderStringChars (Result)
+    end;
+
     procedure GetSeparatorChars;
 
       procedure AddInitialChars (const lChars: String);
@@ -487,6 +504,7 @@ implementation
 
   var
     lToken: String;
+    lNdx: Integer;
   begin
     Self.Clear;
   { Load the file. }
@@ -537,7 +555,8 @@ implementation
   { Get starters and separators. }
     fCommentStartChars := ExtractInitialChars (fComments);
     fDirectiveStartChars := ExtractInitialChars (fDirectives);
-    fOperatorStartChars := ExtractInitialChars (Self.Operators);
+  { See implementation note in method Next to know why this. }
+    fOperatorStartChars := ExtractInitialOperatorChars;
     GetSeparatorChars
   end;
 
@@ -557,6 +576,15 @@ implementation
       You'll see this method uses mostly brute-force.  Actually I didn't planned
       at all this part.  Anyway it is (mostly) self-contained so changes here
       should affect (almost) nothing out there.
+
+    About the operator parsing:
+      A lot of languages have operators that are alphanumeric (AND, OR, SHL,
+      IN...) so they can't be used as separators (i.e: identifier "Operand"
+      would be identified as "Oper"+"AND") so fOperatorStartChars contains
+      non alphanumeric characters only (i.e: "+", "*", "<"...) and operators
+      are parsed twice (as "token" and as "symbol").
+
+      See final lines in ParseNormalCode to see the code.
   }
 
     procedure SetToken (aTokenType: TToken; aTokenLenght: Integer); inline;
@@ -582,18 +610,21 @@ implementation
     end;
 
     function ExtractToken: String;
+    var
+      lTokenLength: Integer = 0;
 
       function CurrentCharIsSeparator: Boolean;
       begin
-        Result :=  (Self.CurrentChar <= ' ')
-                or CharInStr (Self.CurrentChar, fSeparatorChars)
+        Result :=  (Self.Line[Self.TokenStart + lTokenLength] <= ' ')
+                or CharInStr (Self.Line[Self.TokenStart + lTokenLength],
+                              fSeparatorChars)
       end;
 
     begin
       Result := '';
       repeat
-        Result := Concat (Result, Self.CurrentChar);
-        Inc (Self.TokenLength)
+        Result := Concat (Result, Self.Line[Self.TokenStart + lTokenLength]);
+        Inc (lTokenLength)
       until CurrentCharIsSeparator;
       if not fCaseSensitive then Result := LowerCase (Result)
     end;
@@ -681,6 +712,24 @@ implementation
         Result := False
       end;
 
+      function ParseOperators: Boolean;
+      var
+        lToken, lOperator: String;
+      begin
+        if CharInStr (Self.CurrentChar, fOperatorStartChars) then
+          for lOperator in Self.Operators do
+          begin
+            lToken := ExtractSizedToken (Length (lOperator));
+            if lToken = lOperator then
+            begin
+              SetToken (tkOperator, Length (lToken));
+              Exit (True)
+            end
+          end;
+      { Not found. }
+        Result := False
+      end;
+
     var
       lToken: String;
     begin
@@ -707,20 +756,28 @@ implementation
         Self.TokenType := tkString;
         Exit
       end;
-    { Symbols. }
-      if Pos (Self.Line[Self.TokenStart], fSymbolChars) > 0 then
-      begin
-        SetToken (tkSymbol, 1);
-        Exit
-      end;
     { Other. }
       lToken := ExtractToken;
       if Self.IsKeyword (lToken) then
-        Self.TokenType := tkKeyword
+        SetToken (tkKeyword, Length (lToken))
       else if Self.IsLibraryObject (lToken) then
-        Self.TokenType := tkIdentifier
+        SetToken (tkIdentifier, Length (lToken))
       else if Self.IsType (lToken) then
-        Self.TokenType := tkType;
+        SetToken (tkType, Length (lToken))
+      else if Self.IsOperator (lToken) then
+        SetToken (tkOperator, Length (lToken))
+      else begin
+      { Operators (again). }
+        if ParseOperators then Exit;
+      { Symbols. }
+        if CharInStr (Self.Line[Self.TokenStart], fSymbolChars) then
+        begin
+          SetToken (tkSymbol, 1);
+          Exit
+        end
+        else
+          Self.TokenLength := Length (lToken);
+      end
     end;
 
   begin
