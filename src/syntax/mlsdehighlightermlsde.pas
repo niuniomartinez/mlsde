@@ -40,6 +40,7 @@ interface
     TMLSDESyntaxDefinitionSyn = class (TMLSDEHighlighter)
     private
       fTokenIndex: Integer; { In the current line. }
+      fRangeId: String; {To identify the end range. }
     public
     (* Returns the language name. *)
       class function GetLanguageName: string; override;
@@ -130,10 +131,11 @@ implementation
     function ExtractToken: String;
     begin
       Result := '';
-      repeat
+      while Self.CurrentChar > ' ' do
+      begin
         Result := Concat (Result, Self.CurrentChar);
         Inc (Self.TokenLength)
-      until Self.CurrentChar <= ' '
+      end
     end;
 
   const
@@ -154,7 +156,7 @@ implementation
         Self.ParseSpaces
       else if Self.Line[Self.TokenStart] = '#' then
         ParseComment
-      else if Self.Line[Self.TokenStart] = '"' then
+      else if Self.Line[Self.TokenStart] in ['''', '"'] then
         ParseString
       else begin
         lToken := LowerCase (ExtractToken);
@@ -166,8 +168,15 @@ implementation
           { If first token in block line, maybe we reached the end of list. }
             if lToken = 'end' then
             begin
-              Self.Range := crgNone;
-              Self.TokenType := tkKeyword
+              Self.ParseSpaces;
+              lToken := LowerCase (ExtractToken);
+              if lToken = fRangeId then
+              begin
+                Self.Range := crgNone;
+                Self.TokenType := tkKeyword
+              end
+              else
+                Self.TokenType := tkNumber
             end
             else
               Self.TokenType := tkNumber
@@ -181,7 +190,10 @@ implementation
             Self.TokenType := tkKeyword;
             if (fTokenIndex = 1)
             and (FindString (lToken, lBlockIdents) >= 0) then
+            begin
+              fRangeId := lToken;
               Self.Range := crgBlock
+            end
           end
           else if Self.IsLibraryObject (lToken) then
             Self.TokenType := tkIdentifier

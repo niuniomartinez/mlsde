@@ -101,13 +101,11 @@ implementation
     errDuplicatedString = 'Duplicated string definition.';
     errDuplicatedHex = 'Duplicated hexagesimal definition.';
     errDuplicatedSymbols = 'Duplicated symbol definition.';
-    errDuplicatedIdentifier = 'Duplicated identifier characters definition.';
     errUnknownParameter = 'Unknown parameter "%s".';
     errStringExpected = 'String expected.';
     errUndefinedString = 'Undefined string.';
     errExpecting = 'Expecting "%s"';
     errUnknownStringType = 'Unknown string type "%s".';
-    errTokenNotFound = '"%s" not found.';
 
 (*
  * TMLSDECustomHighlighter
@@ -229,31 +227,31 @@ implementation
       Inc (lPos); { Skips string delimiter. }
     end;
 
+    function GetItemList (const aSeparator: String): String;
+    var
+      lItems: TStringDynArray;
+    begin
+      lItems := SplitString (
+        Trim (
+          RightStr (lDefinitionFile[Ndx], Length (lDefinitionFile[Ndx]) - lPos)
+        ),
+        ' '
+      );
+      result := JoinStrings (lItems, aSeparator)
+    end;
+
     procedure SetLanguageName; inline;
     begin
       if Self.Language = EmptyStr then
-        Self.Language := GetToken
+        Self.Language := GetItemList (' ')
       else
         RaiseException (errDuplicatedName)
     end;
 
     procedure SetExtensions;
-    var
-      lExtensions: TStringDynArray;
     begin
       if Self.Extensions = EmptyStr then
-      begin
-        lExtensions  := SplitString (
-          LowerCase (Trim (
-            RightStr (
-              lDefinitionFile[Ndx],
-              Length (lDefinitionFile[Ndx]) - lPos
-            )
-          )),
-          ' '
-        );
-        Self.Extensions := JoinStrings (lExtensions, ';')
-      end
+        Self.Extensions := LowerCase (GetItemList (';'))
       else
         RaiseException (errDuplicatedExtensions)
     end;

@@ -1,5 +1,5 @@
-# Describe Pascal syntax.
-LANGUAGE Pascal
+# Describe Object Pascal syntax.
+LANGUAGE Object Pascal
 EXTENSIONS pas pp lpr dpr
 
 CASE INSENSITIVE
@@ -26,6 +26,13 @@ KEYWORDS
   for to downto
   case of otherwise
   as absolute
+
+  class private protected public published
+  constructor destructor operator
+  property virtual abstract override
+  inherited
+  try finally except on
+  in # Promoted to keyword because the FOR .. IN loops.
 END KEYWORDS
 
 TYPES
@@ -42,7 +49,7 @@ END TYPES
 OPERATORS
   := @ ^
   + - * / div mod
-  < <= = => > <> in
+  < <= = => > <>
   not and or xor
   shl shr
 END OPERATORS
@@ -57,4 +64,9 @@ IDENTIFIERS
   GetMem Dispose Assigned
   Concat UpCase LowerCase
   Pos
+
+  read write default
+  self
+  Exception
+  Create Destroy Free
 END IDENTIFIERS

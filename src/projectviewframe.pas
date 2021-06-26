@@ -98,6 +98,8 @@ implementation
       try
       { Configure dialog. }
         lDlgOpenDirectory.Options := [ofEnableSizing, ofPathMustExist];
+        if Assigned (fProject) then
+          lDlgOpenDirectory.FileName := fProject.BasePath;
         if lDlgOpenDirectory.Execute then
         begin
         { TODO: Check if project changed to save data? }

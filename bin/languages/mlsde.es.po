@@ -104,11 +104,6 @@ msgctxt "mlsdecustomhighlighter.errduplicatedhex"
 msgid "Duplicated hexagesimal definition."
 msgstr "Definiciión HEX duplicada."
 
-#: mlsdecustomhighlighter.errduplicatedidentifier
-msgctxt "mlsdecustomhighlighter.errduplicatedidentifier"
-msgid "Duplicated identifier characters definition."
-msgstr "Definición de identificadores duplicada."
-
 #: mlsdecustomhighlighter.errduplicatedname
 msgctxt "mlsdecustomhighlighter.errduplicatedname"
 msgid "Duplicated language name."
@@ -133,11 +128,6 @@ msgstr "Se esperaba \"%s\"."
 msgctxt "mlsdecustomhighlighter.errstringexpected"
 msgid "String expected."
 msgstr "Se esperaba cadena de caracteres."
-
-#: mlsdecustomhighlighter.errtokennotfound
-msgctxt "mlsdecustomhighlighter.errtokennotfound"
-msgid "\"%s\" not found."
-msgstr "No se encontró \"%s\"."
 
 #: mlsdecustomhighlighter.errundefinedstring
 msgctxt "mlsdecustomhighlighter.errundefinedstring"
