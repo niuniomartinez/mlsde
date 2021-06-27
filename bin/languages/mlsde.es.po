@@ -1,6 +1,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: configuration.txthelp
+msgid "Help"
+msgstr "Ayuda"
+
 #: configuration.txthelpconfig
 msgid "Tells configuration file to use."
 msgstr "Indica qué archivo de configuración usar."
@@ -12,8 +16,8 @@ msgstr "Muestra esta ayuda"
 
 #: configuration.txthelpusage
 msgctxt "configuration.txthelpusage"
-msgid "Usage: %s [options]"
-msgstr "Uso: %s [opciones]"
+msgid "Usage: %s [files and directories] [options]"
+msgstr "Uso: %s [archivos y directorios] [opciones]"
 
 #: configuration.txthelpwhere
 msgctxt "configuration.txthelpwhere"

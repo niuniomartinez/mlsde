@@ -83,10 +83,12 @@ interface
       constructor Create; virtual;
     (* Destructor. *)
       destructor Destroy; override;
-    (* Writes help of the supported command line options.
+    (* Used to get the command line help lines.
+
+       This method should add the help lines in the given string list.
 
        By default it doesn't do anything. *)
-      procedure PrintCommandLineHelp; virtual;
+      procedure GetCommandLineHelp (aStringList: TStrings); virtual;
     (* Parses command line options.
 
        By default it doesn't do anything. *)
@@ -149,10 +151,14 @@ interface
 implementation
 
   uses
+{$IfDef WINDOWS}
+    GUIUtils,
+{$EndIf}
     Forms;
 
   resourcestring
-    txtHelpUsage  = 'Usage: %s [options]';
+    txtHelp       = 'Help';
+    txtHelpUsage  = 'Usage: %s [files and directories] [options]';
     txtHelpWhere  = 'Where options are:';
     txtHelpHelp   = 'Shows this help.';
     txtHelpConfig = 'Tells configuration file to use.';
@@ -248,8 +254,10 @@ implementation
 
 
 (* Command line options.  Does nothing. *)
-  procedure TCustomConfiguration.PrintCommandLineHelp; begin end;
-  procedure TCustomConfiguration.ParseCommandLineOptions; begin end;
+  procedure TCustomConfiguration.GetCommandLineHelp (aStringList: TStrings);
+    begin end;
+  procedure TCustomConfiguration.ParseCommandLineOptions;
+    begin end;
 
 
 
@@ -328,14 +336,44 @@ implementation
   procedure TConfiguration.PrintCommandLinehelp;
   var
     lConfigSection: TCustomConfiguration;
+    lCommandLineHelp, lSectionHelp: TStringList;
+    lLine: String;
   begin
-    WriteLn;
-    WriteLn (Format (txtHelpUsage, [ExtractFileName (Application.ExeName)]));
-    WriteLn;
-    WriteLn (txtHelpWhere);
-    WriteLn ('  --cfg=<config_file_paht>:  ', txtHelpConfig);
-    WriteLn ('  --help: ', txtHelpHelp);
-    for lConfigSection in fSectionList do lConfigSection.PrintCommandLineHelp
+    lCommandLineHelp := TStringList.Create;
+    lSectionHelp := TStringList.Create;
+    try
+{$IfDef WINDOWS}
+      lCommandLineHelp.Append(
+        Format (txtHelpUsage, [ExtractFileName (Application.ExeName)])
+      );
+      lCommandLineHelp.Append ('');
+      lCommandLineHelp.Append (txtHelpWhere);
+      lCommandLineHelp.Append (
+        Concat ('  --cfg=<config_file_paht>:  ', txtHelpConfig)
+      );
+      lCommandLineHelp.Append (Concat ('  --help: ', txtHelpHelp));
+{$EndIf}
+      for lConfigSection in fSectionList do
+      begin
+        lSectionHelp.Clear;
+        lConfigSection.GetCommandLineHelp (lSectionHelp);
+        lCommandLineHelp.AddStrings (lSectionHelp)
+      end;
+{$IFDEF Windows}
+      GUIUtils.ShowInformation (txtHelp, lCommandLineHelp.Text)
+{$ELSE}
+      WriteLn;
+      WriteLn (Format (txtHelpUsage, [ExtractFileName (Application.ExeName)]));
+      WriteLn;
+      WriteLn (txtHelpWhere);
+      WriteLn ('  --cfg=<config_file_paht>:  ', txtHelpConfig);
+      WriteLn ('  --help: ', txtHelpHelp);
+      for lLine in lCommandLineHelp do WriteLn (lLine)
+{$ENDIF}
+    finally
+      lCommandLineHelp.Free;
+      lSectionHelp.Free
+    end
   end;
 
 

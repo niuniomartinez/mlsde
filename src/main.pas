@@ -59,8 +59,8 @@ interface
 
       procedure BuildTitleTemplate;
     public
-    (* Writes help of the supported command line options. *)
-      procedure PrintCommandLineHelp; override;
+    (* Returns help of the supported command line options. *)
+      procedure GetCommandLineHelp (aStringList: TStrings); override;
     (* Parses conmmand line options. *)
       procedure ParseCommandLineOptions; override;
 
@@ -101,6 +101,7 @@ interface
       fConfiguration: TConfiguration;
       fProject: TProject;
       fSynManager: TSynManager;
+      fFileList: TStrings;
 
     (* Sets up the language translation. *)
       procedure SetUpLanguage;
@@ -146,6 +147,8 @@ interface
 
     (* Application configuration. *)
       property Configuration: TConfiguration read fConfiguration;
+    (* List of files passed via command line options. *)
+      property FileList: TStrings read fFileList;
     (* The currently loaded project. *)
       property Project: TProject read fProject;
     (* Reference to the syntax highlighters manager. *)
@@ -283,9 +286,11 @@ implementation
 
 
 (* Prints command line help. *)
-  procedure TEnvironmentConfiguration.PrintCommandLineHelp;
+  procedure TEnvironmentConfiguration.GetCommandLineHelp (aStringList: TStrings);
   begin
-    WriteLn ('  --lang=[en|es]:  ', messageSelectAppLanguage)
+    aStringList.Append (
+      Concat ('  --lang=[en|es]:  ', messageSelectAppLanguage)
+    )
   end;
 
 
@@ -365,7 +370,8 @@ implementation
     inherited Create;
     fConfiguration := TConfiguration.Create;
     fProject := TProject.Create;
-    fSynManager := TSynManager.Create
+    fSynManager := TSynManager.Create;
+    fFileList := TStringList.Create
   end;
 
 
@@ -375,6 +381,7 @@ implementation
   begin
     fProject.Free;
     fSynManager.Free;
+    fFileList.Free;
     fConfiguration.Free;
     inherited Destroy
   end;
@@ -383,12 +390,20 @@ implementation
 
 (* Initializes the object. *)
   procedure TMLSDEApplication.Initialize;
+  var
+    lNdx: Integer;
   begin
   { Add configuration objects. }
     fConfiguration.AddSection (TEnvironmentConfiguration.Create, EnvironmentSection);
     fConfiguration.AddSection (TProjectConfiguration.Create, idProjectConfig);
     fConfiguration.AddSection (TEditorConfiguration.Create, idEditorConfig);
-  { Load configuration file. }
+  { Load configuration file and parse command line options. }
+    lNdx := 0; fFileList.Clear;
+    while lNdx < ParamCount do
+    begin
+      Inc (lNdx);
+      if ParamStr (lNdx)[1] <> '-' then fFileList.Append (ParamStr (lNdx))
+    end;
     fConfiguration.Initialize;
   { Parse command line options. }
     Self.SetUpLanguage; { Needed to translate command line help. }

@@ -247,28 +247,30 @@ implementation
     { Components state. }
       Self.UpdateFileComponentStates;
       Self.EnvironmentConfigurationChanged (Nil);
-    { Check if parameters a file or directory was passed as command line
+    { Check if there were files or directories passed by command line
       parameter. }
-      if ParamCount > 0 then
+      if MLSDEApplication.FileList.Count > 0 then
       begin
       { If only one parameter, opens file and the projec. }
-        if ParamCount = 1 then
+        if MLSDEApplication.FileList.Count = 1 then
         begin
         { Order is important as in POSIX directories are files too. }
-          if DirectoryExists (ParamStr (1)) then
-            MLSDEApplication.Project.Open (ParamStr (1))
+          if DirectoryExists (MLSDEApplication.FileList[0]) then
+            MLSDEApplication.Project.Open (MLSDEApplication.FileList[0])
           else begin
-            Self.ProjectViewer.Project.Open (ExtractFileDir (ParamStr (1)));
-            Self.OpenFile (ParamStr (1))
+            Self.ProjectViewer.Project.Open (
+              ExtractFileDir (MLSDEApplication.FileList[0])
+            );
+            Self.OpenFile (MLSDEApplication.FileList[0])
           end
         end
         else begin
           lDir := '';
-          for Ndx := 1 to ParamCount do
-            if DirectoryExists (ParamStr (Ndx)) then
-              lDir := ParamStr (Ndx)
+          for Ndx := 0 to MLSDEApplication.FileList.Count - 1 do
+            if DirectoryExists (MLSDEApplication.FileList[Ndx]) then
+              lDir := MLSDEApplication.FileList[Ndx]
             else
-              Self.OpenFile (ParamStr (Ndx));
+              Self.OpenFile (MLSDEApplication.FileList[Ndx]);
           if lDir <> EmptyStr then
             Self.ProjectViewer.Project.Open (lDir)
         end
