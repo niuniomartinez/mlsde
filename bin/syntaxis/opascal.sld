@@ -16,9 +16,9 @@ SYMBOLS "#()[]:;,."
 IDENTIFIER CHARS "abcdefghijklmnopqrstuvwxyz0123456789_"
 
 KEYWORDS
-  program procedure function
+  program procedure function forward
   unit uses interface implementation
-  var const type record array set
+  var const type packed record array set
   begin end
   if then else
   wile do
@@ -26,8 +26,9 @@ KEYWORDS
   for to downto
   case of otherwise
   as absolute
+  with
 
-  class private protected public published
+  class private protected public published object
   constructor destructor operator
   property virtual abstract override
   inherited
@@ -36,8 +37,8 @@ KEYWORDS
 END KEYWORDS
 
 TYPES
-  Byte Word DoubleWord
-  ShortInt SmallInt Integer LongInt
+  Byte Word DoubleWord QWord UInt64
+  ShortInt SmallInt Integer LongInt Int64
   Boolean
   Real Single Double
   Char WideChar AnsiChar
@@ -47,6 +48,7 @@ TYPES
 END TYPES
 
 OPERATORS
+  .. # Not sure about this, but cannot be type or identifier (maybe someday).
   := @ ^
   + - * / div mod
   < <= = => > <>

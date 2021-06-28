@@ -1,5 +1,5 @@
 # Describe Lua syntax.
-# I'm not Lua develope so there may be some lacks and mistakes.
+# I'm not Lua developer so there may be some lacks and mistakes.
 LANGUAGE Lua
 EXTENSIONS lua
 

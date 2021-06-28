@@ -16,20 +16,20 @@ SYMBOLS "#()[]:;,."
 IDENTIFIER CHARS "abcdefghijklmnopqrstuvwxyz0123456789_"
 
 KEYWORDS
-  program procedure function
+  program procedure function forward
   unit uses interface implementation
   var const type record array set
   begin end
   if then else
-  wile do
-  repeat until
+  wile do repeat until break continue
   for to downto
   case of otherwise
   as absolute
+  with
 END KEYWORDS
 
 TYPES
-  Byte Word DoubleWord
+  Byte Word
   ShortInt SmallInt Integer LongInt
   Boolean
   Real Single Double
@@ -40,6 +40,7 @@ TYPES
 END TYPES
 
 OPERATORS
+  .. # Not sure about this, but cannot be type or identifier (maybe someday).
   := @ ^
   + - * / div mod
   < <= = => > <> in

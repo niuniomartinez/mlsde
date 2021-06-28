@@ -28,7 +28,8 @@ END KEYWORDS
 
 TYPES
   void
-  char int long short signed unsigned
+  long short signed unsigned
+  char int
   float double
   register volatile
 END TYPES

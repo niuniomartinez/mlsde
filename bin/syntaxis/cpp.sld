@@ -41,7 +41,8 @@ END KEYWORDS
 TYPES
 # From C.
   void
-  char int long short signed unsigned
+  long short signed unsigned
+  char int
   float double
   register volatile
 # New in C++.
