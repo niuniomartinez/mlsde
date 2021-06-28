@@ -35,8 +35,9 @@ interface
         EditDirectoryDepth: TSpinEdit;
         selectDirOrder: TComboBoxEx;
         lblDirectoryOrder: TLabel;
-        CheckHiddenFiles: TCheckBox;
-        CheckHiddenDirectories: TCheckBox;
+        chkKnownFiles: TCheckBox;
+        chkHiddenFiles: TCheckBox;
+        chkHiddenDirectories: TCheckBox;
     public
     (* Initializes the frame.
 
@@ -65,8 +66,9 @@ implementation
       MLSDEApplication.Configuration.FindConfig (idProjectConfig)
     );
   { Files and directories. }
-    CheckHiddenFiles.Checked := lProjectConfiguration.ShowHiddenFiles;
-    CheckHiddenDirectories.Checked := lProjectConfiguration.ShowHiddenDirs;
+    chkKnownFiles.Checked := lProjectConfiguration.OnlyKnownFiles;
+    chkHiddenFiles.Checked := lProjectConfiguration.ShowHiddenFiles;
+    chkHiddenDirectories.Checked := lProjectConfiguration.ShowHiddenDirs;
     EditDirectoryDepth.Value := lProjectConfiguration.DirDepth;
     selectDirOrder.ItemIndex := Ord (lProjectConfiguration.DirOrder);
   end;
@@ -81,8 +83,9 @@ implementation
       MLSDEApplication.Configuration.FindConfig (idProjectConfig)
     );
   { Files and directories. }
-    lProjectConfiguration.ShowHiddenFiles := CheckHiddenFiles.Checked;
-    lProjectConfiguration.ShowHiddenDirs := CheckHiddenDirectories.Checked;
+    lProjectConfiguration.OnlyKnownFiles := chkKnownFiles.Checked ;
+    lProjectConfiguration.ShowHiddenFiles := chkHiddenFiles.Checked;
+    lProjectConfiguration.ShowHiddenDirs := chkHiddenDirectories.Checked;
     lProjectConfiguration.DirDepth := EditDirectoryDepth.Value;
     lProjectConfiguration.DirOrder := TDirectoryOrder (selectDirOrder.ItemIndex)
   end;

@@ -25,7 +25,7 @@ unit Utils;
 
 interface
   uses
-    Classes, Types;
+    Classes;
 
   const
   (* Max number of observers. *)
@@ -59,10 +59,10 @@ interface
 (* Tells if character is in the string.  String should be ordered. *)
   function CharInStr (const aChar: Char; const aString: String): Boolean;
 (* Finds the string in the list or returns -1 if not found. *)
-  function FindString (const aNeedle: String; aHaystack: TStringDynArray)
+  function FindString (const aNeedle: String; aHaystack: array of String)
     : Integer;
 (* Joins the string array in a single string. *)
-  function JoinStrings (aStrings: TStringDynArray; const Delimiter: String):
+  function JoinStrings (aStrings: array of String; const Delimiter: String):
     String;
 (* Extracts file extension @bold(without dot and @italic(lowercased)). *)
   function GetFileExtension (const aFileName: String): String;
@@ -135,7 +135,7 @@ implementation
 
 
 (* Find string. *)
-  function FindString(const aNeedle: String; aHaystack: TStringDynArray)
+  function FindString(const aNeedle: String; aHaystack: array of String)
     : Integer;
   var
     Ndx: Integer;
@@ -148,7 +148,7 @@ implementation
 
 
 (* Join string. *)
-  function JoinStrings(aStrings: TStringDynArray; const Delimiter: String
+  function JoinStrings(aStrings: array of String; const Delimiter: String
     ): String;
   var
     lNdx: Integer;

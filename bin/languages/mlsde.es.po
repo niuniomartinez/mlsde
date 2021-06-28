@@ -204,14 +204,6 @@ msgstr "General"
 msgid "License"
 msgstr "Licencia"
 
-#: tcolorshcemaeditor.btnreloadschema.caption
-msgid "btnReloadSchema"
-msgstr ""
-
-#: tcolorshcemaeditor.btnsaveschema.caption
-msgid "btnSaveSchema"
-msgstr ""
-
 #: tcolorshcemaeditor.chkbold.caption
 msgid "Bold"
 msgstr "Negrita"
@@ -401,13 +393,25 @@ msgstr "Progreso"
 msgid "Working..."
 msgstr "Trabajando..."
 
-#: tprojectconfigurationframe.checkhiddendirectories.caption
+#: tprojectconfigurationframe.chkhiddendirectories.caption
 msgid "Show hidden directories"
 msgstr "Mostrar directorios ocultos"
 
-#: tprojectconfigurationframe.checkhiddenfiles.caption
+#: tprojectconfigurationframe.chkhiddenfiles.caption
 msgid "Show hidden files"
 msgstr "Mostrar archivos ocultos"
+
+#: tprojectconfigurationframe.chkknownfiles.caption
+msgid "Known files only"
+msgstr "Sólo archivos conocidos."
+
+#: tprojectconfigurationframe.chkknownfiles.hint
+msgid ""
+"If select, only known files will be added\n"
+" to the project.  Else, all files will be added.\n"
+msgstr ""
+"Si se selecciona, sólo los archivos reconocideos se añadirán\n"
+"al proyecto.  En otro caso se añadirán todos los archivos.\n"
 
 #: tprojectconfigurationframe.lbldirectorydepth.caption
 msgid "Directory depth"

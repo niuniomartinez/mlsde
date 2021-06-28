@@ -34,15 +34,13 @@ interface
   (* Color schema editor. *)
     TColorShcemaEditor = class (TConfigurationFrame)
       panelColorSchema: TPanel;
-      JavaSyntax: TSynJavaSyn;
        titleSchema: TDividerBevel;
        editSchemaList: TComboBox;
-       btnReloadSchema: TBitBtn;
-       btnSaveSchema: TBitBtn;
       panelSchemaView: TPanel;
        listTokenTypes: TListBox;
        spliterShowSchema: TSplitter;
        editSourceSample: TSynEdit;
+       JavaSyntax: TSynJavaSyn;
       panelAttributeEdition: TPanel;
        titleAttributeEdition: TDividerBevel;
        lblColorTexto: TLabel;

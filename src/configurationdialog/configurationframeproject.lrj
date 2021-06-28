@@ -1,10 +1,12 @@
 {"version":1,"strings":[
 {"hash":237415475,"name":"tprojectconfigurationframe.titlefilesndirs.caption","sourcebytes":[70,105,108,101,115,32,97,110,100,32,100,105,114,101,99,116,111,114,105,101,115],"value":"Files and directories"},
-{"hash":114999027,"name":"tprojectconfigurationframe.checkhiddenfiles.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,102,105,108,101,115],"value":"Show hidden files"},
-{"hash":210492227,"name":"tprojectconfigurationframe.checkhiddendirectories.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,100,105,114,101,99,116,111,114,105,101,115],"value":"Show hidden directories"},
+{"hash":114999027,"name":"tprojectconfigurationframe.chkhiddenfiles.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,102,105,108,101,115],"value":"Show hidden files"},
+{"hash":210492227,"name":"tprojectconfigurationframe.chkhiddendirectories.caption","sourcebytes":[83,104,111,119,32,104,105,100,100,101,110,32,100,105,114,101,99,116,111,114,105,101,115],"value":"Show hidden directories"},
 {"hash":63978040,"name":"tprojectconfigurationframe.lbldirectorydepth.caption","sourcebytes":[68,105,114,101,99,116,111,114,121,32,100,101,112,116,104],"value":"Directory depth"},
 {"hash":65828690,"name":"tprojectconfigurationframe.lbldirectoryorder.caption","sourcebytes":[68,105,114,101,99,116,111,114,121,32,111,114,100,101,114],"value":"Directory order"},
 {"hash":85547347,"name":"tprojectconfigurationframe.selectdirorder.itemsex[0].caption","sourcebytes":[77,105,120,32,100,105,114,101,99,116,111,114,105,101,115,32,97,110,100,32,102,105,108,101,115],"value":"Mix directories and files"},
 {"hash":261263060,"name":"tprojectconfigurationframe.selectdirorder.itemsex[1].caption","sourcebytes":[68,105,114,101,99,116,111,114,105,101,115,32,102,105,114,115,116],"value":"Directories first"},
-{"hash":133886164,"name":"tprojectconfigurationframe.selectdirorder.itemsex[2].caption","sourcebytes":[68,105,114,101,99,116,111,114,105,101,115,32,108,97,115,116],"value":"Directories last"}
+{"hash":133886164,"name":"tprojectconfigurationframe.selectdirorder.itemsex[2].caption","sourcebytes":[68,105,114,101,99,116,111,114,105,101,115,32,108,97,115,116],"value":"Directories last"},
+{"hash":106885806,"name":"tprojectconfigurationframe.chkknownfiles.hint","sourcebytes":[73,102,32,115,101,108,101,99,116,44,32,111,110,108,121,32,107,110,111,119,110,32,102,105,108,101,115,32,119,105,108,108,32,98,101,32,97,100,100,101,100,13,10,32,116,111,32,116,104,101,32,112,114,111,106,101,99,116,46,32,32,69,108,115,101,44,32,97,108,108,32,102,105,108,101,115,32,119,105,108,108,32,98,101,32,97,100,100,101,100,46],"value":"If select, only known files will be added\r\n to the project.  Else, all files will be added."},
+{"hash":39243897,"name":"tprojectconfigurationframe.chkknownfiles.caption","sourcebytes":[75,110,111,119,110,32,102,105,108,101,115,32,111,110,108,121],"value":"Known files only"}
 ]}

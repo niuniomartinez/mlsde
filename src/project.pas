@@ -83,6 +83,8 @@ interface
   (* Manages project configuration. *)
     TProjectConfiguration = class (TCustomConfiguration)
     private
+      function GetOnlyKnownFiles: Boolean;
+      procedure SetOnlyKnownFiles (aValue: Boolean);
       function GetDirectoryDepth: Integer;
       procedure SetDirectoryDepth (aValue: Integer);
       function GetDirectoryOrder: TDirectoryOrder;
@@ -92,6 +94,9 @@ interface
       function GetShowHiddenDirectories: Boolean;
       procedure SetShowHiddenDirectories (aValue: Boolean);
     public
+    (* If @true, only known files will be added to the project. *)
+      property OnlyKnownFiles: Boolean
+        read GetOnlyKnownFiles write SetOnlyKnownFiles;
     (* Tells depth when scanning directories. *)
       property DirDepth: Integer read GetDirectoryDepth write SetDirectoryDepth;
     (* How to order the directories. *)
@@ -225,19 +230,40 @@ interface
 implementation
 
   uses
-    Main, ProgressDialogForm,
+    Main, ProgressDialogForm, Utils,
     ComCtrls, Forms;
 
   const
     DefaultDirDepth = 5;
+    DefaultKnownOnly = True;
 
   var
   (* Flag to know if current operation has been canceled. *)
     fCancelOperation: Boolean;
+  (* Contains the list of known extensions.
+
+     At the moment it exists when scanning only!. *)
+    fExtensionList: TStringList;
 
 (*
  * TProjectConfiguration
  ***************************************************************************)
+
+  function TProjectConfiguration.GetOnlyKnownFiles: Boolean;
+  begin
+    Result := Self.GetBoolValue (
+      idProjectConfig, 'known_files_only',
+      DefaultKnownOnly
+    )
+  end;
+
+  procedure TProjectConfiguration.SetOnlyKnownFiles(aValue: Boolean);
+  begin
+    if aValue <> Self.GetOnlyKnownFiles then
+      Self.SetBooleanValue (idProjectConfig, 'known_files_only', aValue)
+  end;
+
+
 
   function TProjectConfiguration.GetDirectoryDepth: Integer;
   begin
@@ -358,6 +384,30 @@ implementation
       Result := ((aInfo.Attr and faHidden) = faHidden) or (aInfo.Name[1] = '.')
     end;
 
+    function FileUnknown: Boolean;
+    const
+      lKnownFileNames: array [1..3] of String = (
+        'makefile', 'readme', 'license'
+      );
+    var
+      lFileName, lExtension: String;
+    begin
+      lFileName := LowerCase (aInfo.Name);
+      lExtension := GetFileExtension (lFileName);
+      if lExtension <> EmptyStr then
+        lFileName := LeftStr (
+          lFileName,
+          Length (lFileName) - (Length (lExtension) + 1)
+        );
+    { By name. }
+      Result := FindString (lFileName, lKnownFileNames) < 0;
+    { If not found, then by extension. }
+      if Result then
+      begin
+        Result := fExtensionList.IndexOf (lExtension) < 0
+      end
+    end;
+
   var
     lCfgSection: TProjectConfiguration;
   begin
@@ -377,6 +427,9 @@ implementation
     else begin
     { Hidden files. }
       if (not lCfgSection.ShowHiddenFiles) and IsHidden then
+        Exit (False);
+    { Known files. }
+      if lCfgSection.GetOnlyKnownFiles and FileUnknown then
         Exit (False)
     end;
   { If here, then it is valid. }
@@ -548,23 +601,32 @@ implementation
 (* Scans the project directory. *)
   procedure TProject.Scan;
   begin
-  { Set up the progress dialog, if available. }
-    fCancelOperation := False;
-    if ProgressDlg <> Nil then
-    begin
-      ProgressDlg.ProgressBar.Style := pbstMarquee;
-      ProgressDlg.OnCancelAction := @Self.CancelScan
-    end;
-  { Do scan. }
-    fRoot.Scan (
-      TProjectConfiguration (
-        MLSDEApplication.Configuration.FindConfig (idProjectConfig)
-      ).DirDepth
-    );
-  { Reset the progress dialog, if available. }
-    if ProgressDlg <> Nil then ProgressDlg.OnCancelAction := Nil;
-  { If operation was cancelled, remove data. }
-    if fCancelOperation then Self.Clear
+    try
+    { Set up the progress dialog, if available. }
+      fCancelOperation := False;
+      if ProgressDlg <> Nil then
+      begin
+        ProgressDlg.ProgressBar.Style := pbstMarquee;
+        ProgressDlg.OnCancelAction := @Self.CancelScan
+      end;
+    { Get known file extensions. }
+      fExtensionList := TStringList.Create;
+      MLSDEApplication.SynManager.GetExtensions (fExtensionList);
+      fExtensionList.Append ('txt'); { Maybe more? }
+    { Do scan. }
+      fRoot.Scan (
+        TProjectConfiguration (
+          MLSDEApplication.Configuration.FindConfig (idProjectConfig)
+        ).DirDepth
+      );
+    { Reset the progress dialog, if available. }
+      if ProgressDlg <> Nil then ProgressDlg.OnCancelAction := Nil;
+    { If operation was cancelled, remove data. }
+      if fCancelOperation then Self.Clear
+    finally
+    { Clean memory. }
+      FreeAndNil (fExtensionList)
+    end
   end;
 
 

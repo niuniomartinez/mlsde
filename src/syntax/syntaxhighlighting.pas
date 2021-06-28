@@ -31,7 +31,8 @@ interface
 
   uses
     MLSDEHighlighter,
-    SynEditHighlighter;
+    SynEditHighlighter,
+    Classes;
 
   type
   (* Contains the description of the syntax highlighters. *)
@@ -85,6 +86,8 @@ interface
       function GetHighlighter (aLanguage: String): TMLSDEHighlighter;
     (* Returns the highlighter for the given extension. *)
       function GetHighlighterForExt (aExt: String): TMLSDEHighlighter;
+    (* Returns the full list of recognized extensions. *)
+      procedure GetExtensions (aExtensionList: TStringList);
 
     (* Reference to the highlight style. *)
       property Style: TMLSDEHighlightStyle read fHighlightStyle;
@@ -100,7 +103,7 @@ implementation
 
   uses
     GUIUtils, Main, Utils,
-    Classes, StrUtils, sysutils,
+    StrUtils, sysutils, Types,
   { Syntax highlighters. }
     MLSDECustomHighlighter, MLSDEHighlighterINI, MLSDEHighlighterMLSDE;
 
@@ -424,6 +427,31 @@ implementation
     Result := Self.GetHighlighter (
       Self.GetExtensionIndex (aExt)
     )
+  end;
+
+
+
+(* Returns extensions. *)
+  procedure TSynManager.GetExtensions (aExtensionList: TStringList);
+  var
+    lHighligter: THighlighterInfo;
+    lExtensions: TStringDynArray;
+    lExt: String;
+  begin
+  { To avoid duplications and help searching. }
+    aExtensionList.Clear;
+    aExtensionList.Sorted := True;
+    aExtensionList.Duplicates := dupIgnore;
+  { Add extensions. }
+    for lHighligter in fDefinitionList do
+    begin
+      if lHighligter.Extensions <> EmptyStr then
+      begin
+        lExtensions := SplitString (lHighligter.Extensions, ';');
+        for lExt in lExtensions do
+          aExtensionList.Append (lExt)
+      end
+    end
   end;
 
 end.
