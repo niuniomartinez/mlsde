@@ -85,10 +85,12 @@ interface
       procedure ActionSourceFileExecute (Sender: TObject);
     (* Creates the window. *)
       procedure FormCreate (Sender: TObject);
-    (* Activates teh window. *)
+    (* Activates the window. *)
       procedure FormActivate(Sender: TObject);
     (* Event triggered when form is shown. *)
       procedure FormShow (Sender: TObject);
+    (* User pressed a key. *)
+      procedure FormKeyDown (Sender: TObject; var Key: Word; Shift: TShiftState);
     (* User clicks on tree. *)
       procedure ProjectTreeDblClick (Sender: TObject);
     (* There are changes in the editor.
@@ -143,7 +145,7 @@ implementation
   uses
     AboutDlg, ConfigurationDialogForm, GUIUtils, LanguageSelectorDialogform,
     Main, MLSDEHighlighter, Project, Utils,
-    Dialogs, sysutils;
+    Dialogs, LCLType, sysutils;
 
 {$R *.lfm}
 
@@ -288,6 +290,36 @@ implementation
     Self.ProjectViewer.UpdateView;
     Self.UpdateWindowTitle;
     Self.UpdateFileComponentStates
+  end;
+
+
+
+(* User pressed a key. *)
+  procedure TMainWindow.FormKeyDown (
+    Sender: TObject;
+    var Key: Word;
+    Shift: TShiftState
+  );
+  const
+  (* Allows to identify virtual key codes of the "shift" keys.
+
+     Maybe this constant will be moved to another unit (script, edit...). *)
+    VK_SHIFT_KEYS = [
+      VK_SHIFT, VK_LSHIFT, VK_RSHIFT,
+      VK_CONTROL, VK_LCONTROL, VK_RCONTROL,
+      VK_MENU, VK_LMENU, VK_RMENU
+    { NOTE: Should include kana and kanji keys? }
+    ];
+    CFG_VK = {$IfDef WINDOWS}VK_F10{$Else}VK_C{$EndIf};
+  begin
+  { Ignore shift keys. }
+    if Key in VK_SHIFT_KEYS then Exit;
+  { Hardwired configuration dialog. }
+    if (Key = CFG_VK) and (Shift = [ssAlt, ssCtrl]) then
+    begin
+      Key := VK_UNKNOWN;
+      Self.ActionConfigure.Execute
+    end
   end;
 
 

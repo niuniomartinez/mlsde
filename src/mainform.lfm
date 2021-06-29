@@ -6,9 +6,11 @@ object MainWindow: TMainWindow
   Caption = 'MLSDE'
   ClientHeight = 357
   ClientWidth = 643
+  KeyPreview = True
   Menu = MainMenu
   OnActivate = FormActivate
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   Position = poDefault
   LCLVersion = '2.0.12.0'
@@ -161,7 +163,6 @@ object MainWindow: TMainWindow
       Hint = 'Opens configuration dialog.'
       ImageIndex = 1
       OnExecute = ActionEnvironmentExecute
-      ShortCut = 49273
     end
     object ActionAbout: TAction
       Tag = 2

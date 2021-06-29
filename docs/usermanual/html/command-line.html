@@ -11,7 +11,12 @@
  <body>
   <h1 id="command-line">Command Line</h1>
   <p>The <code>mlsde</code> executable accepts several arguments you can use from command line (cmd, bash, ...).</p>
-  <p>You can get the full list of options executing the next line:</p>
+  <p>You can pass files to edit and/or a directory to be open as project by MLSDE.&nbsp;
+  If you pass files only then the directory of the first one will be open as the
+  project.&nbsp; If the path includes spaces you must enclose the path in double
+  quotes.&nbsp; For example:</p>
+  <pre><code>$ ./mlsde "/mng/WIN/Documents and Settings/peter/project/"</code></pre>
+  <p>You can get the full list of options usign the <code>--help</code> option:</p>
   <pre><code>$ ./mlsde <span class="hljs-comment">--help</span>
 </code></pre>
  </body>

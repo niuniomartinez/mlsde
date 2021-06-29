@@ -327,7 +327,9 @@ implementation
     fFile := TIniFile.Create (lFileName);
   { Parse command line options. }
     for lConfigSection in fSectionList do
-      lConfigSection.ParseCommandLineOptions
+      lConfigSection.ParseCommandLineOptions;
+  { To use geteric shift, Alt, Ctrl... instead of distinguish left and right }
+    Application.ExtendedKeysSupport := False
   end;
 
 

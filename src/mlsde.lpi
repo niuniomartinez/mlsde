@@ -240,7 +240,9 @@
       <Unit23>
         <Filename Value="project/projectviewframe.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="ProjectView"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
       </Unit23>
       <Unit24>
         <Filename Value="project/project.pas"/>
