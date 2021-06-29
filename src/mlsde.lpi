@@ -37,7 +37,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="configurationdialog;gui;syntax"/>
+            <OtherUnitFiles Value="configurationdialog;gui;syntax;editor;project"/>
             <UnitOutputDirectory Value="../obj"/>
           </SearchPaths>
           <Parsing>
@@ -102,155 +102,149 @@
         <UnitName Value="MainForm"/>
       </Unit1>
       <Unit2>
-        <Filename Value="project.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="Project"/>
-      </Unit2>
-      <Unit3>
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Main"/>
-      </Unit3>
-      <Unit4>
+      </Unit2>
+      <Unit3>
         <Filename Value="configurationdialog/configurationdialogform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ConfigurationDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ConfigurationDialogForm"/>
-      </Unit4>
-      <Unit5>
+      </Unit3>
+      <Unit4>
         <Filename Value="gui/guiutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="GUIUtils"/>
-      </Unit5>
-      <Unit6>
+      </Unit4>
+      <Unit5>
         <Filename Value="configurationdialog/configurationdialogframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ConfigurationFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="ConfigurationDialogFrame"/>
-      </Unit6>
-      <Unit7>
+      </Unit5>
+      <Unit6>
         <Filename Value="configurationdialog/configurationframeenvironment.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="EnvironmentConfigurationFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="ConfigurationFrameEnvironment"/>
-      </Unit7>
-      <Unit8>
+      </Unit6>
+      <Unit7>
         <Filename Value="aboutdlg.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="AboutDialog"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="AboutDlg"/>
-      </Unit8>
-      <Unit9>
+      </Unit7>
+      <Unit8>
         <Filename Value="globaldatamodule.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="GlobalData"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="GlobalDataModule"/>
-      </Unit9>
-      <Unit10>
-        <Filename Value="projectviewframe.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="ProjectView"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Frame"/>
-        <UnitName Value="ProjectViewFrame"/>
-      </Unit10>
-      <Unit11>
+      </Unit8>
+      <Unit9>
         <Filename Value="configuration.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Configuration"/>
-      </Unit11>
-      <Unit12>
+      </Unit9>
+      <Unit10>
         <Filename Value="configurationdialog/configurationframeproject.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ProjectConfigurationFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="ConfigurationFrameProject"/>
-      </Unit12>
-      <Unit13>
+      </Unit10>
+      <Unit11>
         <Filename Value="gui/progressdialogform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ProgressDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ProgressDialogForm"/>
-      </Unit13>
-      <Unit14>
-        <Filename Value="editorframe.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="SourceEditorFrame"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Frame"/>
-        <UnitName Value="EditorFrame"/>
-      </Unit14>
-      <Unit15>
+      </Unit11>
+      <Unit12>
         <Filename Value="utils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Utils"/>
-      </Unit15>
-      <Unit16>
+      </Unit12>
+      <Unit13>
         <Filename Value="osutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="osUtils"/>
-      </Unit16>
-      <Unit17>
+      </Unit13>
+      <Unit14>
         <Filename Value="syntax/syntaxhighlighting.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SyntaxHighlighting"/>
-      </Unit17>
-      <Unit18>
+      </Unit14>
+      <Unit15>
         <Filename Value="configurationdialog/configurationframeeditor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="EditorConfigurationFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="ConfigurationFrameEditor"/>
-      </Unit18>
-      <Unit19>
+      </Unit15>
+      <Unit16>
         <Filename Value="syntax/mlsdehighlighter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MLSDEHighlighter"/>
-      </Unit19>
-      <Unit20>
+      </Unit16>
+      <Unit17>
         <Filename Value="syntax/mlsdehighlighterini.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MLSDEHighlighterINI"/>
-      </Unit20>
-      <Unit21>
+      </Unit17>
+      <Unit18>
         <Filename Value="syntax/mlsdehighlightermlsde.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MLSDEHighlighterMLSDE"/>
-      </Unit21>
-      <Unit22>
+      </Unit18>
+      <Unit19>
         <Filename Value="syntax/languageselectordialogform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="LanguageSelectorDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="LanguageSelectorDialogform"/>
-      </Unit22>
-      <Unit23>
+      </Unit19>
+      <Unit20>
         <Filename Value="syntax/colorschemaframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ColorShcemaEditor"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="ColorSchemaFrame"/>
-      </Unit23>
-      <Unit24>
+      </Unit20>
+      <Unit21>
         <Filename Value="syntax/mlsdecustomhighlighter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MLSDECustomHighlighter"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="editor/editorframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+        <UnitName Value="EditorFrame"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="project/projectviewframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="project/project.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit24>
     </Units>
   </ProjectOptions>
@@ -261,7 +255,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="configurationdialog;gui;syntax"/>
+      <OtherUnitFiles Value="configurationdialog;gui;syntax;editor;project"/>
       <UnitOutputDirectory Value="../obj"/>
     </SearchPaths>
     <Parsing>

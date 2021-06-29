@@ -358,7 +358,7 @@ implementation
     procedure SetSymbolChars;
     begin
       if fSymbolChars <> EmptyStr then RaiseException (errDuplicatedSymbols);
-      fSymbolChars := OrderStringChars (GetString)
+      fSymbolChars := SortStringChars (GetString)
     end;
 
     procedure SetIdentifierChars;
@@ -371,7 +371,7 @@ implementation
     }
       if LowerCase (GetToken) <> 'chars' then
         RaiseException (Format (errExpecting, ['chars']));
-      Self.IdentifierChars := OrderStringChars (GetString)
+      Self.IdentifierChars := SortStringChars (GetString)
     end;
 
     procedure ParseSection (aList: TStrings; const aEnd: String);
@@ -443,7 +443,7 @@ implementation
         if not fCaseSensitive then lChar := LowerCase (lChar);
         if not CharInStr (lChar, Result) then Result := Concat (Result, lChar);
       end;
-      Result := OrderStringChars (Result)
+      Result := SortStringChars (Result)
     end;
 
     function ExtractInitialChars (aStrings: TStrings): String; overload;
@@ -458,7 +458,7 @@ implementation
         if not fCaseSensitive then lChar := LowerCase (lChar);
         if not CharInStr (lChar, Result) then Result := Concat (Result, lChar);
       end;
-      Result := OrderStringChars (Result)
+      Result := SortStringChars (Result)
     end;
 
     function ExtractInitialOperatorChars: String;
@@ -475,7 +475,7 @@ implementation
         then
           Result := Concat (Result, lChar);
       end;
-      Result := OrderStringChars (Result)
+      Result := SortStringChars (Result)
     end;
 
     procedure GetSeparatorChars;
@@ -497,7 +497,7 @@ implementation
       AddInitialChars (fCommentStartChars);
       AddInitialChars (fDirectiveStartChars);
       AddInitialChars (fOperatorStartChars);
-      fSeparatorChars := OrderStringChars (fSeparatorChars)
+      fSeparatorChars := SortStringChars (fSeparatorChars)
     end;
 
   var

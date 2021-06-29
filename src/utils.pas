@@ -54,8 +54,8 @@ interface
 (* Encodes a name (i.e. file path) so all characters are valid for identifiers.
  *)
   function NormalizeIdentifier (const aName: String): String;
-(* Orders the characters of the given string. *)
-  function OrderStringChars (aString: String): String;
+(* Sorts the characters of the given string. *)
+  function SortStringChars (aString: String): String;
 (* Tells if character is in the string.  String should be ordered. *)
   function CharInStr (const aChar: Char; const aString: String): Boolean;
 (* Finds the string in the list or returns -1 if not found. *)
@@ -89,8 +89,8 @@ implementation
 
 
 
-(* Orders string. *)
-  function OrderStringChars (aString: String): String;
+(* Sorts string. *)
+  function SortStringChars (aString: String): String;
   var
     lNdx: Integer;
     lOrdered: Boolean;

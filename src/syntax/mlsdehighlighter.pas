@@ -484,7 +484,7 @@ implementation
   procedure TMLSDEHighlighter.SetIdentifierChars (aValue: String);
   begin
     if fIdentifierChars = aValue then Exit;
-    fIdentifierChars := OrderStringChars (aValue)
+    fIdentifierChars := SortStringChars (aValue)
   end;
 
 
