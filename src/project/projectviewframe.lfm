@@ -22,8 +22,8 @@ object ProjectView: TProjectView
     Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
   end
   object FileIconList: TImageList
-    Left = 264
-    Top = 16
+    Left = 40
+    Top = 128
     Bitmap = {
       4C69030000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -126,8 +126,8 @@ object ProjectView: TProjectView
   end
   object ActionList: TActionList
     Images = GlobalData.IconList
-    Left = 192
-    Top = 16
+    Left = 40
+    Top = 72
     object ActionOpenProject: TAction
       Tag = 1
       Caption = '&Open...'
@@ -138,7 +138,7 @@ object ProjectView: TProjectView
   end
   object ProjectPopupMenu: TPopupMenu
     Images = GlobalData.IconList
-    Left = 104
+    Left = 40
     Top = 16
     object MenuItemOpenProject: TMenuItem
       Action = ActionOpenProject

@@ -66,6 +66,18 @@ msgstr ""
 msgid "File \"%s\" not found."
 msgstr "Archivo \"%s\" no encontrado."
 
+#: editorframe.textclosing
+msgid "Closing tab"
+msgstr "Cerrando lengüeta"
+
+#: editorframe.textfilemodified
+msgid ""
+"The file changes have not been saved.\n"
+"Do you really want to close the tab?\n"
+msgstr ""
+"El archivo tiene cambios que no se han guardado.\n"
+"¿Cerrar la lengüeta de todas formas?\n"
+
 #: editorframe.textsyntax
 msgctxt "editorframe.textsyntax"
 msgid "Text"
@@ -97,6 +109,18 @@ msgstr ""
 msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr "Selecciona el idioma de la aplicación."
+
+#: mainform.textclosingtabs
+msgid "Closing tabs"
+msgstr "Cerrando lengüetas"
+
+#: mainform.textfilesmodified
+msgid ""
+"One or more files have been changed.\n"
+"Do you really want to close the tabs?\n"
+msgstr ""
+"Uno o más archivos han cambiado.\n"
+"¿Quiere cerrar lengüetas, aun así?\n"
 
 #: mlsdecustomhighlighter.errduplicatedextensions
 msgctxt "mlsdecustomhighlighter.errduplicatedextensions"

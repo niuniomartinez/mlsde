@@ -83,6 +83,8 @@ interface
       procedure ActionEnvironmentExecute (Sender: TObject);
     (* Event trigered when a file action is executed. *)
       procedure ActionSourceFileExecute (Sender: TObject);
+    (* Event trigered when closing the form. *)
+      procedure FormClose (Sender: TObject; var CloseAction: TCloseAction);
     (* Creates the window. *)
       procedure FormCreate (Sender: TObject);
     (* Activates the window. *)
@@ -130,6 +132,10 @@ interface
       procedure OpenFile (const aFileName: String);
     (* Project has changed. *)
       procedure ProjectChanged (Sender: TObject);
+    (* Checks if any of the opened files have unsaved changes. *)
+      function HasSourceChanged: Boolean;
+    (* Checks if can close tabs. *)
+      function CanCloseTabs: Boolean;
     (* Closes all tabs. *)
       procedure CloseAllTabs;
     (* Closes current tab. *)
@@ -161,6 +167,11 @@ implementation
   (* Sizes of the status panels. *)
     CursorPanelWidth = 50;
     LanguagePanelWidth = 100;
+
+  resourcestring
+    TextClosingTabs = 'Closing tabs';
+    TextFilesModified = 'One or more files have been changed.'+
+      #10'Do you really want to close the tabs?';
 
 
 
@@ -212,6 +223,14 @@ implementation
     { This should never be rendered, so no translation required. }
       ShowError ('Action source file tag: %d', [(Sender as TComponent).Tag]);
     end
+  end;
+
+
+
+(* Checks closing. *)
+  procedure TMainWindow.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+  begin
+    if not Self.CanCloseTabs then CloseAction := caNone
   end;
 
 
@@ -572,11 +591,39 @@ implementation
 
 
 
+(* Check changes. *)
+  function TMainWindow.HasSourceChanged: Boolean;
+  var
+    Ndx: Integer;
+  begin;
+    for Ndx := Self.EditorList.PageCount - 1 downto 0 do
+      if Self.FindEditorInTab (Self.EditorList.ActivePage).SynEdit.Modified then
+        Exit (True);
+    Result := false
+  end;
+
+
+
+(* Checks if can close tabs. *)
+  function TMainWindow.CanCloseTabs: Boolean;
+  begin
+    if Self.HasSourceChanged then
+    { Allows to cancel the action. }
+      if not ConfirmationDialog (TextClosingTabs, TextFilesModified) then
+        Exit (False);
+    Result := True
+  end;
+
+
+
 { Closes all tabs. }
   procedure TMainWindow.CloseAllTabs;
   var
     Ndx: Integer;
   begin;
+  { Check if Can close. }
+    if not Self.CanCloseTabs then Exit;
+  { Close the tabs. }
     for Ndx := Self.EditorList.PageCount - 1 downto 0 do
       Self.EditorList.Pages[Ndx].Free;
     Self.UpdateFileComponentStates
@@ -590,7 +637,7 @@ implementation
   { Be sure there's a tab open. }
     if Assigned (Self.EditorList.ActivePage) then
     begin
-      Self.EditorList.ActivePage.Free;
+      Self.FindEditorInTab (Self.EditorList.ActivePage).CloseTab;
       Self.UpdateFileComponentStates
     end
   end;

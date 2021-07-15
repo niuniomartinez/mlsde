@@ -9,6 +9,7 @@ object MainWindow: TMainWindow
   KeyPreview = True
   Menu = MainMenu
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
@@ -25,6 +26,17 @@ object MainWindow: TMainWindow
     inherited ProjectTree: TTreeView
       Height = 305
       Width = 187
+    end
+    inherited FileIconList: TImageList
+      Left = 264
+      Top = 16
+    end
+    inherited ActionList: TActionList
+      Left = 192
+      Top = 16
+    end
+    inherited ProjectPopupMenu: TPopupMenu
+      Left = 104
     end
   end
   object ResizeBar: TSplitter

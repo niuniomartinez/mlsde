@@ -67,6 +67,11 @@ interface
   procedure ShowError (const aMessageFmt: String; aParams: array of const);
     overload;
 
+(* Request a confirmation.  Shows the message with an "Yes/No" buttons.
+   @return(@true or @false depending the  clicked button.) *)
+  function ConfirmationDialog (const aCaption, aMessage: String): Boolean;
+
+
 (* Shows the given form as modal dialog and destroys it when closed.
    @return(The @italic(modal result) of the dialog.) *)
   function RunModalDialog (aDialog: TForm): TModalResult;
@@ -120,6 +125,17 @@ implementation
   procedure ShowError (const aMessageFmt: String; aParams: array of const);
   begin
     ShowError (Format (aMessageFmt, aParams))
+  end;
+
+
+
+(* Asks confirmation. *)
+  function ConfirmationDialog (const aCaption, aMessage: String): Boolean;
+  begin
+    Result := Application.MessageBox (
+      PCHAR (aMessage), PChar (aCaption),
+      MB_YESNO or MB_ICONQUESTION
+    ) = IDYES
   end;
 
 

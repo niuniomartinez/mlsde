@@ -339,7 +339,9 @@ implementation
   var
     lConfigSection: TCustomConfiguration;
     lCommandLineHelp, lSectionHelp: TStringList;
+  {$IfNDef WINDOWS}
     lLine: String;
+  {$EndIf}
   begin
     lCommandLineHelp := TStringList.Create;
     lSectionHelp := TStringList.Create;

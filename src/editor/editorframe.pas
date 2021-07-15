@@ -113,6 +113,10 @@ interface
       procedure SetFocus; override;
     (* Forces the language. *)
       procedure SetLanguage (aLanguage: String);
+    (* Closes tab.
+
+      It checks if there are modifications and allows to cancel if so. *)
+      procedure CloseTab;
 
     (* Tells if source was modified. *)
       property Modified: Boolean read getModified;
@@ -123,8 +127,8 @@ interface
 implementation
 
   uses
-    Main, MainForm, MLSDEHighlighter, Utils,
-    SynGutterLineNumber, SynGutterChanges,
+    GUIUtils, Main, MainForm, MLSDEHighlighter, Utils,
+    ComCtrls, SynGutterLineNumber, SynGutterChanges,
     sysutils;
 
 {$R *.lfm}
@@ -132,6 +136,10 @@ implementation
   resourcestring
     TextSyntax = 'Text';
     errFileNotFound = 'File "%s" not found.';
+
+    TextClosing = 'Closing tab';
+    TextFileModified = 'The file changes have not been saved.'+
+      #10'Do you really want to close the tab?';
 
 (*
  * TEditorConfiguration
@@ -410,6 +418,20 @@ implementation
     Self.SynEdit.Highlighter :=
       MLSDEApplication.SynManager.GetHighlighter (aLanguage);
     Self.UpdateStatusBarInfo
+  end;
+
+
+
+(* Closes tab. *)
+  procedure TSourceEditorFrame.CloseTab;
+  begin
+  { Check if there are modifications. }
+    if Self.SynEdit.Modified then
+    { Allows to cancel the action. }
+      if not ConfirmationDialog (TextClosing, TextFileModified) then
+        Exit;
+  { Closes tab. }
+    TTabSheet (Self.Parent).Free
   end;
 
 end.

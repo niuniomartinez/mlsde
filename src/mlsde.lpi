@@ -234,7 +234,9 @@
       <Unit22>
         <Filename Value="editor/editorframe.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="SourceEditorFrame"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
         <UnitName Value="EditorFrame"/>
       </Unit22>
       <Unit23>
@@ -243,6 +245,7 @@
         <ComponentName Value="ProjectView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ProjectViewFrame"/>
       </Unit23>
       <Unit24>
         <Filename Value="project/project.pas"/>

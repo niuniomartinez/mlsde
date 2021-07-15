@@ -502,7 +502,6 @@ implementation
 
   var
     lToken: String;
-    lNdx: Integer;
   begin
     Self.Clear;
   { Load the file. }

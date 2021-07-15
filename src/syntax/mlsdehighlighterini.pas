@@ -159,8 +159,6 @@ implementation
     end;
 
     procedure ParseSection; inline;
-    const
-      EndToken = [#0, #10, #13, ']'];
     begin
       Self.FindChar (']');
       if Self.CurrentChar = ']' then
