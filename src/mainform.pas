@@ -59,8 +59,9 @@ interface
         MenuItemAbout: TMenuItem;
         MenuItemConfiguration: TMenuItem;
         MenuItemQuit: TMenuItem;
-       MenuItemOpenPrj: TMenuItem;
-        MenuItemProject: TMenuItem;
+       MenuItemProject: TMenuItem;
+        MenuItemOpenPrj: TMenuItem;
+        MenuItemReloadProject: TMenuItem;
         MenuItemCloseAllTabs: TMenuItem;
        MenuItemFile: TMenuItem;
         mnuItemSeparator1: TMenuItem;
@@ -134,12 +135,18 @@ interface
       procedure ProjectChanged (Sender: TObject);
     (* Checks if any of the opened files have unsaved changes. *)
       function HasSourceChanged: Boolean;
-    (* Checks if can close tabs. *)
-      function CanCloseTabs: Boolean;
     (* Closes all tabs. *)
       procedure CloseAllTabs;
     (* Closes current tab. *)
       procedure CloseCurrentTab;
+    public
+    (* Checks if any of the opened files have changes.  If so, asks for save
+       changes or cancel the action.
+
+       If user requested save changes, then the methow will call
+       @code(ActionSaveAll).
+       @return(@false if user request cancel the action, @true otherwise. *)
+      function CanCloseTabs (const aCaption: String): Boolean;
     end;
 
   var
@@ -151,7 +158,7 @@ implementation
   uses
     AboutDlg, ConfigurationDialogForm, GUIUtils, LanguageSelectorDialogform,
     Main, MLSDEHighlighter, Project, Utils,
-    Dialogs, LCLType, sysutils;
+    LCLType, sysutils;
 
 {$R *.lfm}
 
@@ -169,9 +176,10 @@ implementation
     LanguagePanelWidth = 100;
 
   resourcestring
-    TextClosingTabs = 'Closing tabs';
-    TextFilesModified = 'One or more files have been changed.'+
-      #10'Do you really want to close the tabs?';
+    txtClosingWindow = 'Closing application';
+    txtClosingTabs = 'Closing tabs';
+    txtFilesModified = 'One or more files have been changed.'+
+      #10'Do you want to save before continue?';
 
 
 
@@ -230,7 +238,7 @@ implementation
 (* Checks closing. *)
   procedure TMainWindow.FormClose(Sender: TObject; var CloseAction: TCloseAction);
   begin
-    if not Self.CanCloseTabs then CloseAction := caNone
+    if not Self.CanCloseTabs (txtClosingWindow) then CloseAction := caNone
   end;
 
 
@@ -246,6 +254,7 @@ implementation
   { Some action events. }
     Self.ProjectViewer.ProjectTree.OnDblClick := @Self.ProjectTreeDblClick;
     Self.MenuItemOpenPrj.Action := Self.ProjectViewer.ActionOpenProject;
+    Self.MenuItemReloadProject.Action := Self.ProjectViewer.ActionReloadProject;
     Self.tbtnOpenPrj.Action := Self.ProjectViewer.ActionOpenProject;
     MLSDEApplication.Configuration.FindConfig (
       idEnvironmentConfig
@@ -604,25 +613,13 @@ implementation
 
 
 
-(* Checks if can close tabs. *)
-  function TMainWindow.CanCloseTabs: Boolean;
-  begin
-    if Self.HasSourceChanged then
-    { Allows to cancel the action. }
-      if not ConfirmationDialog (TextClosingTabs, TextFilesModified) then
-        Exit (False);
-    Result := True
-  end;
-
-
-
 { Closes all tabs. }
   procedure TMainWindow.CloseAllTabs;
   var
     Ndx: Integer;
   begin;
   { Check if Can close. }
-    if not Self.CanCloseTabs then Exit;
+    if not Self.CanCloseTabs (txtClosingTabs) then Exit;
   { Close the tabs. }
     for Ndx := Self.EditorList.PageCount - 1 downto 0 do
       Self.EditorList.Pages[Ndx].Free;
@@ -640,6 +637,34 @@ implementation
       Self.FindEditorInTab (Self.EditorList.ActivePage).CloseTab;
       Self.UpdateFileComponentStates
     end
+  end;
+
+
+
+(* Checks if can close tabs. *)
+  function TMainWindow.CanCloseTabs (const aCaption: String): Boolean;
+  var
+    lResultConfirmation: INTEGER;
+  begin
+  { Check for changes. }
+    if Self.HasSourceChanged then
+    begin
+    { Ask action. }
+      lResultConfirmation := Application.MessageBox (
+        PCHAR (txtFilesModified), PChar (aCaption),
+	MB_YESNOCANCEL or MB_ICONQUESTION
+      );
+      case lResultConfirmation of
+      IDYES:
+	Result := Self.ActionSaveAll.Execute;
+      IDNO:
+	Exit (True);
+      otherwise
+        Exit (False);
+      end
+    end;
+  { No changes found. }
+    Result := True
   end;
 
 end.

@@ -5,6 +5,7 @@ object ProjectView: TProjectView
   Width = 320
   ClientHeight = 240
   ClientWidth = 320
+  LCLVersion = '2.0.12.0'
   TabOrder = 0
   DesignLeft = 387
   DesignTop = 126
@@ -135,6 +136,13 @@ object ProjectView: TProjectView
       ImageIndex = 3
       OnExecute = ActionProjectExecute
     end
+    object ActionReloadProject: TAction
+      Tag = 2
+      Caption = 'Reload project'
+      Enabled = False
+      ImageIndex = 8
+      OnExecute = ActionProjectExecute
+    end
   end
   object ProjectPopupMenu: TPopupMenu
     Images = GlobalData.IconList
@@ -142,6 +150,9 @@ object ProjectView: TProjectView
     Top = 16
     object MenuItemOpenProject: TMenuItem
       Action = ActionOpenProject
+    end
+    object MenuItemReloadProject: TMenuItem
+      Action = ActionReloadProject
     end
   end
 end

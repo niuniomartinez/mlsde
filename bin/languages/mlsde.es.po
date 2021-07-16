@@ -110,17 +110,24 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr "Selecciona el idioma de la aplicación."
 
-#: mainform.textclosingtabs
+#: mainform.txtclosingtabs
+msgctxt "mainform.txtclosingtabs"
 msgid "Closing tabs"
 msgstr "Cerrando lengüetas"
 
-#: mainform.textfilesmodified
+#: mainform.txtclosingwindow
+msgctxt "mainform.txtclosingwindow"
+msgid "Closing application"
+msgstr ""
+
+#: mainform.txtfilesmodified
+msgctxt "mainform.txtfilesmodified"
 msgid ""
 "One or more files have been changed.\n"
-"Do you really want to close the tabs?\n"
+"Do you want to save before continue?\n"
 msgstr ""
 "Uno o más archivos han cambiado.\n"
-"¿Quiere cerrar lengüetas, aun así?\n"
+"¿Quieres guardar antes de continuar?\n"
 
 #: mlsdecustomhighlighter.errduplicatedextensions
 msgctxt "mlsdecustomhighlighter.errduplicatedextensions"
@@ -176,6 +183,10 @@ msgstr "Tipo de cadena \"%s\" desconocido."
 msgctxt "mlsdecustomhighlighter.errunknowntoken"
 msgid "Unknown token \"%s\"."
 msgstr "\"%s\" no identiifcado."
+
+#: projectviewframe.txtopeningproject
+msgid "Opening project..."
+msgstr "Abriendo proyecto..."
 
 #: projectviewframe.txtsortingfiles
 msgctxt "projectviewframe.txtsortingfiles"
@@ -434,7 +445,7 @@ msgid ""
 "If select, only known files will be added\n"
 " to the project.  Else, all files will be added.\n"
 msgstr ""
-"Si se selecciona, sólo los archivos reconocideos se añadirán\n"
+"Si se selecciona, sólo los archivos reconocidos se añadirán\n"
 "al proyecto.  En otro caso se añadirán todos los archivos.\n"
 
 #: tprojectconfigurationframe.lbldirectorydepth.caption
@@ -468,4 +479,8 @@ msgstr "&Abrir..."
 #: tprojectview.actionopenproject.hint
 msgid "Opens project directory."
 msgstr "Abre directorio de proyecto."
+
+#: tprojectview.actionreloadproject.caption
+msgid "Reload project"
+msgstr "Recargar proyecto"
 

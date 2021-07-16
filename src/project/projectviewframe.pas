@@ -45,10 +45,12 @@ interface
     (* Action list.  Contains non-edition project actions only. *)
       ActionList: TActionList;
        ActionOpenProject: TAction;
+       ActionReloadProject: TAction;
       FileIconList: TImageList;
       ProjectTree: TTreeView;
       ProjectPopupMenu: TPopupMenu;
        MenuItemOpenProject: TMenuItem;
+       MenuItemReloadProject: TMenuItem;
 
     (* Event triggered when a project action is executed. *)
       procedure ActionProjectExecute (Sender: TObject);
@@ -71,17 +73,19 @@ interface
 implementation
 
   uses
-    GUIUtils, Main, ProgressDialogForm,
+    GUIUtils, Main, MainForm, ProgressDialogForm,
     Dialogs, sysutils;
 
 {$R *.lfm}
 
   resourcestring
     txtSortingFiles = 'Sorting files...';
+    txtOpeningProject = 'Opening project...';
 
   const
   (* Tags to identify actions. *)
     tagOpenProject = 1;
+    tagReloadProject = 2;
 
 (*
  * TProjectView
@@ -94,6 +98,9 @@ implementation
     var
       lDlgOpenDirectory: TSelectDirectoryDialog;
     begin
+    { Check if there are changes. }
+      if not MainWindow.CanCloseTabs (txtOpeningProject) then Exit;
+    { Ask for directory and open. }
       lDlgOpenDirectory := TSelectDirectoryDialog.Create (Self);
       try
       { Configure dialog. }
@@ -102,8 +109,6 @@ implementation
           lDlgOpenDirectory.FileName := fProject.BasePath;
         if lDlgOpenDirectory.Execute then
         begin
-        { TODO: Check if project changed to save data? }
-        { Progress dialog. }
 	  ProgressDlg := TProgressDlg.Create (Self);
           try
 	    ProgressDlg.Show;
@@ -117,10 +122,27 @@ implementation
       end
     end;
 
+    procedure ReloadProject;
+    begin
+      ProgressDlg := TProgressDlg.Create (Self);
+      try
+        ProgressDlg.Show;
+        MLSDEApplication.Project.Open (Concat(
+          MLSDEApplication.Project.BasePath,
+          DirectorySeparator,
+          MLSDEApplication.Project.Root.Name
+        ))
+      finally
+        FreeAndNil (ProgressDlg)
+      end
+    end;
+
   begin
     case (Sender as TComponent).Tag of
     tagOpenProject:
       OpenProject;
+    tagReloadProject:
+      ReloadProject;
     else
     { This should never be rendered, so no translation required. }
       GUIUtils.ShowError ('Action tag: %d', [TComponent (Sender).Tag]);
@@ -244,7 +266,9 @@ implementation
     begin
       fProject.Clear;
       Self.ProjectTree.Items.Clear
-    end
+    end;
+  { Updates action states. }
+    Self.ActionReloadProject.Enabled := fProject.NotEmpty
   end;
 
 end.

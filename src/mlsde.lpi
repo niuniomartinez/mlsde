@@ -250,6 +250,7 @@
       <Unit24>
         <Filename Value="project/project.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Project"/>
       </Unit24>
     </Units>
   </ProjectOptions>

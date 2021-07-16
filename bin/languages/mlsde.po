@@ -104,14 +104,21 @@ msgctxt "main.messageselectapplanguage"
 msgid "Selects the application language."
 msgstr ""
 
-#: mainform.textclosingtabs
+#: mainform.txtclosingtabs
+msgctxt "mainform.txtclosingtabs"
 msgid "Closing tabs"
 msgstr ""
 
-#: mainform.textfilesmodified
+#: mainform.txtclosingwindow
+msgctxt "mainform.txtclosingwindow"
+msgid "Closing application"
+msgstr ""
+
+#: mainform.txtfilesmodified
+msgctxt "mainform.txtfilesmodified"
 msgid ""
 "One or more files have been changed.\n"
-"Do you really want to close the tabs?\n"
+"Do you want to save before continue?\n"
 msgstr ""
 
 #: mlsdecustomhighlighter.errduplicatedextensions
@@ -167,6 +174,10 @@ msgstr ""
 #: mlsdecustomhighlighter.errunknowntoken
 msgctxt "mlsdecustomhighlighter.errunknowntoken"
 msgid "Unknown token \"%s\"."
+msgstr ""
+
+#: projectviewframe.txtopeningproject
+msgid "Opening project..."
 msgstr ""
 
 #: projectviewframe.txtsortingfiles
@@ -449,5 +460,9 @@ msgstr ""
 
 #: tprojectview.actionopenproject.hint
 msgid "Opens project directory."
+msgstr ""
+
+#: tprojectview.actionreloadproject.caption
+msgid "Reload project"
 msgstr ""
 

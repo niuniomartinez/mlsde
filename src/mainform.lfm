@@ -139,6 +139,9 @@ object MainWindow: TMainWindow
       object MenuItemOpenPrj: TMenuItem
         Action = ProjectView.ActionOpenProject
       end
+      object MenuItemReloadProject: TMenuItem
+        Action = ProjectView.ActionReloadProject
+      end
       object MenuItemCloseAllTabs: TMenuItem
         Action = ActionCloseAllTabs
       end

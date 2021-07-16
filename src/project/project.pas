@@ -199,6 +199,7 @@ interface
       fRoot: TDirectory;
       fOnChange: TNotifyEvent;
 
+      function GetNotEmpty: Boolean;
     (* Event to cancel the scanning. *)
       procedure CancelScan (aSender: TObject);
     (* Configuration has changed. *)
@@ -219,6 +220,8 @@ interface
       property BasePath: String read fBasePath;
     (* Root directory.  It may be @nil. *)
       property Root: TDirectory read fRoot;
+    (* Tells if project is not empty. *)
+      property NotEmpty: Boolean read GetNotEmpty;
 
     (* Event triggered when project changed.  For example, when opening a new
        one, adding items, etc.
@@ -536,6 +539,14 @@ implementation
 (*
  * TProject
  ***************************************************************************)
+
+  function TProject.GetNotEmpty: Boolean;
+  begin
+    Result := Assigned (fRoot)
+          and ((fRoot.NumDirs <> 0) or (fRoot.NumFiles <> 0))
+  end;
+
+
 
 (* Event to cancel the scanning. *)
   procedure TProject.CancelScan (aSender: TObject);
