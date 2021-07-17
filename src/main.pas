@@ -25,7 +25,7 @@ unit Main;
 interface
 
   uses
-    Configuration, Project, SyntaxHighlighting,
+    Autocompletion, Configuration, Project, SyntaxHighlighting,
     Classes, SysUtils;
 
   const
@@ -102,6 +102,7 @@ interface
       fProject: TProject;
       fSynManager: TSynManager;
       fFileList: TStrings;
+      fAutocompletionWordList: TAutocompletionWordList;
 
     (* Sets up the language translation. *)
       procedure SetUpLanguage;
@@ -153,6 +154,9 @@ interface
       property Project: TProject read fProject;
     (* Reference to the syntax highlighters manager. *)
       property SynManager: TSynManager read fSynManager;
+    (* Reference to the autocompletion word list. *)
+      property AutocompletionWordList: TAutocompletionWordList
+        read fAutocompletionWordList;
     end;
 
   var
@@ -371,6 +375,7 @@ implementation
     fConfiguration := TConfiguration.Create;
     fProject := TProject.Create;
     fSynManager := TSynManager.Create;
+    fAutocompletionWordList := TAutocompletionWordList.Create;
     fFileList := TStringList.Create
   end;
 
@@ -380,6 +385,7 @@ implementation
   destructor TMLSDEApplication.Destroy;
   begin
     fProject.Free;
+    fAutocompletionWordList.Free;
     fSynManager.Free;
     fFileList.Free;
     fConfiguration.Free;
@@ -394,6 +400,7 @@ implementation
     lNdx: Integer;
   begin
   { Add configuration objects. }
+    fConfiguration.AddSection (TAutocompletionConfiguration.Create, idAutocompletionConfig);
     fConfiguration.AddSection (TEnvironmentConfiguration.Create, EnvironmentSection);
     fConfiguration.AddSection (TProjectConfiguration.Create, idProjectConfig);
     fConfiguration.AddSection (TEditorConfiguration.Create, idEditorConfig);
@@ -423,7 +430,9 @@ implementation
     { Configuration initiated. }
       fConfiguration.Apply;
     { Loads and initializes the syntax highlighters. }
-      fSynManager.Initialize
+      fSynManager.Initialize;
+    { Initializes the autocompletion subsystem. }
+      fAutocompletionWordList.Initialize
     end
   end;
 

@@ -29,7 +29,7 @@ interface
 
   uses
     Configuration,
-    Classes, Forms, Graphics, SynEdit;
+    Classes, Forms, Graphics, SynEdit, SynCompletion;
 
   const
   (* Name for the editor configuration section. *)
@@ -73,26 +73,38 @@ interface
 
   (* Source editor frame.  This is created in a tab in the @link(MainWindow). *)
     TSourceEditorFrame = class (TFrame)
+      SynCompletion: TSynCompletion;
       SynEdit: TSynEdit;
 
     (* User modified the text. *)
       procedure SynEditChange (Sender: TObject);
     (* User clicked in the editor with mouse. *)
       procedure SynEditClick (Sender: TObject);
-    (* user pressed a key. *)
+    (* User pressed a key. *)
       procedure SynEditKeyUp (
         Sender: TObject;
         var Key: Word;
         Shift: TShiftState
       );
+    (* Triggers autocompletion. *)
+      procedure AutocompletionExecute (Sender: TObject);
+    (* I think it changes the selection position in the autocompletion popup.
+       It was long since I used this for the first time (copying from 2019
+       branch, and it was written few years before).  Too lazy to do testings
+       now. *)
+      procedure AutocompleteSearchPosition (var aPosition: integer);
     private
       fFileName, fPath: String;
       fOldCaretX, fOldCaretY: LongInt;
       fOnChange: TNotifyEvent;
 
       function getModified: Boolean; inline;
-    (* Updates cursor position panel in main window status bar. *)
+    (* Updates cursor position panel in main window status bar.
+
+       It also may update the autocompletion list. *)
       procedure UpdateCursorPositionPanel;
+    (* Obtains the autocompletion suggestions. *)
+      procedure GetAutocompletionSuggestions;
     public
     (* Constructor. *)
       constructor Create (aOwer: TComponent); override;
@@ -127,7 +139,7 @@ interface
 implementation
 
   uses
-    GUIUtils, Main, MainForm, MLSDEHighlighter, Utils,
+    Autocompletion, GUIUtils, Main, MainForm, MLSDEHighlighter, Utils,
     ComCtrls, SynGutterLineNumber, SynGutterChanges,
     sysutils;
 
@@ -257,7 +269,22 @@ implementation
 
 (* Updates cursor position panel in main window status bar. *)
   procedure TSourceEditorFrame.UpdateCursorPositionPanel;
+  var
+    lNewCaretX, lNewCaretY: Integer;
+    lText: String;
   begin
+    lNewCaretX := Self.SynEdit.CaretX;
+    lNewCaretY := Self.SynEdit.CaretY;
+    lText := Self.SynEdit.Lines[fOldCaretY - 1];
+
+  { If changes line, adds to autocompletion. }
+    if fOldCaretY <> Self.SynEdit.CaretY then
+    begin
+      lText := Trim (Self.SynEdit.Lines[fOldCaretY - 1]);
+      if lText <> EmptyStr then
+        MLSDEApplication.AutocompletionWordList.Add (lText)
+    end;
+  { Update panel. }
     fOldCaretX := Self.SynEdit.CaretX;
     fOldCaretY := Self.SynEdit.CaretY;
     if MainWindow.StatusBar.Visible then
@@ -269,9 +296,25 @@ implementation
 
 (* User modified the file. *)
   procedure TSourceEditorFrame.SynEditChange (Sender: TObject);
+  var
+    cX, cY: Integer;
+    lLine: String;
   begin
     if Self.SynEdit.Modified then
-      Self.Parent.Caption := '*' + fFileName
+    begin
+      Self.Parent.Caption := '*' + fFileName;
+    { If key is not alphanumeric check current line to see if should add a new
+      word to the autocompletion component. }
+      cX := Self.SynEdit.CaretX - 1; cY := Self.SynEdit.CaretY - 1;
+      lLine := Self.SynEdit.Lines[cY];
+      if (cX > 0) and (Length (lLine) >= cX) then
+      begin
+        if IsSeparator (lLine[cX]) then
+          MLSDEApplication.AutocompletionWordList.Add (lLine)
+      end
+      else
+        MLSDEApplication.AutocompletionWordList.Add (lLine);
+    end
     else
       Self.Parent.Caption := fFileName;
     if Assigned (fOnChange) then fOnChange (Self)
@@ -282,6 +325,7 @@ implementation
 (* Mouse click. *)
   procedure TSourceEditorFrame.SynEditClick (Sender: TObject);
   begin
+  { Update cursor position in the estatus panel. }
     if (fOldCaretX <> Self.SynEdit.CaretX)
     or (fOldCaretY <> Self.SynEdit.CaretY)
     then
@@ -297,10 +341,44 @@ implementation
     Shift: TShiftState
   );
   begin
+  { Update cursor position in the status panel. }
     if (fOldCaretX <> Self.SynEdit.CaretX)
     or (fOldCaretY <> Self.SynEdit.CaretY)
     then
       Self.UpdateCursorPositionPanel
+  end;
+
+
+
+(* Triggers autocompletion. *)
+  procedure TSourceEditorFrame.AutocompletionExecute (Sender: TObject);
+  begin
+    Self.GetAutocompletionSuggestions
+  end;
+
+
+
+(* Changes position of the selection in the autocompletion? *)
+  procedure TSourceEditorFrame.AutocompleteSearchPosition
+   (var aPosition: integer);
+  begin
+    Self.GetAutocompletionSuggestions;
+    if Self.SynCompletion.ItemList.Count > 0 then
+      aPosition := 0
+    else
+      aPosition := -1
+  end;
+
+
+
+(* Obtains the autocompletion suggestions. *)
+  procedure TSourceEditorFrame.GetAutocompletionSuggestions;
+  begin
+    Self.SynCompletion.ItemList.Clear;
+    MLSDEApplication.AutocompletionWordList.GetWordSuggestions (
+      Self.SynCompletion.CurrentString,
+      Self.SynCompletion.ItemList
+    )
   end;
 
 
@@ -335,7 +413,8 @@ implementation
       MLSDEApplication.SynManager.GetHighlighterForExt (
         GetFileExtension (aSourceFileName)
       );
-    if Assigned (fOnChange) then fOnChange (Self)
+    if Assigned (fOnChange) then fOnChange (Self);
+    MLSDEApplication.AutocompletionWordList.AddText (Self.SynEdit.Lines)
   end;
 
 

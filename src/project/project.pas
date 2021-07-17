@@ -197,7 +197,7 @@ interface
     private
       fBasePath: String;
       fRoot: TDirectory;
-      fOnChange: TNotifyEvent;
+      fOnChange, fOnClose: TNotifyEvent;
 
       function GetNotEmpty: Boolean;
     (* Event to cancel the scanning. *)
@@ -228,6 +228,8 @@ interface
 
        Note that this doesn't triggers if a file changes (yet). *)
       property OnChange: TNotifyEvent read fOnChange write fOnChange;
+    (* Event triggered when project closes. *)
+      property onClose: TNotifyEvent read fOnClose write fOnClose;
     end;
 
 implementation
@@ -649,7 +651,8 @@ implementation
       idProjectConfig
     ).Subject.RemoveObserver (@Self.ConfigurationChanged);
     FreeAndNil (fRoot);
-    fBasePath := ''
+    fBasePath := '';
+    if Assigned (fOnClose) then fOnClose (Self)
   end;
 
 end.

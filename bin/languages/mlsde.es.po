@@ -297,6 +297,14 @@ msgstr "Tamaño de letra"
 msgid "Each nth line number"
 msgstr "Cada n-ésima línea"
 
+#: teditorconfigurationframe.lblwordlength.caption
+msgid "Minimun word length"
+msgstr "Longitud mínima"
+
+#: teditorconfigurationframe.titleautocompletion.caption
+msgid "Autocompletion"
+msgstr ""
+
 #: teditorconfigurationframe.titlegutter.caption
 msgid "Gutter"
 msgstr "Columna de marcas"

@@ -88,7 +88,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="25">
+    <Units Count="26">
       <Unit0>
         <Filename Value="mlsde.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -252,6 +252,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Project"/>
       </Unit24>
+      <Unit25>
+        <Filename Value="editor/autocompletion.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Autocompletion"/>
+      </Unit25>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

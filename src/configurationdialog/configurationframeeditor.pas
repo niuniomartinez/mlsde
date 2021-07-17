@@ -44,6 +44,9 @@ interface
        FontDialog: TFontDialog;
        lblFontSize: TLabel;
        editFontSize: TSpinEdit;
+      TitleAutocompletion: TDividerBevel;
+       editWordLength: TSpinEdit;
+       lblWordLength: TLabel;
 
     (* Activate or deactivate the gutter. *)
       procedure chkShowGutterChange (Sender: TObject);
@@ -67,7 +70,7 @@ interface
 implementation
 
   uses
-    EditorFrame, Main;
+    Autocompletion, EditorFrame, Main;
 
 {$R *.lfm}
 
@@ -130,6 +133,7 @@ implementation
   procedure TEditorConfigurationFrame.Initialize;
   var
     lEditorConfiguration: TEditorConfiguration;
+    lAutocompletionConfiguration: TAutocompletionConfiguration;
   begin
     lEditorConfiguration := TEditorConfiguration (
       MLSDEApplication.Configuration.FindConfig (idEditorConfig)
@@ -139,7 +143,12 @@ implementation
     Self.chkShowChangeMarks.Checked := lEditorConfiguration.ShowChangeMarks;
     fFont.Assign (lEditorConfiguration.GetFont);
     Self.editFont.Text := fFont.Name;
-    Self.editFontSize.Value := fFont.Size
+    Self.editFontSize.Value := fFont.Size;
+
+    lAutocompletionConfiguration := TAutocompletionConfiguration (
+      MLSDEApplication.Configuration.FindConfig (idAutocompletionConfig)
+    );
+    Self.editWordLength.Value := lAutocompletionConfiguration.MinChars
   end;
 
 
@@ -148,6 +157,7 @@ implementation
   procedure TEditorConfigurationFrame.AcceptConfiguration;
   var
     lEditorConfiguration: TEditorConfiguration;
+    lAutocompletionConfiguration: TAutocompletionConfiguration;
   begin
     lEditorConfiguration := TEditorConfiguration (
       MLSDEApplication.Configuration.FindConfig (idEditorConfig)
@@ -155,7 +165,12 @@ implementation
     lEditorConfiguration.ShowGutter := Self.chkShowGutter.Checked;
     lEditorConfiguration.ShowLinesMultiplesOf := Self.editNthLineNumber.Value;
     lEditorConfiguration.ShowChangeMarks := Self.chkShowChangeMarks.Checked;
-    lEditorConfiguration.CopyFont (fFont)
+    lEditorConfiguration.CopyFont (fFont);
+
+    lAutocompletionConfiguration := TAutocompletionConfiguration (
+      MLSDEApplication.Configuration.FindConfig (idAutocompletionConfig)
+    );
+    lAutocompletionConfiguration.MinChars := Self.editWordLength.Value
   end;
 
 end.

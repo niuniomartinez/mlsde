@@ -23,7 +23,7 @@ object SourceEditorFrame: TSourceEditorFrame
     TabOrder = 0
     OnClick = SynEditClick
     OnKeyUp = SynEditKeyUp
-    Gutter.Width = 19
+    Gutter.Width = 23
     Gutter.MouseActions = <>
     RightGutter.Width = 0
     RightGutter.MouseActions = <>
@@ -481,7 +481,7 @@ object SourceEditorFrame: TSourceEditorFrame
         MouseActions = <>
       end
       object SynGutterLineNumber1: TSynGutterLineNumber
-        Width = 13
+        Width = 17
         MouseActions = <>
         MarkupInfo.Background = clBtnFace
         MarkupInfo.Foreground = clBtnText
@@ -511,5 +511,22 @@ object SourceEditorFrame: TSourceEditorFrame
         MouseActionsCollapsed = <>
       end
     end
+  end
+  object SynCompletion: TSynCompletion
+    OnExecute = AutocompletionExecute
+    Position = 0
+    LinesInWindow = 6
+    OnSearchPosition = AutocompleteSearchPosition
+    SelectedColor = clHighlight
+    CaseSensitive = False
+    Width = 262
+    AutoUseSingleIdent = True
+    ShortCut = 16416
+    EndOfTokenChr = '()[].'
+    ExecCommandID = ecSynCompletionExecute
+    Editor = SynEdit
+    ToggleReplaceWhole = False
+    Left = 96
+    Top = 8
   end
 end

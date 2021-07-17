@@ -145,7 +145,7 @@ interface
 
        If user requested save changes, then the methow will call
        @code(ActionSaveAll).
-       @return(@false if user request cancel the action, @true otherwise. *)
+       @return(@false if user request cancel the action, @true otherwise.) *)
       function CanCloseTabs (const aCaption: String): Boolean;
     end;
 

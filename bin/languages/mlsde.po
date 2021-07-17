@@ -283,6 +283,14 @@ msgstr ""
 msgid "Each nth line number"
 msgstr ""
 
+#: teditorconfigurationframe.lblwordlength.caption
+msgid "Minimun word length"
+msgstr ""
+
+#: teditorconfigurationframe.titleautocompletion.caption
+msgid "Autocompletion"
+msgstr ""
+
 #: teditorconfigurationframe.titlegutter.caption
 msgid "Gutter"
 msgstr ""

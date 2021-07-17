@@ -6,5 +6,7 @@
 {"hash":90566245,"name":"teditorconfigurationframe.lblfontsize.caption","sourcebytes":[70,111,110,116,32,83,105,122,101],"value":"Font Size"},
 {"hash":82623170,"name":"teditorconfigurationframe.titlegutter.caption","sourcebytes":[71,117,116,116,101,114],"value":"Gutter"},
 {"hash":258388116,"name":"teditorconfigurationframe.titletextfont.caption","sourcebytes":[84,101,120,116,32,102,111,110,116],"value":"Text font"},
-{"hash":28580707,"name":"teditorconfigurationframe.chkshowchangemarks.caption","sourcebytes":[83,104,111,119,32,99,104,97,110,103,101,32,109,97,114,107,115],"value":"Show change marks"}
+{"hash":28580707,"name":"teditorconfigurationframe.chkshowchangemarks.caption","sourcebytes":[83,104,111,119,32,99,104,97,110,103,101,32,109,97,114,107,115],"value":"Show change marks"},
+{"hash":194580126,"name":"teditorconfigurationframe.titleautocompletion.caption","sourcebytes":[65,117,116,111,99,111,109,112,108,101,116,105,111,110],"value":"Autocompletion"},
+{"hash":55779896,"name":"teditorconfigurationframe.lblwordlength.caption","sourcebytes":[77,105,110,105,109,117,110,32,119,111,114,100,32,108,101,110,103,116,104],"value":"Minimun word length"}
 ]}
