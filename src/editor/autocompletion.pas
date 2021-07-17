@@ -33,8 +33,6 @@ interface
   const
   (* Identifies autocompletion configuration. *)
     idAutocompletionConfig = 'autocompletion';
-  (* Minimun number of characters per word by default. *)
-    MinCharsWord = 3;
 
   type
   (* Manages autocompletion configuration. *)
@@ -90,6 +88,8 @@ implementation
     sysutils;
 
   const
+  (* Minimun number of characters per word by default. *)
+    MinCharsWord = 3;
   (* Valid characters for identifiers.  ASCII only at the moment.  Also, it
      seems it depends on the synth used. *)
     VALID_CHARS = ['0'..'9', 'a'..'z', 'A'..'Z', '_'];

@@ -15,6 +15,8 @@ This section allows to configure how the source editor looks.
   Click the button with the `...` on the right to open the font selector dialog.
 * **Font size.**  Allows to change the font size.  Note that it can be select
   form the font selector dialog too.
+* **Minimun word length.**  The minimun length for a word to be added to the
+  autocompletion list.
 
 ## Color schema ##
 

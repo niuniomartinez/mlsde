@@ -122,7 +122,6 @@ inherited EditorConfigurationFrame: TEditorConfigurationFrame
     Top = 200
     Width = 50
     MinValue = 1
-    OnChange = editFontSizeChange
     TabOrder = 6
     Value = 1
   end

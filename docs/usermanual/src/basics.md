@@ -67,6 +67,11 @@ with a yellow line in the left _gutter_.
 
 ![Modified file](images/modified-file.png)
 
+Press `Ctrl+Space` to open the autocompletion drop-down. Use cursor keys and
+`Intro` to select, or `Esc` to close, or just type.
+
+![The autocompletion](images/autocompletion.png)
+
 ## Save Files ##
 
 To save the modified files you can use the `File > Save file` menu option or

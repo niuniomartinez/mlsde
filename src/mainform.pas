@@ -375,8 +375,7 @@ implementation
 (* There are changes in the editor. *)
   procedure TMainWindow.EditorChanged (Sender: TObject);
   begin
-    Self.UpdateFileComponentStates;
-    Self.FindEditorInTab (Self.EditorList.ActivePage).SetFocus
+    Self.UpdateFileComponentStates
   end;
 
 

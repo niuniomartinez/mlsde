@@ -157,7 +157,6 @@ implementation
     Forms;
 
   resourcestring
-    txtHelp       = 'Help';
     txtHelpUsage  = 'Usage: %s [files and directories] [options]';
     txtHelpWhere  = 'Where options are:';
     txtHelpHelp   = 'Shows this help.';

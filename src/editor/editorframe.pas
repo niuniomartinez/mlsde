@@ -270,13 +270,8 @@ implementation
 (* Updates cursor position panel in main window status bar. *)
   procedure TSourceEditorFrame.UpdateCursorPositionPanel;
   var
-    lNewCaretX, lNewCaretY: Integer;
     lText: String;
   begin
-    lNewCaretX := Self.SynEdit.CaretX;
-    lNewCaretY := Self.SynEdit.CaretY;
-    lText := Self.SynEdit.Lines[fOldCaretY - 1];
-
   { If changes line, adds to autocompletion. }
     if fOldCaretY <> Self.SynEdit.CaretY then
     begin
