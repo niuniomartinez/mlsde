@@ -1,5 +1,0 @@
-{"version":1,"strings":[
-{"hash":107746238,"name":"tprojectview.actionopenproject.caption","sourcebytes":[38,79,112,101,110,46,46,46],"value":"&Open..."},
-{"hash":64257246,"name":"tprojectview.actionopenproject.hint","sourcebytes":[79,112,101,110,115,32,112,114,111,106,101,99,116,32,100,105,114,101,99,116,111,114,121,46],"value":"Opens project directory."},
-{"hash":197228628,"name":"tprojectview.actionreloadproject.caption","sourcebytes":[82,101,108,111,97,100,32,112,114,111,106,101,99,116],"value":"Reload project"}
-]}

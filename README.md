@@ -1,46 +1,8 @@
-# MultiLanguage Scriptable Development Environment #
+# Moved to SourceForge #
 
-The **MultiLanguage Scriptable Development Environment** (**MLSDE**) aims to be
-a flexible source editor not engaged to any language.  Right now it is in an
-early development state, so it is not recommended to used in real life.
+I've read that Microsoft has ignored the license terms of various GitHub projects several times, so I decided to remove all the projects I have.
 
-Read the documentation found in the '~/docs' directory and see the _Contact
-info_ section to know where you'll find more information.
+MLSDE has been moved to [sf.net/p/mlsde](https://sourceforge.net/projects/mlsde/).  I know SourceForge has bad reputation but new owners have did a good job cleaning and improving the services.  I was considering to move to GitLab and maybe I'll do in the future as other projects did recently (such as [Lazarus and Free Pascal](https://gitlab.com/freepascal.org/), for example).
 
-## License ##
-
-Read file `LICENSE` for complete license text.
-
-
-
-## Installation ##
-
-At the moment, you have to compile the application by yourself.  Sorry.
-
-You need [Lazarus](https://www.lazarus-ide.org/).
-
-
-
-## Compilation ##
-
-First, install Lazarus IDE.  You'll find at http://www.lazarus-ide.org/.
-
-Then, use Lazarus to open the file `~/src/mlsde.lpi`.  Then compile (may be
-you want to tweak the debug and optimization options first).
-
-To build source documentation, install [pasdoc](https://github.com/pasdoc/pasdoc)
-and execute `makedocs.sh`.
-
-
-
-## How to use ##
-
-At the moment it allows simple edition only.
-
-You have detailed documentation at the `~/docs/usermanual` directory.
-
-
-
-## Contact info ##
-
-Project web: https://github.com/niuniomartinez/mlsde
+Regards,
+Guillermo "Ñuño" Martínez

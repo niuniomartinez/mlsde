@@ -1,8 +1,0 @@
-Exception=TObject
-TPersistent=TObject
-TComponent=TPersistent
-TControl=TComponent
-TDataModule=TComponent
-TForm=TControl
-TFrame=TControl
-TSynCustomHighlighter=TComponent
